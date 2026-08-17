@@ -28,6 +28,20 @@ describe('movement, economy and fog', () => {
     expect(G.players['0'].knowledge.bodies['1']).toMatchObject({ value: 'BRIDGE_N', asOfDay: 0 });
   });
 
+  it('records living-player knowledge at an intermediate node', () => {
+    const G = createInitialState(random);
+    G.players['0'].character = 'RESERVIST';
+    G.players['0'].location = 'TEMPLE';
+    G.players['1'].location = 'VO';
+
+    movePlayer(context(G, '0'), ['VO', 'BRIDGE_N']);
+
+    expect(G.players['0'].location).toBe('BRIDGE_N');
+    expect(G.players['0'].knowledge.positions['1']).toEqual({
+      value: 'VO', asOfDay: 0, source: 'co-location',
+    });
+  });
+
   it('keeps severed edges impassable', () => {
     const G = createInitialState(random);
     G.players['0'].location = 'BRIDGE_N';
@@ -59,9 +73,10 @@ describe('movement, economy and fog', () => {
   it('clamps a mixed scavenge by resource and still charges one action on partial success', () => {
     const G = createInitialState(random);
     G.players['0'].location = 'CLINIC';
+    G.players['0'].inventory = { food: 0, battery: 0 };
     G.caches.CLINIC = { food: 1, battery: 2 };
     scavenge(context(G, '0'), { food: 2, battery: 0 });
-    expect(G.players['0'].inventory).toEqual({ food: 4, battery: 3 });
+    expect(G.players['0'].inventory).toEqual({ food: 1, battery: 0 });
     expect(G.caches.CLINIC).toEqual({ food: 0, battery: 2 });
     expect(G.players['0'].actionsLeft).toBe(1);
   });

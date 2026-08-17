@@ -102,12 +102,12 @@ export const movePlayer: MoveFn<TruthState> = ({ G, playerID }, path: NodeId[]) 
   if (validated.cost > 0) requireRule(player.actionsLeft > 0, 'NO_ACTIONS');
   cancelRoadProposalsFor(G, playerID as PlayerID);
   if (validated.cost > 0) player.actionsLeft -= 1;
-  rememberArrival(G, playerID as PlayerID, validated.entered);
   for (const node of validated.entered) {
     player.location = node;
+    rememberArrival(G, playerID as PlayerID, [node]);
     if (MAP_NODES[node].bulletin) readCurrentBulletin(G, playerID as PlayerID);
+    refreshPositionKnowledge(G);
   }
-  refreshPositionKnowledge(G);
 };
 
 export const scavenge: MoveFn<TruthState> = ({ G, playerID }, request: Inventory) => {

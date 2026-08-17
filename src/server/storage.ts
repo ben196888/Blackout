@@ -6,6 +6,39 @@ interface PaceLogMetadata {
   paceMessages?: MessageOutcome[];
 }
 
+class MetadataConflictError extends Error {
+  readonly status = 409;
+  readonly expose = true;
+}
+
+function normaliseLobbyName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+function assertMetadataUpdateIsCurrent(
+  current: ServerTypes.MatchData | undefined,
+  next: ServerTypes.MatchData,
+): void {
+  const claimedNames = Object.values(next.players)
+    .map((player) => player.name && normaliseLobbyName(player.name))
+    .filter((name): name is string => Boolean(name));
+  if (new Set(claimedNames).size !== claimedNames.length) {
+    throw new MetadataConflictError('That name is already in this game.');
+  }
+
+  if (!current) return;
+  for (const [playerID, currentSeat] of Object.entries(current.players)) {
+    const nextSeat = next.players[Number(playerID)];
+    if (
+      currentSeat.credentials
+      && nextSeat?.credentials
+      && currentSeat.credentials !== nextSeat.credentials
+    ) {
+      throw new MetadataConflictError('That seat was claimed at the same time.');
+    }
+  }
+}
+
 /** In-memory boardgame.io storage with private authoritative message stdout events. */
 export class LoggingInMemory implements StorageAPI.Sync {
   private readonly states = new Map<string, State>();
@@ -53,13 +86,17 @@ export class LoggingInMemory implements StorageAPI.Sync {
   }
 
   setMetadata(matchID: string, metadata: ServerTypes.MatchData) {
-    this.metadata.set(matchID, metadata);
+    assertMetadataUpdateIsCurrent(this.metadata.get(matchID), metadata);
+    this.metadata.set(matchID, structuredClone(metadata));
   }
 
   fetch<O extends StorageAPI.FetchOpts>(matchID: string, opts: O): StorageAPI.FetchResult<O> {
     const result: Partial<StorageAPI.FetchFields> = {};
     if (opts.state) result.state = this.states.get(matchID)!;
-    if (opts.metadata) result.metadata = this.metadata.get(matchID)!;
+    if (opts.metadata) {
+      const metadata = this.metadata.get(matchID);
+      if (metadata) result.metadata = structuredClone(metadata);
+    }
     if (opts.log) result.log = this.logs.get(matchID) ?? [];
     if (opts.initialState) result.initialState = this.initial.get(matchID)!;
     return result as StorageAPI.FetchResult<O>;

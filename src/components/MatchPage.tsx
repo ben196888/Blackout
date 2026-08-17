@@ -18,7 +18,8 @@ export function MatchPage({ matchID }: { matchID: string }) {
   const [identity, setIdentity] = useState<SeatIdentity | null>(() => localIdentity.get(matchID));
   const [identityValidated, setIdentityValidated] = useState(false);
   const [name, setName] = useState('');
-  const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
+  const [actionError, setActionError] = useState('');
 
   const refresh = useCallback(async () => {
     try {
@@ -47,10 +48,10 @@ export function MatchPage({ matchID }: { matchID: string }) {
         setIdentityValidated(false);
       }
       setMatch(next);
-      setError('');
+      setLoadError('');
     } catch {
       setMatch(null);
-      setError('This game does not exist or is no longer available.');
+      setLoadError('This game does not exist or is no longer available.');
     }
   }, [matchID]);
 
@@ -74,20 +75,21 @@ export function MatchPage({ matchID }: { matchID: string }) {
   }), []);
 
   async function join() {
-    setError('');
+    setActionError('');
     try {
       const seat = await claimFirstFree(matchID, name);
       localIdentity.set(matchID, seat);
       setIdentity(seat);
       await refresh();
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Could not join the game.');
       await refresh();
+      setActionError(reason instanceof Error ? reason.message : 'Could not join the game.');
     }
   }
 
   async function leave() {
     if (!identity || occupied === PLAYER_COUNT) return;
+    setActionError('');
     await lobbyClient.leaveMatch(GAME_NAME, matchID, {
       playerID: identity.playerID,
       credentials: identity.credentials,
@@ -123,7 +125,9 @@ export function MatchPage({ matchID }: { matchID: string }) {
         )}
         {identity && <button className="quiet" onClick={() => void leave()}>Leave seat</button>}
         {fullWithoutSeat && <p role="alert">This game is already in progress. Spectator access is not available.</p>}
-        {error && <p className="error" role="alert">{error}</p>}
+        {(actionError || loadError) && (
+          <p className="error" role="alert">{actionError || loadError}</p>
+        )}
       </section>
     </main>
   );

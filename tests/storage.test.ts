@@ -1,10 +1,42 @@
-import type { LogEntry, State } from 'boardgame.io';
+import type { LogEntry, Server as ServerTypes, State } from 'boardgame.io';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LoggingInMemory } from '../src/server/storage';
 
 afterEach(() => vi.restoreAllMocks());
 
 describe('message logging storage', () => {
+  it('rejects stale seat claims and case-insensitive duplicate names', () => {
+    const storage = new LoggingInMemory();
+    const metadata: ServerTypes.MatchData = {
+      gameName: 'blackout',
+      players: {
+        0: { id: 0 },
+        1: { id: 1 },
+        2: { id: 2 },
+        3: { id: 3 },
+      },
+      createdAt: 1,
+      updatedAt: 1,
+    };
+    storage.setMetadata('match', metadata);
+
+    const first = storage.fetch('match', { metadata: true }).metadata;
+    const stale = storage.fetch('match', { metadata: true }).metadata;
+    first.players[0]!.name = 'Player One';
+    first.players[0]!.credentials = 'first-token';
+    storage.setMetadata('match', first);
+
+    stale.players[0]!.name = 'Other Player';
+    stale.players[0]!.credentials = 'stale-token';
+    expect(() => storage.setMetadata('match', stale)).toThrow('claimed at the same time');
+
+    const duplicate = storage.fetch('match', { metadata: true }).metadata;
+    duplicate.players[1]!.name = '  PLAYER ONE  ';
+    duplicate.players[1]!.credentials = 'second-token';
+    expect(() => storage.setMetadata('match', duplicate)).toThrow('already in this game');
+    expect(storage.fetch('match', { metadata: true }).metadata.players[1]!.name).toBeUndefined();
+  });
+
   it('emits one private structured event with match context and no credentials', () => {
     const write = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const storage = new LoggingInMemory();

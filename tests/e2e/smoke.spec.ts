@@ -200,6 +200,43 @@ test('simultaneous last-seat claims refetch the authoritative full room', async 
   }
 });
 
+test('simultaneous equal names cannot claim two seats', async ({ browser, request }) => {
+  const contexts: BrowserContext[] = [];
+  try {
+    for (let index = 0; index < 3; index += 1) contexts.push(await browser.newContext());
+    const pages = await Promise.all(contexts.map((context) => context.newPage()));
+
+    await pages[0]!.goto('/');
+    await pages[0]!.getByLabel('Your name').fill('Creator');
+    await pages[0]!.getByRole('button', { name: 'Create game' }).click();
+    const invite = await pages[0]!.getByLabel('Invite link').inputValue();
+    const matchID = new URL(invite).pathname.split('/').at(-1)!;
+
+    for (const page of pages.slice(1)) {
+      await page.goto(invite);
+      await page.getByLabel('Your name').fill('Same Name');
+    }
+    await Promise.all(pages.slice(1).map((page) =>
+      page.getByRole('button', { name: 'Join first free seat' }).click()
+    ));
+
+    await expect.poll(async () => {
+      const response = await request.get(`/games/blackout/${matchID}`);
+      if (!response.ok()) return -1;
+      const match = await response.json() as { players: Array<{ name?: string }> };
+      return match.players.filter(({ name }) => name?.toLowerCase() === 'same name').length;
+    }).toBe(1);
+    await expect.poll(async () => {
+      const errors = await Promise.all(pages.slice(1).map((page) =>
+        page.getByRole('alert').isVisible().catch(() => false)
+      ));
+      return errors.filter(Boolean).length;
+    }).toBe(1);
+  } finally {
+    await Promise.all(contexts.map((context) => context.close()));
+  }
+});
+
 test('four isolated players complete seven nights to the same outcome', async ({ browser }) => {
   test.setTimeout(300_000);
   const contexts: BrowserContext[] = [];
@@ -261,7 +298,9 @@ test('four isolated players complete seven nights to the same outcome', async ({
     }
 
     for (const day of [2, 3, 4, 5, 6, 7]) {
-      for (const page of pages) await expect(page.getByText(`Day ${day}`)).toBeVisible({ timeout: 15_000 });
+      for (const page of pages) {
+        await expect(page.getByText(`Day ${day}`, { exact: true })).toBeVisible({ timeout: 15_000 });
+      }
       if (day <= 4) {
         const scavenge = pages[0]!.getByRole('group', { name: 'Scavenge' });
         await scavenge.getByLabel('Food').fill('2');

@@ -55,7 +55,7 @@ export async function claimFirstFree(matchID: string, rawName: string): Promise<
   const name = normaliseName(rawName);
   const match = await lobbyClient.getMatch(GAME_NAME, matchID);
   const duplicate = match.players.some(
-    (player) => player.name?.trim().toLocaleLowerCase() === name.toLocaleLowerCase(),
+    (player) => player.name?.trim().toLowerCase() === name.toLowerCase(),
   );
   if (duplicate) throw new Error('That name is already in this game.');
   try {

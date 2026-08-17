@@ -2,7 +2,9 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Server } from 'boardgame.io/server';
 import serve from 'koa-static';
+import { GAME_NAME } from './constants';
 import { BlackoutGame } from './game/game';
+import { validateSeatCredentials } from './server/identity';
 import { LoggingInMemory } from './server/storage';
 
 const port = Number(process.env.PORT ?? 8080);
@@ -14,6 +16,36 @@ const origins = [
   'http://127.0.0.1:8080',
 ];
 const server = Server({ games: [BlackoutGame], db: new LoggingInMemory(), origins, apiOrigins: origins });
+
+server.router.post('/games/:name/:id/auth', async (ctx) => {
+  ctx.set('Cache-Control', 'no-store');
+  ctx.set('Vary', 'Authorization, X-Player-ID');
+
+  const authorization = ctx.get('Authorization');
+  const credentials = authorization.startsWith('Bearer ') ? authorization.slice('Bearer '.length) : undefined;
+  const gameName = ctx.params.name ?? '';
+  const matchID = ctx.params.id ?? '';
+  const status = await validateSeatCredentials({
+    auth: server.auth,
+    credentials,
+    db: server.db,
+    gameName,
+    matchID,
+    playerID: ctx.get('X-Player-ID'),
+  });
+
+  if (gameName !== GAME_NAME || status === 'NOT_FOUND') {
+    ctx.status = 404;
+    ctx.body = { error: 'Match not found' };
+    return;
+  }
+  if (status === 'INVALID') {
+    ctx.status = 401;
+    ctx.body = { error: 'Invalid seat credentials' };
+    return;
+  }
+  ctx.status = 204;
+});
 
 server.app.use(async (ctx, next) => {
   if (ctx.path === '/health') {

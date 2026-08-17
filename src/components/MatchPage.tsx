@@ -5,7 +5,7 @@ import type { Game } from 'boardgame.io';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GAME_NAME, PLAYER_COUNT } from '../constants';
 import { BlackoutGame } from '../game/game';
-import { claimFirstFree, lobbyClient } from '../lobby/client';
+import { claimFirstFree, lobbyClient, validateIdentity } from '../lobby/client';
 import { localIdentity, type SeatIdentity } from '../lobby/identity';
 import type { PlayerViewState } from '../types';
 import { PlanningBoard } from './PlanningBoard';
@@ -15,6 +15,7 @@ type Match = LobbyAPI.Match;
 export function MatchPage({ matchID }: { matchID: string }) {
   const [match, setMatch] = useState<Match | null>(null);
   const [identity, setIdentity] = useState<SeatIdentity | null>(() => localIdentity.get(matchID));
+  const [identityValidated, setIdentityValidated] = useState(false);
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
@@ -27,25 +28,42 @@ export function MatchPage({ matchID }: { matchID: string }) {
         if (seat?.name !== stored.name) {
           localIdentity.clear(matchID);
           setIdentity(null);
+          setIdentityValidated(false);
         } else {
-          setIdentity(stored);
+          const validation = await validateIdentity(matchID, stored);
+          if (validation === 'VALID') {
+            setIdentity(stored);
+            setIdentityValidated(true);
+          } else {
+            localIdentity.clear(matchID);
+            setIdentity(null);
+            setIdentityValidated(false);
+            if (validation === 'NOT_FOUND') throw new Error('MATCH_NOT_FOUND');
+          }
         }
+      } else {
+        setIdentity(null);
+        setIdentityValidated(false);
       }
       setMatch(next);
       setError('');
     } catch {
+      setMatch(null);
       setError('This game does not exist or is no longer available.');
     }
   }, [matchID]);
 
+  const occupied = match?.players.filter((player) => player.name).length ?? 0;
+  const lobbyComplete = occupied === PLAYER_COUNT;
+
   useEffect(() => {
     void refresh();
+    if (lobbyComplete) return;
     const timer = window.setInterval(() => void refresh(), 1_000);
     return () => window.clearInterval(timer);
-  }, [refresh]);
+  }, [lobbyComplete, refresh]);
 
-  const occupied = match?.players.filter((player) => player.name).length ?? 0;
-  const readyForSocket = occupied === PLAYER_COUNT && identity;
+  const readyForSocket = lobbyComplete && identity && identityValidated;
   const GameClient = useMemo(() => Client({
     game: BlackoutGame as unknown as Game<PlayerViewState>,
     board: PlanningBoard,
@@ -75,6 +93,7 @@ export function MatchPage({ matchID }: { matchID: string }) {
     });
     localIdentity.clear(matchID);
     setIdentity(null);
+    setIdentityValidated(false);
     await refresh();
   }
 

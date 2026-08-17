@@ -22,6 +22,21 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await expect(first.getByText(/Waiting room/)).toBeVisible();
     const invite = await first.getByLabel('Invite link').inputValue();
     expect(invite).toContain(`${baseURL}/play/`);
+    const matchID = new URL(invite).pathname.split('/').at(-1)!;
+    const storedIdentity = await first.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID);
+    const seat = JSON.parse(storedIdentity!) as { playerID: string; credentials: string };
+    const validAuth = await request.post(`/games/blackout/${matchID}/auth`, {
+      headers: { Authorization: `Bearer ${seat.credentials}`, 'X-Player-ID': seat.playerID },
+    });
+    expect(validAuth.status()).toBe(204);
+    expect(validAuth.headers()['cache-control']).toBe('no-store');
+    expect(await validAuth.body()).toHaveLength(0);
+    const invalidAuth = await request.post(`/games/blackout/${matchID}/auth`, {
+      headers: { Authorization: 'Bearer tampered-token', 'X-Player-ID': seat.playerID },
+    });
+    expect(invalidAuth.status()).toBe(401);
+    expect(invalidAuth.headers()['cache-control']).toBe('no-store');
+    expect(await invalidAuth.text()).not.toContain('tampered-token');
 
     for (let index = 1; index < 4; index += 1) {
       const page = pages[index]!;
@@ -44,6 +59,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       for (let index = 0; index < needed; index += 1) await checkboxes.nth(index).check();
       await rolePanel.getByRole('button', { name: 'Save methods' }).click();
       await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Mobile data');
+      await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Food available');
     }
 
     await pages[0]!.getByLabel('Fallback protocol').fill('If isolated, reach SCHOOL after Day 7.');
@@ -64,10 +80,14 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       await expect(page.getByText('Move', { exact: true })).toBeVisible();
       await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
       await expect(page.getByLabel('Village map')).toBeVisible();
+      await expect(page.getByTestId(`player-public-${playerIndex}`)).toContainText('Mobile data');
+      await expect(page.getByTestId(`player-public-${playerIndex}`)).toContainText(/Food (available|unavailable)/);
+      const privateInventory = await page.getByTestId('private-inventory').textContent();
       await page.reload();
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Connected')).toBeVisible();
       await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
+      await expect(page.getByTestId('private-inventory')).toHaveText(privateInventory!);
     }
 
     for (const [playerIndex, page] of pages.entries()) {
@@ -88,6 +108,86 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.getByRole('button', { name: 'Send', exact: true }).click();
     await expect(pages[0]!.getByRole('status')).toHaveText('Sent');
     await expect(pages[1]!.getByText('MEET AT SCHOOL')).toBeVisible({ timeout: 15_000 });
+
+    await pages[0]!.evaluate((id) => {
+      const key = `pace.identity.${id}`;
+      const identity = JSON.parse(localStorage.getItem(key)!) as { credentials: string };
+      identity.credentials = 'tampered-token';
+      localStorage.setItem(key, JSON.stringify(identity));
+    }, matchID);
+    await pages[0]!.reload();
+    await expect(pages[0]!.getByRole('alert')).toHaveText('This game is already in progress. Spectator access is not available.');
+    await expect(pages[0]!.getByText('Day 1')).toHaveCount(0);
+    await expect.poll(() => pages[0]!.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID)).toBeNull();
+  } finally {
+    await Promise.all(contexts.map((context) => context.close()));
+  }
+});
+
+test('invalid pregame identity clears and may claim a free seat', async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  try {
+    await page.goto('/');
+    await page.getByLabel('Your name').fill('Original Player');
+    await page.getByRole('button', { name: 'Create game' }).click();
+    await expect(page).toHaveURL(/\/play\/[A-Za-z0-9_-]+/);
+    const matchID = new URL(page.url()).pathname.split('/').at(-1)!;
+    await page.evaluate((id) => {
+      const key = `pace.identity.${id}`;
+      const identity = JSON.parse(localStorage.getItem(key)!) as { credentials: string };
+      identity.credentials = 'tampered-token';
+      localStorage.setItem(key, JSON.stringify(identity));
+    }, matchID);
+
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Join first free seat' })).toBeVisible();
+    await expect.poll(() => page.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID)).toBeNull();
+    await page.getByLabel('Your name').fill('Replacement Player');
+    await page.getByRole('button', { name: 'Join first free seat' }).click();
+    await expect(page.getByText('Waiting room · 2/4 seats')).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
+test('simultaneous last-seat claims refetch the authoritative full room', async ({ browser }) => {
+  const contexts: BrowserContext[] = [];
+  const pages: Page[] = [];
+  try {
+    for (let index = 0; index < 5; index += 1) {
+      const context = await browser.newContext();
+      contexts.push(context);
+      pages.push(await context.newPage());
+    }
+
+    await pages[0]!.goto('/');
+    await pages[0]!.getByLabel('Your name').fill('Host');
+    await pages[0]!.getByRole('button', { name: 'Create game' }).click();
+    const invite = await pages[0]!.getByLabel('Invite link').inputValue();
+    for (let index = 1; index < 3; index += 1) {
+      await pages[index]!.goto(invite);
+      await pages[index]!.getByLabel('Your name').fill(`Joined ${index}`);
+      await pages[index]!.getByRole('button', { name: 'Join first free seat' }).click();
+      await expect(pages[index]!.getByText(`Waiting room · ${index + 1}/4 seats`)).toBeVisible();
+    }
+    for (let index = 3; index < 5; index += 1) {
+      await pages[index]!.goto(invite);
+      await pages[index]!.getByLabel('Your name').fill(`Contender ${index}`);
+    }
+
+    await Promise.all([
+      pages[3]!.getByRole('button', { name: 'Join first free seat' }).click(),
+      pages[4]!.getByRole('button', { name: 'Join first free seat' }).click(),
+    ]);
+    await expect.poll(async () => {
+      const planning = await Promise.all(pages.slice(3).map((page) => page.getByText('Day 0 · Planning').isVisible().catch(() => false)));
+      return planning.filter(Boolean).length;
+    }).toBe(1);
+    await expect.poll(async () => {
+      const rejected = await Promise.all(pages.slice(3).map((page) => page.getByText('This game is already in progress. Spectator access is not available.').isVisible().catch(() => false)));
+      return rejected.filter(Boolean).length;
+    }).toBe(1);
   } finally {
     await Promise.all(contexts.map((context) => context.close()));
   }

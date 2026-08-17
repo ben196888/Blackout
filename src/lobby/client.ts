@@ -5,6 +5,26 @@ import type { SeatIdentity } from './identity';
 
 export const lobbyClient = new LobbyClient({ server: '' });
 
+export type IdentityValidation = 'VALID' | 'INVALID' | 'NOT_FOUND';
+
+export async function validateIdentity(matchID: string, seat: SeatIdentity): Promise<IdentityValidation> {
+  const response = await fetch(
+    `/games/${encodeURIComponent(GAME_NAME)}/${encodeURIComponent(matchID)}/auth`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${seat.credentials}`,
+        'X-Player-ID': seat.playerID,
+      },
+      cache: 'no-store',
+    },
+  );
+  if (response.status === 204) return 'VALID';
+  if (response.status === 401 || response.status === 403) return 'INVALID';
+  if (response.status === 404) return 'NOT_FOUND';
+  throw new Error('Could not verify the saved seat.');
+}
+
 export function normaliseName(raw: string): string {
   const name = raw.trim();
   const visibleLength = Array.from(name).length;

@@ -11,6 +11,9 @@ describe('playerView secrecy boundary', () => {
     truth.players['1'].location = 'MTNRD';
     truth.players['1'].inbox.push({ day: 1, from: 'SYSTEM', method: 'RADIO', text: 'SECRET_TEXT' });
     truth.players['1'].alive = false;
+    truth.players['1'].bulletinNotebook = [{
+      id: 'VO:1', board: 'VO', day: 4, author: 'SYSTEM', text: 'Official rendezvous: TEA', official: true,
+    }];
     truth.caches.MTNRD = { food: 23, battery: 29 };
 
     const view = playerView({ G: truth, playerID: '0' });
@@ -23,6 +26,7 @@ describe('playerView secrecy boundary', () => {
     const serialized = JSON.stringify(view);
     expect(serialized).not.toContain('MTNRD');
     expect(serialized).not.toContain('SECRET_TEXT');
+    expect(serialized).not.toContain('Official rendezvous');
     expect(serialized).not.toContain('"food":17');
     expect(serialized).not.toContain('"alive":false');
     expect(serialized).not.toContain('"food":23');

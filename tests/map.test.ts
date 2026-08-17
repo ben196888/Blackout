@@ -5,6 +5,7 @@ import {
   MAP_EDGES,
   MAP_NODES,
   NODE_IDS,
+  RENDEZVOUS_CENTRE_NODES,
   connectedComponents,
   distancesFrom,
   eccentricity,
@@ -20,6 +21,9 @@ describe('resolved 16-node map', () => {
     expect(NODE_IDS.filter((node) => eccentricity(node) <= 6).sort()).toEqual([
       'BRIDGE_N', 'BRIDGE_S', 'COOP', 'FIELD', 'FORD', 'MTNRD', 'SCHOOL', 'SHRINE', 'TEA', 'VO',
     ]);
+    expect([...RENDEZVOUS_CENTRE_NODES].sort()).toEqual(
+      NODE_IDS.filter((node) => eccentricity(node) <= 6).sort(),
+    );
   });
 
   it('splits into the pinned two 8-node halves and preserves supply asymmetry', () => {

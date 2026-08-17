@@ -2,6 +2,7 @@ import type { MoveFn } from 'boardgame.io';
 import { ACTIONS_PER_DAY } from '../constants';
 import type { Inventory, NodeId, PlayerID, TruthState } from '../types';
 import { requireRule } from './errors';
+import { readCurrentBulletin } from './facilities';
 import { MAP_EDGES, MAP_NODES, edgeKey, getEdge, validatePath } from './map';
 
 const PLAYER_IDS: PlayerID[] = ['0', '1', '2', '3'];
@@ -101,7 +102,10 @@ export const movePlayer: MoveFn<TruthState> = ({ G, playerID }, path: NodeId[]) 
   cancelRoadProposalsFor(G, playerID as PlayerID);
   if (validated.cost > 0) player.actionsLeft -= 1;
   rememberArrival(G, playerID as PlayerID, validated.entered);
-  player.location = validated.entered.at(-1)!;
+  for (const node of validated.entered) {
+    player.location = node;
+    if (MAP_NODES[node].bulletin) readCurrentBulletin(G, playerID as PlayerID);
+  }
   refreshPositionKnowledge(G);
 };
 

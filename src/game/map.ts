@@ -24,6 +24,12 @@ export const NODE_IDS: NodeId[] = [
   'POND', 'SHRINE', 'QUARRY', 'FOREST', 'BRIDGE_N', 'BRIDGE_S', 'MTNRD', 'FORD',
 ];
 
+/** Resolved eccentricity <= 6 set used for the Day 4 rendezvous draw. */
+export const RENDEZVOUS_CENTRE_NODES: NodeId[] = [
+  'BRIDGE_N', 'BRIDGE_S', 'COOP', 'FIELD', 'FORD',
+  'MTNRD', 'SCHOOL', 'SHRINE', 'TEA', 'VO',
+];
+
 export const MAP_NODES: Record<NodeId, NodeSpec> = {
   VO: { id: 'VO', label: 'Village Office', region: 'CORE', open: false, landline: true, bulletin: true, cache: { food: 0, battery: 2 } },
   TEMPLE: { id: 'TEMPLE', label: 'Temple', region: 'CORE', open: true, cache: { food: 3, battery: 0 } },

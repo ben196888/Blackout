@@ -60,6 +60,8 @@ select { border: 1px solid var(--line); border-radius: 5px; background: #0d120f;
 .over-cap { color: var(--signal); margin: 0; }
 .sent-status { color: var(--fresh); font-weight: 700; }
 .resource-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: .75rem 0; }
-.inbox article { border-top: 1px solid var(--line); margin-top: .75rem; padding-top: .75rem; }
-.inbox small { color: var(--stale); }
+.intelligence article { border-top: 1px solid var(--line); margin-top: .75rem; padding-top: .75rem; }
+.intelligence small { color: var(--stale); }
+.private-control { border: 1px dashed var(--line); border-radius: 6px; padding: .75rem; }
+.facilities-panel { display: grid; gap: .75rem; }
 .public-status { display: grid; gap: .3rem; border-top: 1px solid var(--line); padding-top: .75rem; }

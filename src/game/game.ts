@@ -13,6 +13,8 @@ import {
 } from './actions';
 import { exchange, sendMessage, senderMethodStatus } from './comms';
 import { requireRule, withErrorBoundary } from './errors';
+import { leaderBroadcast, postBulletin, resolveNightRadio, setRadioListen } from './facilities';
+import { RENDEZVOUS_CENTRE_NODES } from './map';
 import { createInitialState } from './setup';
 
 const ids: PlayerID[] = ['0', '1', '2', '3'];
@@ -154,10 +156,18 @@ export const BlackoutGame: Game<TruthState> = {
       moves: {
         sendMessage: { move: withErrorBoundary(sendMessage), client: false, redact: true },
         exchange: { move: withErrorBoundary(exchange), client: false, redact: true },
+        setRadioListen: { move: withErrorBoundary(setRadioListen), client: false },
+        postBulletin: { move: withErrorBoundary(postBulletin), client: false, redact: true },
+        leaderBroadcast: { move: withErrorBoundary(leaderBroadcast), client: false, redact: true },
         ready: { move: withErrorBoundary(readyContact), client: false },
       },
       endIf: ({ G }) => livingReady(G),
-      onEnd: ({ G }) => {
+      onEnd: ({ G, random }) => {
+        if (G.day === 4) {
+          const candidates = RENDEZVOUS_CENTRE_NODES.filter((node) => node !== G.rendezvous);
+          G.rendezvous = random.Shuffle(candidates)[0]!;
+        }
+        resolveNightRadio(G);
         resolveNightEconomy(G);
         G.day += 1;
         for (const id of ids) G.players[id].ready = false;

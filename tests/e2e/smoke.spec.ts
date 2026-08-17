@@ -78,6 +78,10 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       else await expect(page.getByTestId(`player-state-${playerIndex}`)).toContainText('Ready');
     }
     for (const page of pages) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
+    for (const page of pages) await expect(page.getByText('Local facilities')).toBeVisible();
+    const radioListen = pages[0]!.getByLabel(/Listen to the nightly radio/);
+    await radioListen.click();
+    await expect(radioListen).toBeChecked();
 
     await pages[0]!.getByLabel('Method').selectOption('SMS');
     await pages[0]!.getByLabel('Message').fill('MEET AT SCHOOL');

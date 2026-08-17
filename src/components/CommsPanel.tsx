@@ -60,11 +60,6 @@ export function CommsPanel({ G, moves, playerID }: Props) {
         <button onClick={() => moves.exchange!(giftTarget, gift)}>Give immediately</button>
       </details>
 
-      <div className="inbox">
-        <h3>Private inbox</h3>
-        {you.inbox.length === 0 && <p>No messages yet.</p>}
-        {you.inbox.map((message, index) => <article key={`${message.day}-${index}`}><small>Day {message.day} · {message.method} · from {message.from === 'SYSTEM' ? 'System' : `Seat ${Number(message.from) + 1}`}</small><p>{message.text}</p></article>)}
-      </div>
     </section>
   );
 }

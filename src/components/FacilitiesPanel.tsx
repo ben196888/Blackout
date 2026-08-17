@@ -1,0 +1,45 @@
+import type { BoardProps } from 'boardgame.io/react';
+import { useState } from 'react';
+import { MAP_NODES } from '../game/map';
+import type { BulletinBoardId, PlayerViewState } from '../types';
+
+type Props = Pick<BoardProps<PlayerViewState>, 'G' | 'moves' | 'playerID'>;
+
+const BOARD_IDS: BulletinBoardId[] = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
+
+export function FacilitiesPanel({ G, moves, playerID }: Props) {
+  const you = G.you!;
+  const [post, setPost] = useState('');
+  const [broadcast, setBroadcast] = useState('');
+  const atBoard = BOARD_IDS.includes(you.location as BulletinBoardId);
+  const canPost = atBoard && you.methods.includes('BULLETIN');
+  const canBroadcast = you.character === 'VILLAGE_LEADER' && you.location === 'VO';
+  const ready = G.publicPlayers[playerID as keyof typeof G.publicPlayers].ready;
+
+  return (
+    <section className="panel facilities-panel">
+      <p className="eyebrow">Local facilities</p>
+      <label className="check private-control">
+        <input
+          checked={you.radioListen}
+          disabled={ready}
+          onChange={(event) => moves.setRadioListen!(event.target.checked)}
+          type="checkbox"
+        />
+        <span>Listen to the nightly radio (private · costs 1 Battery at night)</span>
+      </label>
+
+      {atBoard && <p>You are at the {MAP_NODES[you.location].label} bulletin board.</p>}
+      {canPost && <>
+        <label>Append a local notice<textarea aria-label="Bulletin notice" value={post} onChange={(event) => setPost(event.target.value)} /></label>
+        <button disabled={!post.trim()} onClick={() => { moves.postBulletin!(post); setPost(''); }}>Post to this board</button>
+      </>}
+
+      {canBroadcast && <>
+        <label>Village Office broadcast<textarea aria-label="Village broadcast" maxLength={60} value={broadcast} onChange={(event) => setBroadcast(event.target.value)} /></label>
+        <p className="counter">{Array.from(broadcast).length} / 60 characters · one-way, no delivery feedback</p>
+        <button disabled={!broadcast} onClick={() => { moves.leaderBroadcast!(broadcast); setBroadcast(''); }}>Broadcast</button>
+      </>}
+    </section>
+  );
+}

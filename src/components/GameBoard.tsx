@@ -4,6 +4,7 @@ import { CHARACTER_LABELS } from '../constants';
 import { MAP_EDGES, MAP_NODES, NODE_IDS, distancesFrom, edgeKey, shortestPath } from '../game/map';
 import type { Inventory, NodeId, PlayerID, PlayerViewState } from '../types';
 import { CommsPanel } from './CommsPanel';
+import { FacilitiesPanel } from './FacilitiesPanel';
 
 const POSITIONS: Record<NodeId, [number, number]> = {
   STORE: [90, 80], TEMPLE: [210, 55], VO: [330, 80], BRIDGE_N: [450, 110],
@@ -97,7 +98,20 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             {Object.entries(you.knowledge.caches).map(([node, memory]) => <p key={node}><strong>{node}</strong> Food {memory!.value.food}, Battery {memory!.value.battery} <span className="as-of">as of Day {memory!.asOfDay}</span></p>)}
           </section>
 
-          {ctx.phase === 'contact' && you.alive && <><CommsPanel G={G} moves={moves} playerID={playerID} /><section className="panel"><button className="primary" onClick={() => moves.ready!()}>Ready for night</button></section></>}
+          <section className="panel intelligence">
+            <p className="eyebrow">Private intelligence</p>
+            {you.rendezvousKnowledge
+              ? <p><strong>Current rendezvous: {MAP_NODES[you.rendezvousKnowledge.location].label}</strong><span className="as-of">learned on Day {you.rendezvousKnowledge.learnedDay} by {you.rendezvousKnowledge.source.toLowerCase()}</span></p>
+              : <p>The true current rendezvous is unknown.</p>}
+            <h3>Bulletin notebook</h3>
+            {!you.bulletinNotebook?.length && <p>No bulletin posts read yet.</p>}
+            {you.bulletinNotebook?.map((post) => <article key={post.id}><small>{MAP_NODES[post.board].label} · Day {post.day} · {post.author === 'SYSTEM' ? 'Official' : `Seat ${Number(post.author) + 1}`}</small><p>{post.text}</p></article>)}
+            <h3>Private inbox</h3>
+            {you.inbox.length === 0 && <p>No messages yet.</p>}
+            {you.inbox.map((message, index) => <article key={`${message.day}-${index}`}><small>Day {message.day} · {message.method} · from {message.from === 'SYSTEM' ? 'System' : `Seat ${Number(message.from) + 1}`}</small><p>{message.text}</p></article>)}
+          </section>
+
+          {ctx.phase === 'contact' && you.alive && <><CommsPanel G={G} moves={moves} playerID={playerID} /><FacilitiesPanel G={G} moves={moves} playerID={playerID} /><section className="panel"><button className="primary" onClick={() => moves.ready!()}>Ready for night</button></section></>}
           {!you.alive && <section className="panel"><p>You can no longer act or speak.</p></section>}
         </aside>
       </div>

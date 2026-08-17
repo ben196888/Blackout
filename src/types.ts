@@ -4,6 +4,7 @@ export type PlayerID = '0' | '1' | '2' | '3';
 export type CharacterId = (typeof CHARACTER_IDS)[number];
 export type MethodId = (typeof METHOD_IDS)[number];
 export type DeliveryMethodId = MethodId | 'FACE_TO_FACE';
+export type FacilityMethodId = 'RADIO' | 'VILLAGE_BROADCAST';
 export type NodeId =
   | (typeof STARTING_NODES)[number]
   | 'TEMPLE'
@@ -46,6 +47,10 @@ export interface PlayerTruth {
   actionsLeft: number;
   ready: boolean;
   radioListen: boolean;
+  /** Durable private copies of bulletin posts this player has read. */
+  bulletinNotebook?: BulletinPost[];
+  /** Private knowledge of the true rendezvous, if learned in play. */
+  rendezvousKnowledge?: RendezvousKnowledge;
   /** Lazily reset by the comms engine when the game day changes. */
   commsUsage?: DailyCommsUsage;
   /** The only remote-send outcome exposed back to the sender. */
@@ -62,7 +67,7 @@ export interface DailyCommsUsage {
 export interface MessageOutcome {
   day: number;
   sender: PlayerID;
-  method: DeliveryMethodId;
+  method: DeliveryMethodId | FacilityMethodId;
   target: PlayerID | NodeId | null;
   rawText: string;
   deliveredText: string;
@@ -73,6 +78,23 @@ export interface MessageOutcome {
     reason: 'DEAD' | 'METHOD_NOT_HELD' | 'NOT_CONNECTED';
   }>;
   truncated: boolean;
+}
+
+export type BulletinBoardId = (typeof STARTING_NODES)[number];
+
+export interface BulletinPost {
+  id: string;
+  board: BulletinBoardId;
+  day: number;
+  author: PlayerID | 'SYSTEM';
+  text: string;
+  official: boolean;
+}
+
+export interface RendezvousKnowledge {
+  location: NodeId;
+  learnedDay: number;
+  source: 'RADIO' | 'BULLETIN';
 }
 
 export interface Memory<T> {
@@ -103,6 +125,8 @@ export interface TruthState {
   commsPlan: CommsPlan;
   /** Server-authoritative delivery facts. Never included in PlayerViewState. */
   messageOutcomes?: MessageOutcome[];
+  /** Append-only boards at VO, SCHOOL, COOP and FOREST. */
+  bulletinBoards?: Record<BulletinBoardId, BulletinPost[]>;
 }
 
 export interface PublicPlayer {

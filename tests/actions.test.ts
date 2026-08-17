@@ -8,6 +8,7 @@ import {
   scavenge,
 } from '../src/game/actions';
 import { RuleError } from '../src/game/errors';
+import { appendBulletinPost } from '../src/game/facilities';
 import { BRIDGE_SPAN } from '../src/game/map';
 import { createInitialState } from '../src/game/setup';
 import type { PlayerID, TruthState } from '../src/types';
@@ -33,6 +34,17 @@ describe('movement, economy and fog', () => {
     G.severedEdges = [BRIDGE_SPAN];
     expect(() => movePlayer(context(G, '0'), ['BRIDGE_S'])).toThrowError(new RuleError('IMPASSABLE'));
     expect(G.players['0'].actionsLeft).toBe(2);
+  });
+
+  it('copies a board history when a living player enters its node', () => {
+    const G = createInitialState(random);
+    G.players['0'].methods.push('BULLETIN');
+    appendBulletinPost(G, '0', 'Office history');
+    G.players['1'].location = 'TEMPLE';
+
+    movePlayer(context(G, '1'), ['VO']);
+
+    expect(G.players['1'].bulletinNotebook?.map(({ text }) => text)).toEqual(['Office history']);
   });
 
   it('clamps a mixed scavenge by resource and still charges one action on partial success', () => {

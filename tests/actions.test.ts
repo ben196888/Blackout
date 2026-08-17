@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { BALANCE } from '../src/constants';
 import {
   cancelRoadProposalsFor,
   clearRoad,
@@ -81,6 +82,26 @@ describe('movement, economy and fog', () => {
     expect(G.players['0'].actionsLeft).toBe(1);
   });
 
+  it('depletes a contested cache in dispatch order and distinguishes an empty cache', () => {
+    const G = createInitialState(random);
+    const yieldValue = BALANCE.scavengeYield.DEFAULT;
+    for (const id of ['0', '1', '2'] as PlayerID[]) {
+      G.players[id].character = 'VILLAGE_LEADER';
+      G.players[id].location = 'CLINIC';
+      G.players[id].inventory = { food: 0, battery: 0 };
+    }
+    G.caches.CLINIC = { food: yieldValue + 1, battery: 0 };
+
+    scavenge(context(G, '0'), { food: yieldValue, battery: 0 });
+    scavenge(context(G, '1'), { food: yieldValue, battery: 0 });
+
+    expect(G.players['0'].inventory.food).toBe(yieldValue);
+    expect(G.players['1'].inventory.food).toBe(1);
+    expect(G.caches.CLINIC.food).toBe(0);
+    expect(() => scavenge(context(G, '2'), { food: 1, battery: 0 })).toThrow('CACHE_EMPTY');
+    expect(G.players['2'].actionsLeft).toBe(2);
+  });
+
   it('rejects zero quantity and full hands without charging', () => {
     const G = createInitialState(random);
     expect(() => scavenge(context(G, '0'), { food: 0, battery: 0 })).toThrowError('ZERO_QUANTITY');
@@ -137,5 +158,11 @@ describe('clear road and night economy', () => {
     resolveNightEconomy(G);
     expect(G.players['0'].inventory.food).toBe(2);
     expect(G.players['1'].inventory.food).toBe(1);
+  });
+
+  it('fails loudly if any inventory exceeds its shared capacity at night', () => {
+    const G = createInitialState(random);
+    G.players['0'].inventory = { food: 0, battery: G.players['0'].capacity + 1 };
+    expect(() => resolveNightEconomy(G)).toThrow('Inventory capacity invariant failed for player 0');
   });
 });

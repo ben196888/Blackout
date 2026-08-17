@@ -223,4 +223,9 @@ export function resolveNightEconomy(G: TruthState) {
       }
     }
   }
+  for (const [playerID, player] of Object.entries(G.players)) {
+    if (player.inventory.food + player.inventory.battery > player.capacity) {
+      throw new Error(`Inventory capacity invariant failed for player ${playerID}`);
+    }
+  }
 }

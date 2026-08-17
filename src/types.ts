@@ -4,7 +4,7 @@ export type PlayerID = '0' | '1' | '2' | '3';
 export type CharacterId = (typeof CHARACTER_IDS)[number];
 export type MethodId = (typeof METHOD_IDS)[number];
 export type DeliveryMethodId = MethodId | 'FACE_TO_FACE';
-export type FacilityMethodId = 'RADIO' | 'VILLAGE_BROADCAST';
+export type FacilityMethodId = 'RADIO' | 'VILLAGE_BROADCAST' | 'PLANNING';
 export type GameDay = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type NodeId =
   | (typeof STARTING_NODES)[number]
@@ -33,6 +33,12 @@ export interface CommsPlan {
   reportingShorthand: string;
   notes: string;
   locked: boolean;
+}
+
+export interface PlanningMessage {
+  id: number;
+  author: PlayerID;
+  text: string;
 }
 
 export interface PlayerTruth {
@@ -165,6 +171,7 @@ export interface TruthState {
   severedEdges: string[];
   clearRoadProposals: Record<string, ClearRoadProposal>;
   commsPlan: CommsPlan;
+  planningMessages: PlanningMessage[];
   /** Server-authoritative delivery facts. Never included in PlayerViewState. */
   messageOutcomes?: MessageOutcome[];
   /** Append-only boards at VO, SCHOOL, COOP and FOREST. */
@@ -191,6 +198,7 @@ export interface PlayerViewState {
   publicRendezvous: 'SCHOOL';
   publicPlayers: Record<PlayerID, PublicPlayer>;
   commsPlan: CommsPlan;
+  planningMessages: PlanningMessage[];
   severedEdges: string[];
   startingLocations: Record<PlayerID, NodeId>;
   localCache: Inventory | null;

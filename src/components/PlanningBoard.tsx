@@ -11,6 +11,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
   const you = G.you;
   const publicYou = playerID ? G.publicPlayers[playerID as PlayerID] : null;
   const [methods, setMethods] = useState<MethodId[]>(you?.methods ?? []);
+  const [discussion, setDiscussion] = useState('');
   const [plan, setPlan] = useState<CommsPlanInput>({
     expectedRevision: G.commsPlan.revision,
     fallbackProtocol: G.commsPlan.fallbackProtocol,
@@ -87,10 +88,28 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
           <button disabled={Boolean(publicYou?.ready)} onClick={() => moves.saveCommsPlan!(plan)}>Save shared plan</button>
         </section>
 
+        <section className="panel planning-discussion">
+          <p className="eyebrow">Public planning discussion</p>
+          <p>Coordinate method coverage here. Discussion is unrestricted on Day 0 and recorded for POC analysis.</p>
+          <div aria-label="Planning messages" className="planning-messages">
+            {G.planningMessages.length === 0 && <p>No messages yet.</p>}
+            {G.planningMessages.map((message) => (
+              <p key={message.id}><strong>Seat {Number(message.author) + 1}:</strong> {message.text}</p>
+            ))}
+          </div>
+          <label>Planning message<textarea disabled={Boolean(publicYou?.ready)} value={discussion} onChange={(event) => setDiscussion(event.target.value)} /></label>
+          <button
+            disabled={Boolean(publicYou?.ready) || !discussion.trim()}
+            onClick={() => { moves.sendPlanningMessage!(discussion); setDiscussion(''); }}
+          >
+            Send to everyone
+          </button>
+        </section>
+
         <section className="panel roster">
           <p className="eyebrow">Public roster</p>
           {Object.entries(G.publicPlayers).map(([id, player]) => (
-            <article key={id}>
+            <article data-testid={`planning-player-${id}`} key={id}>
               <strong>Seat {Number(id) + 1} · {CHARACTER_LABELS[player.character]}</strong>
               <span>{player.ready ? 'Ready' : 'Not ready'}</span>
               <small>{player.methods.length ? player.methods.map((method) => METHOD_LABELS[method]).join(', ') : 'Choosing methods'}</small>

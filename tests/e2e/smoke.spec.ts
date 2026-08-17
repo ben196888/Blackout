@@ -53,7 +53,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       await expect(page.getByText('Day 0 · Planning')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Connected')).toBeVisible();
       if (playerIndex > 0) {
-        await expect(page.getByText(`Seat ${playerIndex}`).locator('..')).toContainText('Mobile data');
+        await expect(page.getByTestId(`planning-player-${playerIndex - 1}`)).toContainText('Mobile data');
       }
       const rolePanel = page.getByText('Your role').locator('..');
       const isStudent = await rolePanel.getByRole('heading', { name: 'Student' }).isVisible().catch(() => false);
@@ -61,8 +61,16 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       const checkboxes = rolePanel.getByRole('checkbox');
       for (let index = 0; index < needed; index += 1) await checkboxes.nth(index).check();
       await rolePanel.getByRole('button', { name: 'Save methods' }).click();
-      await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Mobile data');
-      await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Food available');
+      await expect(page.getByTestId(`planning-player-${playerIndex}`)).toContainText('Mobile data');
+      await expect(page.getByTestId(`planning-player-${playerIndex}`)).toContainText('Food available');
+    }
+
+    await pages[0]!.getByRole('textbox', { name: 'Planning message', exact: true })
+      .fill('Who can cover walkie and mesh?');
+    await pages[0]!.getByRole('button', { name: 'Send to everyone' }).click();
+    for (const page of pages) {
+      await expect(page.getByLabel('Planning messages', { exact: true }))
+        .toContainText('Who can cover walkie and mesh?');
     }
 
     await pages[0]!.getByLabel('Fallback protocol').fill('If isolated, reach SCHOOL after Day 7.');
@@ -75,11 +83,11 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     }
     for (const [playerIndex, page] of pages.entries()) {
       if (playerIndex > 0) {
-        await expect(page.getByText(`Seat ${playerIndex}`).locator('..')).toContainText('Ready');
+        await expect(page.getByTestId(`planning-player-${playerIndex - 1}`)).toContainText('Ready');
       }
       await page.getByRole('button', { name: 'Ready — lock my choices' }).click();
       if (playerIndex === 3) await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
-      else await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Ready');
+      else await expect(page.getByTestId(`planning-player-${playerIndex}`)).toContainText('Ready');
     }
     const starts = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
     for (const [playerIndex, page] of pages.entries()) {
@@ -276,12 +284,12 @@ test('four isolated players complete seven nights to the same outcome', async ({
       const count = isStudent ? 5 : 4;
       for (let index = 0; index < count; index += 1) await rolePanel.getByRole('checkbox').nth(index).check();
       await rolePanel.getByRole('button', { name: 'Save methods' }).click();
-      await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Mobile data');
+      await expect(page.getByTestId(`planning-player-${playerIndex}`)).toContainText('Mobile data');
     }
     for (const [playerIndex, page] of pages.entries()) {
       await page.getByRole('button', { name: 'Ready — lock my choices' }).click();
       if (playerIndex < 3) {
-        await expect(pages[0]!.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Ready');
+        await expect(pages[0]!.getByTestId(`planning-player-${playerIndex}`)).toContainText('Ready');
       }
     }
     for (const page of pages) await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });

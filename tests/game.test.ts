@@ -9,6 +9,39 @@ import { createInitialState } from '../src/game/setup';
 import type { PlayerID, TruthState } from '../src/types';
 
 describe('planning phase', () => {
+  it('broadcasts and logs unrestricted public Day 0 discussion', async () => {
+    const multiplayer = Local();
+    const clients = ['0', '1', '2', '3'].map((playerID) => Client({
+      game: BlackoutGame,
+      multiplayer,
+      matchID: 'planning-discussion-test',
+      playerID,
+      numPlayers: 4,
+    }));
+    clients.forEach((client) => client.start());
+
+    clients[0]!.moves.sendPlanningMessage!('  Cover mesh?  ');
+    for (const client of clients) {
+      const view = client.getState()?.G as unknown as {
+        planningMessages: Array<{ author: string; text: string }>;
+      };
+      expect(view.planningMessages).toEqual([{ id: 1, author: '0', text: 'Cover mesh?' }]);
+    }
+    const log = clients[0]!.getState()?.log.at(-1)?.metadata as {
+      paceMessage?: { method: string; recipients: string[]; rawText: string };
+    };
+    expect(log.paceMessage).toEqual(expect.objectContaining({
+      method: 'PLANNING', recipients: ['1', '2', '3'], rawText: 'Cover mesh?',
+    }));
+    const owner = clients[0]!.getState()?.G as unknown as { you: { character: string } };
+    clients[0]!.moves.chooseMethods!(METHOD_IDS.slice(0, owner.you.character === 'STUDENT' ? 5 : 4));
+    clients[0]!.moves.ready!();
+    clients[0]!.moves.sendPlanningMessage!('Too late');
+    const locked = clients[0]!.getState()?.G as unknown as { planningMessages: unknown[] };
+    expect(locked.planningMessages).toHaveLength(1);
+    clients.forEach((client) => client.stop());
+  });
+
   it('locks valid method sets and advances four simultaneous players to Day 1 Move', async () => {
     const multiplayer = Local();
     const clients = ['0', '1', '2', '3'].map((playerID) => Client({

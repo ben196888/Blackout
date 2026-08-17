@@ -50,6 +50,29 @@ const saveCommsPlan: MoveFn<TruthState> = ({ G, playerID }, input: CommsPlanInpu
   };
 };
 
+const sendPlanningMessage: MoveFn<TruthState> = ({ G, playerID, log }, rawText: string) => {
+  const player = actor(G, playerID);
+  requireRule(!player.ready, 'READY_LOCKED');
+  requireRule(typeof rawText === 'string' && rawText.trim().length > 0, 'INVALID_MESSAGE');
+  const author = playerID as PlayerID;
+  const text = rawText.trim();
+  G.planningMessages.push({ id: G.planningMessages.length + 1, author, text });
+  const outcome = {
+    day: G.day,
+    sender: author,
+    method: 'PLANNING' as const,
+    target: null,
+    rawText: text,
+    deliveredText: text,
+    recipients: ids.filter((id) => id !== author),
+    dropped: [],
+    excluded: [],
+    truncated: false,
+  };
+  (G.messageOutcomes ??= []).push(outcome);
+  log.setMetadata({ paceMessage: structuredClone(outcome) });
+};
+
 const readyPlanning: MoveFn<TruthState> = ({ G, playerID }) => {
   const player = actor(G, playerID);
   requireRule(!player.ready, 'READY_LOCKED');
@@ -124,6 +147,7 @@ export function playerView({ G, ctx, playerID }: {
     publicRendezvous: 'SCHOOL',
     publicPlayers,
     commsPlan: structuredClone(G.commsPlan),
+    planningMessages: structuredClone(G.planningMessages),
     severedEdges: [...G.severedEdges],
     startingLocations: { '0': 'VO', '1': 'SCHOOL', '2': 'COOP', '3': 'FOREST' },
     localCache: you ? { ...G.caches[you.location] } : null,
@@ -151,6 +175,7 @@ export const BlackoutGame: Game<TruthState> = {
       moves: {
         chooseMethods: { move: withErrorBoundary(chooseMethods), client: false },
         saveCommsPlan: { move: withErrorBoundary(saveCommsPlan), client: false },
+        sendPlanningMessage: { move: withErrorBoundary(sendPlanningMessage), client: false, redact: true },
         ready: { move: withErrorBoundary(readyPlanning), client: false },
       },
       endIf: ({ G }) => ids.every((id) => G.players[id].ready),

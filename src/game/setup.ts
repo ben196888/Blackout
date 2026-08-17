@@ -86,5 +86,6 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
       notes: '',
       locked: false,
     },
+    planningMessages: [],
   };
 }

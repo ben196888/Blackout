@@ -37,6 +37,7 @@ Leave that command running for the complete trial. `trial-logs/` is ignored by G
 ## 4. Run the trial
 
 - Admit exactly four human players using the invite link.
+- Use the public in-app planning discussion for Day 0 method negotiation.
 - Let players negotiate and act without out-of-band gameplay communication.
 - Observe without supplying hidden information or strategy.
 - Ensure the match reaches a terminal loss or 1–3-star outcome.

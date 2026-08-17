@@ -5,6 +5,7 @@ export type CharacterId = (typeof CHARACTER_IDS)[number];
 export type MethodId = (typeof METHOD_IDS)[number];
 export type DeliveryMethodId = MethodId | 'FACE_TO_FACE';
 export type FacilityMethodId = 'RADIO' | 'VILLAGE_BROADCAST';
+export type GameDay = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type NodeId =
   | (typeof STARTING_NODES)[number]
   | 'TEMPLE'
@@ -97,6 +98,41 @@ export interface RendezvousKnowledge {
   source: 'RADIO' | 'BULLETIN';
 }
 
+export interface ScheduleProgress {
+  appliedDays: GameDay[];
+  rendezvousChanged: boolean;
+}
+
+export interface TerminalPlayerReveal {
+  character: CharacterId;
+  alive: boolean;
+  finalLocation: NodeId;
+  bodyLocation: NodeId | null;
+  inventory: Inventory;
+  starvationNights: number;
+  discoveries: {
+    knowledge: Knowledge;
+    rendezvousKnowledge: RendezvousKnowledge | null;
+    bulletinNotebook: BulletinPost[];
+  };
+}
+
+export interface StarCalculation {
+  survivorCount: number;
+  allPlayersSurvived: boolean;
+  allSurvivorsAtTrueRendezvous: boolean;
+  stars: 0 | 1 | 2 | 3;
+}
+
+export interface TerminalOutcome {
+  result: 'LOSS' | 'WIN';
+  reason: 'ALL_DEAD' | 'NIGHT_7_COMPLETE';
+  endedAfterNight: number;
+  trueRendezvous: NodeId;
+  calculation: StarCalculation;
+  players: Record<PlayerID, TerminalPlayerReveal>;
+}
+
 export interface Memory<T> {
   value: T;
   asOfDay: number;
@@ -127,6 +163,10 @@ export interface TruthState {
   messageOutcomes?: MessageOutcome[];
   /** Append-only boards at VO, SCHOOL, COOP and FOREST. */
   bulletinBoards?: Record<BulletinBoardId, BulletinPost[]>;
+  /** Idempotency markers for scheduled one-shot events. */
+  scheduleProgress?: ScheduleProgress;
+  /** Complete truth is populated only when play has ended. */
+  terminalOutcome?: TerminalOutcome;
 }
 
 export interface PublicPlayer {
@@ -147,6 +187,7 @@ export interface PlayerViewState {
   startingLocations: Record<PlayerID, NodeId>;
   localCache: Inventory | null;
   methodConnectivity: Partial<Record<MethodId, { available: boolean; reason?: string }>>;
+  terminalOutcome: TerminalOutcome | null;
   you: PlayerTruth | null;
 }
 

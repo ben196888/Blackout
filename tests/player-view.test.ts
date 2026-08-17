@@ -37,4 +37,17 @@ describe('playerView secrecy boundary', () => {
     const truth = createInitialState(random);
     expect(playerView({ G: truth, playerID: null }).you).toBeNull();
   });
+
+  it('masks dead action state and shadows readiness only at living quorum', () => {
+    const truth = createInitialState(random);
+    truth.players['3'].alive = false;
+    truth.players['3'].actionsLeft = 0;
+
+    const active = playerView({ G: truth, ctx: { phase: 'move' }, playerID: '0' });
+    expect(active.publicPlayers['3']).toMatchObject({ actionsLeft: 2, ready: false });
+
+    for (const id of ['0', '1', '2'] as const) truth.players[id].ready = true;
+    const transitioning = playerView({ G: truth, ctx: { phase: 'move' }, playerID: '0' });
+    expect(transitioning.publicPlayers['3']).toMatchObject({ actionsLeft: 2, ready: true });
+  });
 });

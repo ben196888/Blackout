@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CHARACTER_LABELS, METHOD_IDS, METHOD_LABELS } from '../constants';
 import type { CommsPlanInput, MethodId, PlayerID, PlayerViewState } from '../types';
 import { GameBoard } from './GameBoard';
+import { OutcomeBoard } from './OutcomeBoard';
 
 type PaceBoardProps = BoardProps<PlayerViewState>;
 
@@ -32,6 +33,8 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
       ? current.filter((candidate) => candidate !== method)
       : current.length < methodLimit ? [...current, method] : current);
   }
+
+  if (G.terminalOutcome) return <OutcomeBoard outcome={G.terminalOutcome} />;
 
   if (ctx.phase !== 'planning') {
     return <GameBoard G={G} ctx={ctx} moves={moves} playerID={playerID} isConnected={isConnected} />;

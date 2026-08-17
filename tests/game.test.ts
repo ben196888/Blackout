@@ -1,9 +1,12 @@
+import type { Game } from 'boardgame.io';
 import { Client } from 'boardgame.io/client';
 import { Local } from 'boardgame.io/multiplayer';
 import { describe, expect, it } from 'vitest';
 import { METHOD_IDS } from '../src/constants';
 import { BlackoutGame } from '../src/game/game';
-import { RENDEZVOUS_CENTRE_NODES } from '../src/game/map';
+import { BRIDGE_SPAN, DAY_2_EDGE, RENDEZVOUS_CENTRE_NODES } from '../src/game/map';
+import { createInitialState } from '../src/game/setup';
+import type { PlayerID, TruthState } from '../src/types';
 
 describe('planning phase', () => {
   it('locks valid method sets and advances four simultaneous players to Day 1 Move', async () => {
@@ -89,8 +92,8 @@ describe('planning phase', () => {
     clients[0]!.moves.move!(['TEMPLE']);
     clients[0]!.moves.move!(['STORE']);
     clients[0]!.moves.done!(true);
-    clients[1]!.moves.move!(['BRIDGE_S', 'BRIDGE_N']);
-    clients[1]!.moves.move!(['VO']);
+    clients[1]!.moves.scavenge!({ food: 2, battery: 0 });
+    clients[1]!.moves.scavenge!({ food: 2, battery: 0 });
     clients[1]!.moves.done!(true);
     clients[2]!.moves.done!(true);
     clients[3]!.moves.done!(true);
@@ -98,6 +101,11 @@ describe('planning phase', () => {
 
     for (const expectedDay of [2, 3]) {
       expect(clients[0]!.getState()?.G.day).toBe(expectedDay);
+      if (expectedDay === 2) clients[0]!.moves.scavenge!({ food: 2, battery: 0 });
+      if (expectedDay === 2) {
+        clients[1]!.moves.move!(['BRIDGE_S', 'BRIDGE_N']);
+        clients[1]!.moves.move!(['VO']);
+      }
       for (const client of clients) client.moves.done!(true);
       for (const client of clients) client.moves.ready!();
     }
@@ -132,5 +140,169 @@ describe('planning phase', () => {
     expect(unaware.rendezvousKnowledge).toBeUndefined();
     expect(unaware.bulletinNotebook).toBeUndefined();
     clients.forEach((client) => client.stop());
+  });
+
+  it('plays all seven nights and ends with a one-star terminal reveal', () => {
+    const multiplayer = Local();
+    const clients = ['0', '1', '2', '3'].map((playerID) => Client({
+      game: BlackoutGame,
+      multiplayer,
+      matchID: 'seven-night-game-test',
+      playerID,
+      numPlayers: 4,
+    }));
+    clients.forEach((client) => client.start());
+    for (const client of clients) {
+      const projected = client.getState()?.G as unknown as { you: { character: string } };
+      client.moves.chooseMethods!(METHOD_IDS.slice(0, projected.you.character === 'STUDENT' ? 5 : 4));
+      client.moves.ready!();
+    }
+
+    clients[0]!.moves.move!(['TEMPLE']);
+    clients[0]!.moves.move!(['STORE']);
+    for (const client of clients) client.moves.done!(true);
+    for (const client of clients) client.moves.ready!();
+
+    for (const day of [2, 3, 4, 5, 6, 7]) {
+      expect(clients[0]!.getState()?.G.day).toBe(day);
+      const publicState = clients[0]!.getState()?.G as unknown as {
+        publicPlayers: Record<string, { ready: boolean }>;
+        severedEdges: string[];
+      };
+      if (day >= 2) expect(publicState.severedEdges).toContain(DAY_2_EDGE);
+      if (day >= 3) expect(publicState.severedEdges).toContain(BRIDGE_SPAN);
+      if (day === 5) expect(publicState.publicPlayers['1']?.ready).toBe(false);
+      const survivor = clients[0]!;
+      while (true) {
+        const view = survivor.getState()?.G as unknown as {
+          localCache: { food: number };
+          you: { actionsLeft: number; capacity: number; inventory: { food: number; battery: number } };
+        };
+        const room = view.you.capacity - view.you.inventory.food - view.you.inventory.battery;
+        if (view.you.actionsLeft === 0 || room === 0 || view.localCache.food === 0) break;
+        survivor.moves.scavenge!({ food: Math.min(2, room, view.localCache.food), battery: 0 });
+      }
+      for (const client of clients) {
+        const view = client.getState()?.G as unknown as { you: { alive: boolean } };
+        if (view.you.alive) client.moves.done!(true);
+      }
+      expect(clients[0]!.getState()?.ctx.phase).toBe('contact');
+      for (const client of clients) {
+        const state = client.getState();
+        const view = state?.G as unknown as { you: { alive: boolean } };
+        if (!state?.ctx.gameover && view.you.alive) client.moves.ready!();
+      }
+    }
+
+    for (const client of clients) {
+      const state = client.getState();
+      const view = state?.G as unknown as {
+        day: number;
+        terminalOutcome: { calculation: { stars: number; survivorCount: number }; players: Record<string, unknown> };
+      };
+      expect(state?.ctx.gameover).toBeTruthy();
+      expect(view.day).toBe(7);
+      expect(view.terminalOutcome.calculation).toMatchObject({ stars: 1, survivorCount: 1 });
+      expect(Object.keys(view.terminalOutcome.players)).toHaveLength(4);
+    }
+    clients.forEach((client) => client.stop());
+  });
+});
+
+function scenarioGame(name: string, configure: (G: TruthState) => void): Game<TruthState> {
+  return {
+    ...BlackoutGame,
+    name,
+    setup: ({ random }) => {
+      const G = createInitialState(random);
+      configure(G);
+      return G;
+    },
+  };
+}
+
+function playEngineScenario(game: Game<TruthState>, matchID: string) {
+  const multiplayer = Local();
+  const clients = (['0', '1', '2', '3'] as PlayerID[]).map((playerID) => Client({
+    game,
+    multiplayer,
+    matchID,
+    playerID,
+    numPlayers: 4,
+  }));
+  clients.forEach((client) => client.start());
+  for (const client of clients) {
+    const view = client.getState()?.G as unknown as { you: { character: string } };
+    client.moves.chooseMethods!(METHOD_IDS.slice(0, view.you.character === 'STUDENT' ? 5 : 4));
+    client.moves.ready!();
+  }
+  for (let day = 1; day <= 7 && !clients[0]!.getState()?.ctx.gameover; day += 1) {
+    for (const client of clients) {
+      const view = client.getState()?.G as unknown as { you: { alive: boolean } };
+      if (view.you.alive) client.moves.done!(true);
+    }
+    for (const client of clients) {
+      const state = client.getState();
+      const view = state?.G as unknown as { you: { alive: boolean } };
+      if (!state?.ctx.gameover && view.you.alive) client.moves.ready!();
+    }
+  }
+  const outcomes = clients.map((client) => {
+    const state = client.getState();
+    expect(state?.ctx.gameover).toBeTruthy();
+    return (state?.G as unknown as { terminalOutcome: unknown }).terminalOutcome;
+  });
+  clients.forEach((client) => client.stop());
+  expect(outcomes.slice(1)).toEqual([outcomes[0], outcomes[0], outcomes[0]]);
+  return outcomes[0] as {
+    endedAfterNight: number;
+    result: string;
+    trueRendezvous: string;
+    calculation: { stars: number; survivorCount: number };
+  };
+}
+
+describe('boardgame.io terminal lifecycle', () => {
+  it('ends in immediate zero-star loss when Night 1 kills everyone', () => {
+    const game = scenarioGame('blackout-total-loss', (G) => {
+      for (const player of Object.values(G.players)) {
+        player.inventory = { food: 0, battery: 0 };
+        player.starvationNights = 1;
+      }
+    });
+    expect(playEngineScenario(game, 'engine-total-loss')).toMatchObject({
+      result: 'LOSS', endedAfterNight: 1,
+      calculation: { survivorCount: 0, stars: 0 },
+    });
+  });
+
+  it('scores two stars through the engine when all four survive apart', () => {
+    const game = scenarioGame('blackout-two-stars', (G) => {
+      G.rendezvous = 'TEA';
+      G.scheduleProgress = { appliedDays: [], rendezvousChanged: true };
+      for (const player of Object.values(G.players)) {
+        player.location = 'STORE';
+        player.inventory = { food: 7, battery: 0 };
+      }
+    });
+    expect(playEngineScenario(game, 'engine-two-stars')).toMatchObject({
+      endedAfterNight: 7, trueRendezvous: 'TEA',
+      calculation: { survivorCount: 4, stars: 2 },
+    });
+  });
+
+  it('scores three stars through the engine after every exposure night', () => {
+    const game = scenarioGame('blackout-three-stars', (G) => {
+      G.rendezvous = 'TEA';
+      G.scheduleProgress = { appliedDays: [], rendezvousChanged: true };
+      for (const player of Object.values(G.players)) {
+        player.location = 'TEA';
+        player.inventory = { food: 10, battery: 0 };
+      }
+    });
+    expect(playEngineScenario(game, 'engine-three-stars')).toMatchObject({
+      endedAfterNight: 7, trueRendezvous: 'TEA',
+      calculation: { survivorCount: 4, stars: 3 },
+    });
   });
 });

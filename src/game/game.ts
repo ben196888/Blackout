@@ -8,13 +8,12 @@ import {
   dropItems,
   finishMove,
   movePlayer,
-  resolveNightEconomy,
   scavenge,
 } from './actions';
 import { exchange, sendMessage, senderMethodStatus } from './comms';
 import { requireRule, withErrorBoundary } from './errors';
-import { leaderBroadcast, postBulletin, resolveNightRadio, setRadioListen } from './facilities';
-import { RENDEZVOUS_CENTRE_NODES } from './map';
+import { leaderBroadcast, postBulletin, setRadioListen } from './facilities';
+import { applyScheduledDay, resolveScheduledNight } from './schedule';
 import { createInitialState } from './setup';
 
 const ids: PlayerID[] = ['0', '1', '2', '3'];
@@ -66,7 +65,12 @@ function livingReady(G: TruthState) {
   return ids.every((id) => !G.players[id].alive || G.players[id].ready);
 }
 
-export function playerView({ G, playerID }: { G: TruthState; playerID?: string | null }): PlayerViewState {
+export function playerView({ G, ctx, playerID }: {
+  G: TruthState;
+  ctx?: { phase?: string | null };
+  playerID?: string | null;
+}): PlayerViewState {
+  const quorumComplete = livingReady(G);
   const publicPlayers = Object.fromEntries(
     ids.map((id) => {
       const player = G.players[id];
@@ -75,8 +79,10 @@ export function playerView({ G, playerID }: { G: TruthState; playerID?: string |
         methods: [...player.methods],
         hasFood: player.inventory.food > 0,
         hasBattery: player.inventory.battery > 0,
-        actionsLeft: player.actionsLeft,
-        ready: player.ready,
+        actionsLeft: player.alive
+          ? player.actionsLeft
+          : ctx?.phase === 'contact' ? 0 : ACTIONS_PER_DAY,
+        ready: player.ready || (!player.alive && quorumComplete),
       }];
     }),
   ) as PlayerViewState['publicPlayers'];
@@ -98,6 +104,7 @@ export function playerView({ G, playerID }: { G: TruthState; playerID?: string |
     startingLocations: { '0': 'VO', '1': 'SCHOOL', '2': 'COOP', '3': 'FOREST' },
     localCache: you ? { ...G.caches[you.location] } : null,
     methodConnectivity,
+    terminalOutcome: G.terminalOutcome ? structuredClone(G.terminalOutcome) : null,
     you,
   };
 }
@@ -109,6 +116,7 @@ export const BlackoutGame: Game<TruthState> = {
   disableUndo: true,
   setup: ({ random }) => createInitialState(random),
   playerView,
+  endIf: ({ G }) => G.terminalOutcome,
   phases: {
     planning: {
       start: true,
@@ -129,6 +137,7 @@ export const BlackoutGame: Game<TruthState> = {
     move: {
       next: 'contact',
       onBegin: ({ G }) => {
+        applyScheduledDay(G);
         for (const id of ids) {
           G.players[id].actionsLeft = G.players[id].alive ? ACTIONS_PER_DAY : 0;
           G.players[id].ready = false;
@@ -163,13 +172,8 @@ export const BlackoutGame: Game<TruthState> = {
       },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G, random }) => {
-        if (G.day === 4) {
-          const candidates = RENDEZVOUS_CENTRE_NODES.filter((node) => node !== G.rendezvous);
-          G.rendezvous = random.Shuffle(candidates)[0]!;
-        }
-        resolveNightRadio(G);
-        resolveNightEconomy(G);
-        G.day += 1;
+        const outcome = resolveScheduledNight(G, random);
+        if (!outcome) G.day += 1;
         for (const id of ids) G.players[id].ready = false;
       },
       turn: { activePlayers: ActivePlayers.ALL },

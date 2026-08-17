@@ -92,3 +92,76 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await Promise.all(contexts.map((context) => context.close()));
   }
 });
+
+test('four isolated players complete seven nights to the same outcome', async ({ browser }) => {
+  const contexts: BrowserContext[] = [];
+  const pages: Page[] = [];
+  try {
+    for (let index = 0; index < 4; index += 1) {
+      const context = await browser.newContext();
+      contexts.push(context);
+      const page = await context.newPage();
+      page.on('dialog', (dialog) => void dialog.accept());
+      pages.push(page);
+    }
+
+    await pages[0]!.goto('/');
+    await pages[0]!.getByLabel('Your name').fill('Survivor 1');
+    await pages[0]!.getByRole('button', { name: 'Create game' }).click();
+    await expect(pages[0]!).toHaveURL(/\/play\/[A-Za-z0-9_-]+/);
+    const invite = await pages[0]!.getByLabel('Invite link').inputValue();
+    for (let index = 1; index < 4; index += 1) {
+      const page = pages[index]!;
+      await page.goto(invite);
+      await page.getByLabel('Your name').fill(`Survivor ${index + 1}`);
+      await page.getByRole('button', { name: 'Join first free seat' }).click();
+    }
+
+    for (const page of pages) {
+      await expect(page.getByText('Day 0 · Planning')).toBeVisible({ timeout: 15_000 });
+      const rolePanel = page.getByText('Your role').locator('..');
+      const isStudent = await rolePanel.getByRole('heading', { name: 'Student' }).isVisible().catch(() => false);
+      const count = isStudent ? 5 : 4;
+      for (let index = 0; index < count; index += 1) await rolePanel.getByRole('checkbox').nth(index).check();
+      await rolePanel.getByRole('button', { name: 'Save methods' }).click();
+    }
+    for (const page of pages) await page.getByRole('button', { name: 'Ready — lock my choices' }).click();
+    for (const page of pages) await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
+
+    await pages[0]!.getByRole('button', { name: 'Temple' }).click();
+    await pages[0]!.getByRole('button', { name: 'Store' }).click();
+    for (const page of pages) await page.getByRole('button', { name: 'Done moving' }).click();
+    for (const page of pages) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
+    for (const page of pages) await page.getByRole('button', { name: 'Ready for night' }).click();
+
+    for (const day of [2, 3, 4, 5, 6, 7]) {
+      for (const page of pages) await expect(page.getByText(`Day ${day}`)).toBeVisible({ timeout: 15_000 });
+      if (day <= 4) {
+        const scavenge = pages[0]!.getByRole('group', { name: 'Scavenge' });
+        await scavenge.getByLabel('Food').fill('2');
+        await pages[0]!.getByRole('button', { name: 'Take items' }).click();
+      }
+
+      for (const page of pages) {
+        const done = page.getByRole('button', { name: 'Done moving' });
+        if (await done.isVisible().catch(() => false)) await done.click();
+      }
+      for (const page of pages) {
+        await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
+      }
+      for (const page of pages) {
+        const ready = page.getByRole('button', { name: 'Ready for night' });
+        if (await ready.isVisible().catch(() => false)) await ready.click();
+      }
+    }
+
+    for (const page of pages) {
+      await expect(page.getByRole('heading', { name: '1 star' })).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText('1 of 4 survived.')).toBeVisible();
+      await expect(page.getByText(/complete truth revealed/)).toBeVisible();
+      await expect(page.getByRole('button', { name: /rematch|play again/i })).toHaveCount(0);
+    }
+  } finally {
+    await Promise.all(contexts.map((context) => context.close()));
+  }
+});

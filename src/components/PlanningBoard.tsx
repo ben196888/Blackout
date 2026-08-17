@@ -89,6 +89,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
               <strong>Seat {Number(id) + 1} · {CHARACTER_LABELS[player.character]}</strong>
               <span>{player.ready ? 'Ready' : 'Not ready'}</span>
               <small>{player.methods.length ? player.methods.map((method) => METHOD_LABELS[method]).join(', ') : 'Choosing methods'}</small>
+              <small>{player.hasFood ? 'Food available' : 'Food unavailable'} · {player.hasBattery ? 'Battery available' : 'Battery unavailable'} · {player.actionsLeft} actions</small>
             </article>
           ))}
           <button

@@ -1,6 +1,6 @@
 import type { BoardProps } from 'boardgame.io/react';
 import { useMemo, useState } from 'react';
-import { CHARACTER_LABELS } from '../constants';
+import { CHARACTER_LABELS, METHOD_LABELS } from '../constants';
 import { MAP_EDGES, MAP_NODES, NODE_IDS, distancesFrom, edgeKey, shortestPath } from '../game/map';
 import type { Inventory, NodeId, PlayerID, PlayerViewState } from '../types';
 import { CommsPanel } from './CommsPanel';
@@ -71,14 +71,20 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
 
         <aside className="side-stack">
           <section className="panel">
-            <p className="eyebrow">You</p>
+            <p className="eyebrow">Your private current status</p>
             <h2>{CHARACTER_LABELS[you.character]}</h2>
             <p><strong data-testid="current-location">{you.location}</strong> · {you.alive ? 'Alive' : 'Dead'}</p>
-            <p>Food {you.inventory.food} · Battery {you.inventory.battery} · Load {you.inventory.food + you.inventory.battery}/{you.capacity}</p>
+            <p data-testid="private-inventory">Food {you.inventory.food} · Battery {you.inventory.battery} · Load {you.inventory.food + you.inventory.battery}/{you.capacity}</p>
             <p>Actions {publicYou.actionsLeft}</p>
-            <p>Local cache: Food {G.localCache?.food ?? 0} · Battery {G.localCache?.battery ?? 0}</p>
+            <p>Current local cache: Food {G.localCache?.food ?? 0} · Battery {G.localCache?.battery ?? 0}</p>
+            <h3>Public roster</h3>
+            <p className="information-key">Methods, resource availability, actions and readiness are public. Exact counts and locations are private.</p>
             <div className="public-status">
-              {Object.entries(G.publicPlayers).map(([id, player]) => <small data-testid={`player-state-${id}`} key={id}>Seat {Number(id) + 1}: {player.ready ? 'Ready' : 'Not ready'} · {player.actionsLeft} actions</small>)}
+              {Object.entries(G.publicPlayers).map(([id, player]) => <article data-testid={`player-public-${id}`} key={id}>
+                <strong>Seat {Number(id) + 1} · {CHARACTER_LABELS[player.character]}</strong>
+                <span>{player.methods.map((method) => METHOD_LABELS[method]).join(', ')}</span>
+                <small data-testid={`player-state-${id}`}>{player.hasFood ? 'Food available' : 'Food unavailable'} · {player.hasBattery ? 'Battery available' : 'Battery unavailable'} · {player.actionsLeft} actions · {player.ready ? 'Ready' : 'Not ready'}</small>
+              </article>)}
             </div>
           </section>
 
@@ -105,10 +111,13 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
               : <p>The true current rendezvous is unknown.</p>}
             <h3>Bulletin notebook</h3>
             {!you.bulletinNotebook?.length && <p>No bulletin posts read yet.</p>}
-            {you.bulletinNotebook?.map((post) => <article key={post.id}><small>{MAP_NODES[post.board].label} · Day {post.day} · {post.author === 'SYSTEM' ? 'Official' : `Seat ${Number(post.author) + 1}`}</small><p>{post.text}</p></article>)}
+            {you.bulletinNotebook?.map((post) => <article key={post.id}><strong>{MAP_NODES[post.board].label} · {post.author === 'SYSTEM' ? 'Official' : `Seat ${Number(post.author) + 1}`}</strong><span className="as-of">posted on Day {post.day}</span><p>{post.text}</p></article>)}
+            <h3>Bodies discovered</h3>
+            {Object.entries(you.knowledge.bodies).length === 0 && <p>None.</p>}
+            {Object.entries(you.knowledge.bodies).map(([id, memory]) => <article key={id}><p>Seat {Number(id) + 1} at {MAP_NODES[memory!.value].label}<span className="as-of">discovered on Day {memory!.asOfDay}</span></p></article>)}
             <h3>Private inbox</h3>
             {you.inbox.length === 0 && <p>No messages yet.</p>}
-            {you.inbox.map((message, index) => <article key={`${message.day}-${index}`}><small>Day {message.day} · {message.method} · from {message.from === 'SYSTEM' ? 'System' : `Seat ${Number(message.from) + 1}`}</small><p>{message.text}</p></article>)}
+            {you.inbox.map((message, index) => <article key={`${message.day}-${index}`}><strong>{message.method} · from {message.from === 'SYSTEM' ? 'System' : `Seat ${Number(message.from) + 1}`}</strong><span className="as-of">received on Day {message.day}</span><p>{message.text}</p></article>)}
           </section>
 
           {ctx.phase === 'contact' && you.alive && <><CommsPanel G={G} moves={moves} playerID={playerID} /><FacilitiesPanel G={G} moves={moves} playerID={playerID} /><section className="panel"><button className="primary" onClick={() => moves.ready!()}>Ready for night</button></section></>}

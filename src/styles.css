@@ -32,6 +32,7 @@ h2 { margin-top: .3rem; }
 .error { color: var(--danger); }
 .game-shell { padding: 1.25rem; }
 .statusbar { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--line); padding: .75rem 0 1.25rem; color: var(--ink-muted); }
+.phase-completion { border: 1px solid var(--fresh); border-radius: 6px; color: var(--fresh); margin: 1rem 0 0; padding: .65rem 1rem; text-align: center; }
 .planning-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
 .method-list { display: grid; gap: .55rem; margin: 1rem 0; }
 .check { grid-template-columns: auto 1fr; align-items: center; }

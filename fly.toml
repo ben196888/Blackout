@@ -4,6 +4,7 @@ primary_region = "sin"
 [build]
 
 [env]
+  APP_VERSION = "0.1.0"
   PORT = "8080"
 
 [http_service]

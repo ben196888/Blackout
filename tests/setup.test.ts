@@ -50,10 +50,23 @@ describe('initial state', () => {
     expect(Object.values(BALANCE.payloadCap).every((cap) => Number.isInteger(cap) && cap >= 0)).toBe(true);
     expect(Object.values(BALANCE.scavengeYield).every((yieldValue) =>
       Number.isInteger(yieldValue) && yieldValue > 0)).toBe(true);
+    expect(BALANCE.scavengeYield.DEFAULT).toBeLessThanOrEqual(BALANCE.capacity.DEFAULT);
+    expect(BALANCE.scavengeYield.OFFICE_WORKER).toBeLessThanOrEqual(BALANCE.capacity.OFFICE_WORKER);
     expect(BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY).toBeGreaterThan(0);
     expect(BALANCE.communicationPrice.WALKIE_SENDS_PER_BATTERY).toBeGreaterThan(0);
     expect(BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE).toBeGreaterThanOrEqual(0);
     expect(BALANCE.communicationPrice.RADIO_NIGHTLY).toBeGreaterThanOrEqual(0);
     expect(BALANCE.communicationPrice.DAY_5_MULTIPLIER).toBeGreaterThanOrEqual(1);
+  });
+
+  it('keeps conservative total Food supply above seven-night base demand', () => {
+    const mapFood = Object.values(BALANCE.mapSupply)
+      .reduce((total, inventory) => total + inventory.food, 0);
+    const minimumStart = Math.min(
+      BALANCE.startingInventory.DEFAULT.food,
+      BALANCE.startingInventory.OFFICE_WORKER.food,
+      BALANCE.startingInventory.STORE_OWNER.food,
+    );
+    expect(mapFood + minimumStart * 4).toBeGreaterThan(4 * 7);
   });
 });

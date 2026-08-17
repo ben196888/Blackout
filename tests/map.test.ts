@@ -46,6 +46,11 @@ describe('resolved 16-node map', () => {
     expect(supplies(south)).toEqual(tunedSupplies(south));
   });
 
+  it('reconnects the graph when either scheduled cut is cleared', () => {
+    expect(connectedComponents([BRIDGE_SPAN])).toHaveLength(1);
+    expect(connectedComponents([DAY_2_EDGE])).toHaveLength(1);
+  });
+
   it('has bulletin boards only at the four resolved locations', () => {
     expect(NODE_IDS.filter((node) => MAP_NODES[node].bulletin)).toEqual(['VO', 'SCHOOL', 'COOP', 'FOREST']);
   });

@@ -16,6 +16,8 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
 
     const first = pages[0]!;
     await first.goto('/');
+    await expect(first.getByLabel('Playtest notice')).toContainText('fictional disaster');
+    await expect(first.getByLabel('Playtest notice')).toContainText('message text');
     await first.getByLabel('Your name').fill('Player 1');
     await first.getByRole('button', { name: 'Create game' }).click();
     await expect(first).toHaveURL(/\/play\/[A-Za-z0-9_-]+/);
@@ -41,6 +43,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     for (let index = 1; index < 4; index += 1) {
       const page = pages[index]!;
       await page.goto(invite);
+      await expect(page.getByLabel('Playtest notice')).toContainText('authoritative delivery outcomes');
       await page.getByLabel('Your name').fill(`Player ${index + 1}`);
       await page.getByRole('button', { name: 'Join first free seat' }).click();
       await expect(page.getByText(/Waiting room|Day 0/)).toBeVisible();

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createAndClaim } from '../lobby/client';
 import { localIdentity } from '../lobby/identity';
+import { TrialNotice } from './TrialNotice';
 
 export function Home() {
   const [name, setName] = useState('');
@@ -28,6 +29,7 @@ export function Home() {
         <p>
           Seven days. Broken connections. One shared plan—and private fragments of the truth.
         </p>
+        <TrialNotice />
         <label>
           Your name
           <input

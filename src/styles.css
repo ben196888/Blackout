@@ -26,6 +26,8 @@ h2 { margin-top: .3rem; }
 .home { display: grid; min-height: 100vh; place-items: center; padding: 2rem; }
 .panel { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); padding: 1.4rem; }
 .hero, .lobby { width: min(38rem, 100%); display: grid; gap: 1rem; }
+.trial-notice { border-left: 4px solid var(--signal); background: #131a16; padding: .7rem 1rem; }
+.trial-notice p { margin: .35rem 0; }
 .eyebrow { color: var(--signal); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
 .error { color: var(--danger); }
 .game-shell { padding: 1.25rem; }

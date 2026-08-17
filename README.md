@@ -18,6 +18,8 @@ pnpm smoke
 
 The mandatory browser smoke uses four isolated browser contexts. It covers the thin Lobby REST flow, socket connection, Day 0 planning, credential-preserving refresh, the complete seven-night schedule, and the shared terminal outcome. Every main-branch release runs the same smoke locally, deploys the tested commit, then repeats it against Fly.
 
+Four-human sessions must follow the private-log capture and verification checklist in [the trial runbook](docs/trial-runbook.md).
+
 ## Runtime limits
 
 - boardgame.io is intentionally pinned to 0.50.2. It has not published a newer release since November 2022.

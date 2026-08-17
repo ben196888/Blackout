@@ -199,6 +199,18 @@ describe('planning phase', () => {
         if (view.you.alive) client.moves.done!(true);
       }
       expect(clients[0]!.getState()?.ctx.phase).toBe('contact');
+      if (day === 5) {
+        const boundary = clients[0]!.getState()?.G as unknown as {
+          publicPlayers: Record<string, { ready: boolean }>;
+          lastPhaseCompletion: { day: number; phase: string; ready: Record<string, boolean> };
+        };
+        expect(boundary.publicPlayers['1']?.ready).toBe(false);
+        expect(boundary.lastPhaseCompletion).toEqual({
+          day: 5,
+          phase: 'move',
+          ready: { '0': true, '1': true, '2': true, '3': true },
+        });
+      }
       for (const client of clients) {
         const state = client.getState();
         const view = state?.G as unknown as { you: { alive: boolean } };

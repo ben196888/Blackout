@@ -78,6 +78,17 @@ function livingReady(G: TruthState) {
   return ids.every((id) => !G.players[id].alive || G.players[id].ready);
 }
 
+function recordPhaseCompletion(
+  G: TruthState,
+  phase: 'planning' | 'move' | 'contact',
+): void {
+  G.lastPhaseCompletion = {
+    day: G.day,
+    phase,
+    ready: { '0': true, '1': true, '2': true, '3': true },
+  };
+}
+
 export function playerView({ G, ctx, playerID }: {
   G: TruthState;
   ctx?: { phase?: string | null };
@@ -118,6 +129,9 @@ export function playerView({ G, ctx, playerID }: {
     localCache: you ? { ...G.caches[you.location] } : null,
     methodConnectivity,
     terminalOutcome: G.terminalOutcome ? structuredClone(G.terminalOutcome) : null,
+    lastPhaseCompletion: G.lastPhaseCompletion
+      ? structuredClone(G.lastPhaseCompletion)
+      : null,
     you,
   };
 }
@@ -141,6 +155,7 @@ export const BlackoutGame: Game<TruthState> = {
       },
       endIf: ({ G }) => ids.every((id) => G.players[id].ready),
       onEnd: ({ G }) => {
+        recordPhaseCompletion(G, 'planning');
         G.commsPlan.locked = true;
         G.day = 1;
         for (const id of ids) G.players[id].ready = false;
@@ -165,6 +180,7 @@ export const BlackoutGame: Game<TruthState> = {
       },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
+        recordPhaseCompletion(G, 'move');
         cancelAllRoadProposals(G);
         for (const id of ids) G.players[id].ready = false;
       },
@@ -185,6 +201,7 @@ export const BlackoutGame: Game<TruthState> = {
       },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
+        recordPhaseCompletion(G, 'contact');
         for (const id of ids) G.players[id].ready = false;
       },
       turn: { activePlayers: ActivePlayers.ALL },

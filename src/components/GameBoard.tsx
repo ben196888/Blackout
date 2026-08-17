@@ -38,6 +38,11 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
         <span>{ctx.phase === 'move' ? 'Move' : 'Contact'}</span>
         <span>{isConnected ? 'Connected' : 'Reconnecting…'}</span>
       </header>
+      {G.lastPhaseCompletion && (
+        <p className="phase-completion" data-testid="phase-completion">
+          Day {G.lastPhaseCompletion.day} {G.lastPhaseCompletion.phase} complete · all four seats Ready
+        </p>
+      )}
       <div className="board-grid">
         <section className="panel map-panel">
           <p className="eyebrow">Your map · exact only where observed</p>

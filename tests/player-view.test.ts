@@ -50,4 +50,22 @@ describe('playerView secrecy boundary', () => {
     const transitioning = playerView({ G: truth, ctx: { phase: 'move' }, playerID: '0' });
     expect(transitioning.publicPlayers['3']).toMatchObject({ actionsLeft: 2, ready: true });
   });
+
+  it('projects an explicit all-seat Ready snapshot after a phase boundary', () => {
+    const truth = createInitialState(random);
+    truth.players['3'].alive = false;
+    truth.lastPhaseCompletion = {
+      day: 4,
+      phase: 'move',
+      ready: { '0': true, '1': true, '2': true, '3': true },
+    };
+
+    const view = playerView({ G: truth, ctx: { phase: 'contact' }, playerID: '0' });
+    expect(view.publicPlayers['3'].ready).toBe(false);
+    expect(view.lastPhaseCompletion).toEqual({
+      day: 4,
+      phase: 'move',
+      ready: { '0': true, '1': true, '2': true, '3': true },
+    });
+  });
 });

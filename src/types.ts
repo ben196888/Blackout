@@ -151,6 +151,12 @@ export interface ClearRoadProposal {
   contributors: PlayerID[];
 }
 
+export interface PhaseCompletion {
+  day: number;
+  phase: 'planning' | 'move' | 'contact';
+  ready: Record<PlayerID, true>;
+}
+
 export interface TruthState {
   day: number;
   rendezvous: NodeId;
@@ -167,6 +173,8 @@ export interface TruthState {
   scheduleProgress?: ScheduleProgress;
   /** Complete truth is populated only when play has ended. */
   terminalOutcome?: TerminalOutcome;
+  /** Public atomic boundary snapshot, including shadow readiness for dead seats. */
+  lastPhaseCompletion?: PhaseCompletion;
 }
 
 export interface PublicPlayer {
@@ -188,6 +196,7 @@ export interface PlayerViewState {
   localCache: Inventory | null;
   methodConnectivity: Partial<Record<MethodId, { available: boolean; reason?: string }>>;
   terminalOutcome: TerminalOutcome | null;
+  lastPhaseCompletion: PhaseCompletion | null;
   you: PlayerTruth | null;
 }
 

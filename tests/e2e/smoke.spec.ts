@@ -128,7 +128,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.getByLabel('Method').selectOption('SMS');
     await pages[0]!.getByLabel('Message').fill('MEET AT SCHOOL');
     await pages[0]!.getByRole('button', { name: 'Send', exact: true }).click();
-    await expect(pages[0]!.getByRole('status')).toHaveText('Sent');
+    await expect(pages[0]!.getByRole('status')).toHaveText('Sent. Delivery is unknown.');
     await expect(pages[1]!.getByText('MEET AT SCHOOL')).toBeVisible({ timeout: 15_000 });
 
     await pages[0]!.evaluate((id) => {

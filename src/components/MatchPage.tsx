@@ -9,6 +9,7 @@ import { claimFirstFree, lobbyClient, validateIdentity } from '../lobby/client';
 import { localIdentity, type SeatIdentity } from '../lobby/identity';
 import type { PlayerViewState } from '../types';
 import { PlanningBoard } from './PlanningBoard';
+import { SettingPremise } from './SettingPremise';
 import { TrialNotice } from './TrialNotice';
 
 type Match = LobbyAPI.Match;
@@ -111,6 +112,7 @@ export function MatchPage({ matchID }: { matchID: string }) {
       <section className="panel lobby">
         <p className="eyebrow">Waiting room · {occupied}/4 seats</p>
         <h1>Gather your group</h1>
+        <SettingPremise />
         <TrialNotice />
         <label>Invite link<input aria-label="Invite link" readOnly value={invite} /></label>
         <button onClick={() => void navigator.clipboard.writeText(invite)}>Copy invite link</button>

@@ -2,6 +2,7 @@ import type { BoardProps } from 'boardgame.io/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CHARACTER_LABELS, METHOD_IDS, METHOD_LABELS } from '../constants';
 import type { CommsPlanInput, MethodId, PlayerID, PlayerViewState } from '../types';
+import { CharacterAbility } from './CharacterAbility';
 import { GameBoard } from './GameBoard';
 import { OutcomeBoard } from './OutcomeBoard';
 
@@ -57,6 +58,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
         <section className="panel">
           <p className="eyebrow">Your role</p>
           <h2>{you ? CHARACTER_LABELS[you.character] : 'Joining…'}</h2>
+          {you && <CharacterAbility character={you.character} />}
           <p>Choose exactly {methodLimit} communication methods. Everyone can see the choice.</p>
           <div className="method-list">
             {METHOD_IDS.map((method) => (
@@ -110,7 +112,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
           <p className="eyebrow">Public roster</p>
           {Object.entries(G.publicPlayers).map(([id, player]) => (
             <article data-testid={`planning-player-${id}`} key={id}>
-              <strong>Seat {Number(id) + 1} · {CHARACTER_LABELS[player.character]}</strong>
+              <strong>Seat {Number(id) + 1}{id === playerID ? ' (you)' : ''} · {CHARACTER_LABELS[player.character]}</strong>
               <span>{player.ready ? 'Ready' : 'Not ready'}</span>
               <small>{player.methods.length ? player.methods.map((method) => METHOD_LABELS[method]).join(', ') : 'Choosing methods'}</small>
               <small>{player.hasFood ? 'Food available' : 'Food unavailable'} · {player.hasBattery ? 'Battery available' : 'Battery unavailable'} · {player.actionsLeft} actions</small>

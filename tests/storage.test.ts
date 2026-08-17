@@ -100,4 +100,44 @@ describe('message logging storage', () => {
         expect.objectContaining({ match: 'match-night', sender: 'SYSTEM', method: 'BULLETIN', rawText: 'board' }),
       ]);
   });
+
+  it('emits private radio-choice analysis separately from actual messages', () => {
+    const write = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const storage = new LoggingInMemory();
+    const state = { G: {}, ctx: {} } as State;
+    const entry = {
+      phase: 'contact',
+      metadata: {
+        paceRadioChoices: [
+          {
+            day: 3, player: '0', outcome: 'LISTEN_SUCCESS',
+            reason: 'NO_NEW_BROADCAST', batteryBefore: 2, batteryCharged: 1,
+          },
+          {
+            day: 3, player: '1', outcome: 'LISTEN_FAILURE',
+            reason: 'INSUFFICIENT_BATTERY', batteryBefore: 0, batteryCharged: 0,
+          },
+          {
+            day: 3, player: '2', outcome: 'SKIP',
+            reason: 'NOT_SELECTED', batteryBefore: 3, batteryCharged: 0,
+          },
+        ],
+      },
+    } as unknown as LogEntry;
+
+    storage.setState('match-radio', state, [entry]);
+
+    expect(write).toHaveBeenCalledTimes(3);
+    const events = write.mock.calls.map(([line]) => JSON.parse(String(line)) as Record<string, unknown>);
+    expect(events).toEqual([
+      expect.objectContaining({
+        event: 'pace.radio-choice.v1', match: 'match-radio', gameDay: 3,
+        player: '0', outcome: 'LISTEN_SUCCESS', reason: 'NO_NEW_BROADCAST',
+        batteryBefore: 2, batteryCharged: 1,
+      }),
+      expect.objectContaining({ event: 'pace.radio-choice.v1', player: '1', outcome: 'LISTEN_FAILURE' }),
+      expect.objectContaining({ event: 'pace.radio-choice.v1', player: '2', outcome: 'SKIP' }),
+    ]);
+    expect(JSON.stringify(events)).not.toContain('rawText');
+  });
 });

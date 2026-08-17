@@ -99,7 +99,7 @@ describe('planning phase', () => {
 
     const sender = clients[0]?.getState()?.G as unknown as { you: { lastSend?: unknown }; messageOutcomes?: unknown };
     const recipient = clients[1]?.getState()?.G as unknown as { you: { inbox: Array<{ text: string }> } };
-    expect(sender.you.lastSend).toEqual({ day: 1, state: 'sent' });
+    expect(sender.you.lastSend).toMatchObject({ day: 1, state: 'sent' });
     expect(sender.messageOutcomes).toBeUndefined();
     expect(recipient.you.inbox.at(-1)?.text).toBe('MEET AT SCHOOL');
     clients[0]?.moves.ready!();
@@ -185,6 +185,74 @@ describe('planning phase', () => {
       expect.objectContaining({ sender: 'SYSTEM', method: 'RADIO' }),
       expect.objectContaining({ sender: 'SYSTEM', method: 'BULLETIN' }),
     ]));
+    clients.forEach((client) => client.stop());
+  });
+
+  it('reads a persistent bulletin through the reducer on entry and re-entry', () => {
+    const multiplayer = Local();
+    const clients = ['0', '1', '2', '3'].map((playerID) => Client({
+      game: BlackoutGame,
+      multiplayer,
+      matchID: 'bulletin-reentry-reducer-test',
+      playerID,
+      numPlayers: 4,
+    }));
+    clients.forEach((client) => client.start());
+    clients.forEach((client, index) => {
+      const projected = client.getState()?.G as unknown as { you: { character: string } };
+      const count = projected.you.character === 'STUDENT' ? 5 : 4;
+      const methods = index === 0
+        ? [...METHOD_IDS.slice(0, count - 1), 'BULLETIN']
+        : METHOD_IDS.slice(0, count);
+      client.moves.chooseMethods!(methods);
+      client.moves.ready!();
+    });
+
+    for (const client of clients) client.moves.done!(true);
+    clients[0]!.moves.postBulletin!('Persistent office notice');
+    clients[0]!.moves.setRadioListen!(true);
+    for (const client of clients) client.moves.ready!();
+
+    expect(clients[0]!.getState()?.G.day).toBe(2);
+    const afterNightOne = clients[0]!.getState();
+    expect((afterNightOne?.G as unknown as {
+      lastPhaseCompletion: { day: number; phase: string };
+      you: { inbox: Array<{ text: string }> };
+    }).lastPhaseCompletion).toMatchObject({ day: 1, phase: 'contact' });
+    expect((afterNightOne?.G as unknown as { you: { inbox: Array<{ text: string }> } })
+      .you.inbox.at(-1)?.text).toBe('The radio carried nothing new tonight.');
+    const radioLog = afterNightOne?.log.find((entry) =>
+      Boolean((entry.metadata as { paceRadioChoices?: unknown } | undefined)?.paceRadioChoices));
+    expect((radioLog?.metadata as { paceRadioChoices: Array<{ outcome: string }> })
+      .paceRadioChoices).toEqual([
+        expect.objectContaining({ player: '0', outcome: 'LISTEN_SUCCESS', batteryBefore: 3 }),
+        expect.objectContaining({ player: '1', outcome: 'SKIP', batteryBefore: expect.any(Number) }),
+        expect.objectContaining({ player: '2', outcome: 'SKIP', batteryBefore: expect.any(Number) }),
+        expect.objectContaining({ player: '3', outcome: 'SKIP', batteryBefore: expect.any(Number) }),
+      ]);
+    clients[1]!.moves.move!(['BRIDGE_S', 'BRIDGE_N']);
+    clients[1]!.moves.move!(['VO']);
+    const firstVisit = clients[1]!.getState()?.G as unknown as {
+      you: { bulletinNotebook?: Array<{ text: string }>; location: string };
+      radioChoiceEvidence?: unknown;
+    };
+    expect(firstVisit.you.location).toBe('VO');
+    expect(firstVisit.you.bulletinNotebook?.map(({ text }) => text))
+      .toEqual(['Persistent office notice']);
+    expect(firstVisit.radioChoiceEvidence).toBeUndefined();
+
+    for (const client of clients) client.moves.done!(true);
+    for (const client of clients) client.moves.ready!();
+    expect(clients[0]!.getState()?.G.day).toBe(3);
+
+    clients[1]!.moves.move!(['TEMPLE']);
+    clients[1]!.moves.move!(['VO']);
+    const secondVisit = clients[1]!.getState()?.G as unknown as {
+      you: { bulletinNotebook?: Array<{ text: string }>; location: string };
+    };
+    expect(secondVisit.you.location).toBe('VO');
+    expect(secondVisit.you.bulletinNotebook?.map(({ text }) => text))
+      .toEqual(['Persistent office notice']);
     clients.forEach((client) => client.stop());
   });
 

@@ -1,9 +1,10 @@
 import type { LogEntry, Server as ServerTypes, State, StorageAPI } from 'boardgame.io';
-import type { MessageOutcome } from '../types';
+import type { MessageOutcome, RadioChoiceEvidence } from '../types';
 
 interface PaceLogMetadata {
   paceMessage?: MessageOutcome;
   paceMessages?: MessageOutcome[];
+  paceRadioChoices?: RadioChoiceEvidence[];
 }
 
 class MetadataConflictError extends Error {
@@ -78,6 +79,20 @@ export class LoggingInMemory implements StorageAPI.Sync {
             dropped: outcome.dropped,
             excluded: outcome.excluded,
             truncated: outcome.truncated,
+          }));
+        }
+        for (const choice of metadata?.paceRadioChoices ?? []) {
+          console.log(JSON.stringify({
+            event: 'pace.radio-choice.v1',
+            match: matchID,
+            serverTime: new Date().toISOString(),
+            gameDay: choice.day,
+            phase: entry.phase,
+            player: choice.player,
+            outcome: choice.outcome,
+            reason: choice.reason,
+            batteryBefore: choice.batteryBefore,
+            batteryCharged: choice.batteryCharged,
           }));
         }
       }

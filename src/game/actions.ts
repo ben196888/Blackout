@@ -72,7 +72,7 @@ export function refreshPositionKnowledge(G: TruthState) {
         };
         continue;
       }
-      if (observer.location === 'SHRINE' && MAP_NODES[target.location].open) {
+      if (MAP_NODES[observer.location].highGround && MAP_NODES[target.location].open) {
         observer.knowledge.positions[targetID] = {
           value: target.location,
           asOfDay: G.day,
@@ -191,14 +191,14 @@ export const finishMove: MoveFn<TruthState> = ({ G, playerID }, confirmUnused = 
   player.actionsLeft = 0;
 };
 
-export function resolveNightEconomy(G: TruthState) {
+export function resolveNightEconomy(G: TruthState, exposureNight = false) {
   const livingAtStart = PLAYER_IDS.filter((id) => G.players[id].alive);
   const newlyDead: PlayerID[] = [];
   for (const playerID of livingAtStart) {
     const player = G.players[playerID];
     const sharesNode = livingAtStart.some((otherID) =>
       otherID !== playerID && G.players[otherID].location === player.location);
-    const exposure = [2, 3, 5].includes(G.day) && MAP_NODES[player.location].open ? 1 : 0;
+    const exposure = exposureNight && MAP_NODES[player.location].open ? 1 : 0;
     const nurseDiscount = player.character === 'NURSE' && sharesNode ? 1 : 0;
     const consumption = Math.max(0, 1 + exposure - nurseDiscount);
     player.inventory.food = Math.max(0, player.inventory.food - consumption);

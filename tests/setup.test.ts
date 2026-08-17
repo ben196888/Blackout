@@ -33,6 +33,18 @@ describe('initial state', () => {
     }
   });
 
+  it('records every other player\'s public Day 0 starting position', () => {
+    const state = createInitialState(deterministicRandom);
+    for (const [playerID, player] of Object.entries(state.players)) {
+      expect(Object.keys(player.knowledge.positions).sort())
+        .toEqual(['0', '1', '2', '3'].filter((id) => id !== playerID));
+      for (const known of Object.values(player.knowledge.positions)) {
+        expect(known.asOfDay).toBe(0);
+        expect(known.source).toBe('setup');
+      }
+    }
+  });
+
   it('routes every M7 balance category through the constants tuning surface', () => {
     expect(MAP_NODES.STORE.cache).toEqual(BALANCE.mapSupply.STORE);
     expect(METHOD_SPECS.SMS.payloadCap).toBe(BALANCE.payloadCap.SMS);

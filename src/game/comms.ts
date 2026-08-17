@@ -324,8 +324,12 @@ export function deliver(
   };
   (G.messageOutcomes ??= []).push(outcome);
 
-  if (request.method === 'FACE_TO_FACE') return { state: 'delivered', recipients: [...recipients] };
-  sender.lastSend = { day: G.day, state: 'sent' };
+  const sequence = (sender.lastSend?.sequence ?? 0) + 1;
+  if (request.method === 'FACE_TO_FACE') {
+    sender.lastSend = { sequence, day: G.day, state: 'delivered', recipientCount: recipients.length };
+    return { state: 'delivered', recipients: [...recipients] };
+  }
+  sender.lastSend = { sequence, day: G.day, state: 'sent' };
   return { state: 'sent' };
 }
 

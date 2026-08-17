@@ -247,7 +247,8 @@ export function resolveScheduledNight(
   G: TruthState,
   random: ShuffleRandom,
 ): TerminalOutcome | undefined {
-  resolveNightEconomy(G);
+  const schedule = SEVEN_DAY_SCHEDULE.find((entry) => entry.day === G.day);
+  resolveNightEconomy(G, schedule?.exposureNight ?? false);
   changeRendezvousForDayFour(G, random);
   resolveNightRadio(G);
   refreshPositionKnowledge(G);

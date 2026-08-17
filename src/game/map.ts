@@ -32,22 +32,22 @@ export const RENDEZVOUS_CENTRE_NODES: NodeId[] = [
 ];
 
 export const MAP_NODES: Record<NodeId, NodeSpec> = {
-  VO: { id: 'VO', label: 'Village Office', region: 'CORE', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.VO } },
-  TEMPLE: { id: 'TEMPLE', label: 'Temple', region: 'CORE', open: true, cache: { ...BALANCE.mapSupply.TEMPLE } },
-  STORE: { id: 'STORE', label: 'Store', region: 'CORE', open: false, cache: { ...BALANCE.mapSupply.STORE } },
-  SCHOOL: { id: 'SCHOOL', label: 'School', region: 'SCHOOL', open: true, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.SCHOOL } },
-  CLINIC: { id: 'CLINIC', label: 'Clinic', region: 'SCHOOL', open: false, landline: true, cache: { ...BALANCE.mapSupply.CLINIC } },
-  FIELD: { id: 'FIELD', label: 'Field', region: 'SCHOOL', open: true, cache: { ...BALANCE.mapSupply.FIELD } },
-  COOP: { id: 'COOP', label: 'Co-op', region: 'FARM', open: false, bulletin: true, cache: { ...BALANCE.mapSupply.COOP } },
-  TEA: { id: 'TEA', label: 'Tea fields', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.TEA } },
-  POND: { id: 'POND', label: 'Pond', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.POND } },
-  SHRINE: { id: 'SHRINE', label: 'Shrine', region: 'MOUNTAIN', open: true, highGround: true, cache: { ...BALANCE.mapSupply.SHRINE } },
-  QUARRY: { id: 'QUARRY', label: 'Quarry', region: 'MOUNTAIN', open: true, cache: { ...BALANCE.mapSupply.QUARRY } },
-  FOREST: { id: 'FOREST', label: 'Forest Station', region: 'MOUNTAIN', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.FOREST } },
-  BRIDGE_N: { id: 'BRIDGE_N', label: 'Bridge North', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_N } },
-  BRIDGE_S: { id: 'BRIDGE_S', label: 'Bridge South', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_S } },
-  MTNRD: { id: 'MTNRD', label: 'Mountain Road', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.MTNRD } },
-  FORD: { id: 'FORD', label: 'Ford', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.FORD } },
+  VO: { id: 'VO', label: 'Village Office 村辦公處', region: 'CORE', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.VO } },
+  TEMPLE: { id: 'TEMPLE', label: 'Temple Square 廟口', region: 'CORE', open: true, cache: { ...BALANCE.mapSupply.TEMPLE } },
+  STORE: { id: 'STORE', label: 'Store 柑仔店', region: 'CORE', open: false, cache: { ...BALANCE.mapSupply.STORE } },
+  SCHOOL: { id: 'SCHOOL', label: 'School 國小', region: 'SCHOOL', open: true, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.SCHOOL } },
+  CLINIC: { id: 'CLINIC', label: 'Clinic 衛生所', region: 'SCHOOL', open: false, landline: true, cache: { ...BALANCE.mapSupply.CLINIC } },
+  FIELD: { id: 'FIELD', label: 'Playing Field 操場', region: 'SCHOOL', open: true, cache: { ...BALANCE.mapSupply.FIELD } },
+  COOP: { id: 'COOP', label: 'Co-op Warehouse 農會倉庫', region: 'FARM', open: false, bulletin: true, cache: { ...BALANCE.mapSupply.COOP } },
+  TEA: { id: 'TEA', label: 'Tea Terrace 茶園', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.TEA } },
+  POND: { id: 'POND', label: 'Irrigation Pond 灌溉池', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.POND } },
+  SHRINE: { id: 'SHRINE', label: 'Mountain Shrine 山神廟', region: 'MOUNTAIN', open: true, highGround: true, cache: { ...BALANCE.mapSupply.SHRINE } },
+  QUARRY: { id: 'QUARRY', label: 'Quarry 採石場', region: 'MOUNTAIN', open: true, cache: { ...BALANCE.mapSupply.QUARRY } },
+  FOREST: { id: 'FOREST', label: 'Forest Station 林務站', region: 'MOUNTAIN', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.FOREST } },
+  BRIDGE_N: { id: 'BRIDGE_N', label: 'Suspension Bridge North 吊橋北端', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_N } },
+  BRIDGE_S: { id: 'BRIDGE_S', label: 'Suspension Bridge South 吊橋南端', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_S } },
+  MTNRD: { id: 'MTNRD', label: 'Mountain Road 山路', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.MTNRD } },
+  FORD: { id: 'FORD', label: 'River Ford 溪流淺灘', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.FORD } },
 };
 
 export const MAP_EDGES: EdgeSpec[] = [

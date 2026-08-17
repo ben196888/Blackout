@@ -54,4 +54,9 @@ describe('resolved 16-node map', () => {
   it('has bulletin boards only at the four resolved locations', () => {
     expect(NODE_IDS.filter((node) => MAP_NODES[node].bulletin)).toEqual(['VO', 'SCHOOL', 'COOP', 'FOREST']);
   });
+
+  it('keeps the high-ground rule data-driven and shows bilingual place names', () => {
+    expect(NODE_IDS.filter((node) => MAP_NODES[node].highGround)).toEqual(['SHRINE']);
+    expect(Object.values(MAP_NODES).every((node) => /[^\u0000-\u007f]/.test(node.label))).toBe(true);
+  });
 });

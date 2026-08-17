@@ -53,6 +53,13 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
           source: 'setup' as const,
         }]),
       );
+      const knownStartingPositions = Object.fromEntries(
+        PLAYER_IDS.filter((otherID) => otherID !== playerID).map((otherID) => [otherID, {
+          value: STARTING_NODES[Number(otherID)],
+          asOfDay: 0,
+          source: 'setup' as const,
+        }]),
+      );
       const player: PlayerTruth = {
         character,
         methods: [],
@@ -60,7 +67,7 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
         capacity,
         location,
         inbox: [],
-        knowledge: { positions: {}, caches: knownCaches, bodies: {} },
+        knowledge: { positions: knownStartingPositions, caches: knownCaches, bodies: {} },
         alive: true,
         starvationNights: 0,
         actionsLeft: ACTIONS_PER_DAY,

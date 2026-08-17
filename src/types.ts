@@ -60,8 +60,12 @@ export interface PlayerTruth {
   rendezvousKnowledge?: RendezvousKnowledge;
   /** Lazily reset by the comms engine when the game day changes. */
   commsUsage?: DailyCommsUsage;
-  /** The only remote-send outcome exposed back to the sender. */
-  lastSend?: { day: number; state: 'sent' };
+  /** Owner-private acknowledgement. Remote sends never expose delivery facts. */
+  lastSend?:
+    | { sequence: number; day: number; state: 'sent' }
+    | { sequence: number; day: number; state: 'delivered'; recipientCount: number };
+  /** Private authoritative once-per-day office broadcaster usage. */
+  villageBroadcastDay?: number;
 }
 
 export interface DailyCommsUsage {
@@ -85,6 +89,15 @@ export interface MessageOutcome {
     reason: 'DEAD' | 'METHOD_NOT_HELD' | 'NOT_CONNECTED';
   }>;
   truncated: boolean;
+}
+
+export interface RadioChoiceEvidence {
+  day: number;
+  player: PlayerID;
+  outcome: 'LISTEN_SUCCESS' | 'LISTEN_FAILURE' | 'SKIP';
+  reason: 'RENDEZVOUS_RECEIVED' | 'NO_NEW_BROADCAST' | 'INSUFFICIENT_BATTERY' | 'PLAYER_DEAD' | 'NOT_SELECTED';
+  batteryBefore: number;
+  batteryCharged: number;
 }
 
 export type BulletinBoardId = (typeof STARTING_NODES)[number];
@@ -174,6 +187,8 @@ export interface TruthState {
   planningMessages: PlanningMessage[];
   /** Server-authoritative delivery facts. Never included in PlayerViewState. */
   messageOutcomes?: MessageOutcome[];
+  /** Private trial-analysis facts. Never included in PlayerViewState. */
+  radioChoiceEvidence?: RadioChoiceEvidence[];
   /** Append-only boards at VO, SCHOOL, COOP and FOREST. */
   bulletinBoards?: Record<BulletinBoardId, BulletinPost[]>;
   /** Idempotency markers for scheduled one-shot events. */
@@ -200,7 +215,6 @@ export interface PlayerViewState {
   commsPlan: CommsPlan;
   planningMessages: PlanningMessage[];
   severedEdges: string[];
-  startingLocations: Record<PlayerID, NodeId>;
   localCache: Inventory | null;
   methodConnectivity: Partial<Record<MethodId, { available: boolean; reason?: string }>>;
   terminalOutcome: TerminalOutcome | null;

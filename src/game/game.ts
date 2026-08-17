@@ -1,7 +1,15 @@
 import type { Game, MoveFn } from 'boardgame.io';
 import { ActivePlayers } from 'boardgame.io/core';
 import { ACTIONS_PER_DAY, GAME_NAME, METHOD_IDS, PLAYER_COUNT } from '../constants';
-import type { CommsPlanInput, MethodId, PlayerID, PlayerViewState, TruthState } from '../types';
+import type {
+  CommsPlanInput,
+  MessageOutcome,
+  MethodId,
+  PlayerID,
+  PlayerViewState,
+  RadioChoiceEvidence,
+  TruthState,
+} from '../types';
 import {
   cancelAllRoadProposals,
   clearRoad,
@@ -17,6 +25,10 @@ import { applyScheduledDay, resolveScheduledNight } from './schedule';
 import { createInitialState } from './setup';
 
 const ids: PlayerID[] = ['0', '1', '2', '3'];
+
+function cloneSerializable<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
 
 function actor(G: TruthState, playerID: string) {
   requireRule(ids.includes(playerID as PlayerID), 'INVALID_PLAYER');
@@ -88,12 +100,19 @@ const readyContact: MoveFn<TruthState> = ({ G, playerID, random, log }) => {
   player.ready = true;
   if (!livingReady(G)) return;
 
+  recordPhaseCompletion(G, 'contact');
   const firstNightMessage = G.messageOutcomes?.length ?? 0;
+  const firstRadioChoice = G.radioChoiceEvidence?.length ?? 0;
   const outcome = resolveScheduledNight(G, random);
   const nightMessages = G.messageOutcomes?.slice(firstNightMessage) ?? [];
-  if (nightMessages.length) {
-    log.setMetadata({ paceMessages: structuredClone(nightMessages) });
-  }
+  const radioChoices = G.radioChoiceEvidence?.slice(firstRadioChoice) ?? [];
+  const metadata: {
+    paceMessages?: MessageOutcome[];
+    paceRadioChoices?: RadioChoiceEvidence[];
+  } = {};
+  if (nightMessages.length) metadata.paceMessages = cloneSerializable(nightMessages);
+  if (radioChoices.length) metadata.paceRadioChoices = cloneSerializable(radioChoices);
+  if (Object.keys(metadata).length) log.setMetadata(metadata);
   if (!outcome) G.day += 1;
 };
 
@@ -149,7 +168,6 @@ export function playerView({ G, ctx, playerID }: {
     commsPlan: structuredClone(G.commsPlan),
     planningMessages: structuredClone(G.planningMessages),
     severedEdges: [...G.severedEdges],
-    startingLocations: { '0': 'VO', '1': 'SCHOOL', '2': 'COOP', '3': 'FOREST' },
     localCache: you ? { ...G.caches[you.location] } : null,
     methodConnectivity,
     terminalOutcome: G.terminalOutcome ? structuredClone(G.terminalOutcome) : null,
@@ -226,7 +244,6 @@ export const BlackoutGame: Game<TruthState> = {
       },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
-        recordPhaseCompletion(G, 'contact');
         for (const id of ids) G.players[id].ready = false;
       },
       turn: { activePlayers: ActivePlayers.ALL },

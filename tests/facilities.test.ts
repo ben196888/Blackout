@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BALANCE } from '../src/constants';
 import {
   BULLETIN_BOARD_IDS,
+  RADIO_NO_NEWS_NOTICE,
   RADIO_SILENT_NOTICE,
   appendBulletinPost,
   broadcastFromVillageOffice,
@@ -38,6 +39,23 @@ describe('night radio', () => {
       .toBe(before - BALANCE.communicationPrice.RADIO_NIGHTLY);
     expect(G.players['0'].radioListen).toBe(false);
     expect(G.players['0'].rendezvousKnowledge).toBeUndefined();
+    expect(G.players['0'].inbox.at(-1)).toMatchObject({
+      from: 'SYSTEM', method: 'RADIO', text: RADIO_NO_NEWS_NOTICE,
+    });
+    expect(G.messageOutcomes?.at(-1)).toMatchObject({
+      method: 'RADIO', target: '0', rawText: RADIO_NO_NEWS_NOTICE,
+    });
+    expect(G.radioChoiceEvidence).toEqual([
+      {
+        day: 5, player: '0', outcome: 'LISTEN_SUCCESS',
+        reason: 'NO_NEW_BROADCAST', batteryBefore: before,
+        batteryCharged: BALANCE.communicationPrice.RADIO_NIGHTLY,
+      },
+      ...(['1', '2', '3'] as PlayerID[]).map((player) => ({
+        day: 5, player, outcome: 'SKIP' as const, reason: 'NOT_SELECTED' as const,
+        batteryBefore: 3, batteryCharged: 0,
+      })),
+    ]);
   });
 
   it('notices a failed listen privately without a partial charge or rendezvous reveal', () => {
@@ -59,6 +77,11 @@ describe('night radio', () => {
       rawText: RADIO_SILENT_NOTICE,
     });
     expect(G.players['1'].inbox).toHaveLength(0);
+    expect(G.radioChoiceEvidence?.[0]).toEqual({
+      day: 4, player: '0', outcome: 'LISTEN_FAILURE',
+      reason: 'INSUFFICIENT_BATTERY', batteryBefore: 0, batteryCharged: 0,
+    });
+    expect(G.radioChoiceEvidence).toHaveLength(4);
   });
 
   it('reveals the Day 4 rendezvous to paid listeners and posts it once only at VO', () => {
@@ -83,6 +106,11 @@ describe('night radio', () => {
       { sender: 'SYSTEM', method: 'RADIO' },
       { sender: 'SYSTEM', method: 'BULLETIN' },
     ]);
+    expect(G.radioChoiceEvidence?.[0]).toMatchObject({
+      player: '0', outcome: 'LISTEN_SUCCESS', reason: 'RENDEZVOUS_RECEIVED',
+      batteryBefore: BALANCE.communicationPrice.RADIO_NIGHTLY,
+      batteryCharged: BALANCE.communicationPrice.RADIO_NIGHTLY,
+    });
   });
 });
 
@@ -167,6 +195,22 @@ describe('Village Leader broadcaster', () => {
     expect(() => broadcastFromVillageOffice(G, leader, 'no')).toThrow('PLAYER_DEAD');
   });
 
+  it('limits the Village Office broadcaster to once per game day', () => {
+    const G = state();
+    const leader = leaderID(G);
+    G.day = 3;
+    G.players[leader].location = 'VO';
+    broadcastFromVillageOffice(G, leader, 'Morning update');
+    expect(G.players[leader].villageBroadcastDay).toBe(3);
+    expect(() => broadcastFromVillageOffice(G, leader, 'Second update'))
+      .toThrow('VILLAGE_BROADCAST_USED');
+    expect(G.messageOutcomes).toHaveLength(1);
+
+    G.day = 4;
+    expect(() => broadcastFromVillageOffice(G, leader, 'New day update')).not.toThrow();
+    expect(G.players[leader].villageBroadcastDay).toBe(4);
+  });
+
   it('uses the tuned cap and reaches only living graph-connected recipients', () => {
     const G = state();
     G.day = 4;
@@ -188,6 +232,7 @@ describe('Village Leader broadcaster', () => {
     expect(cut.excluded).toContainEqual({ player: '2', reason: 'NOT_CONNECTED' });
     expect(cut.excluded).toContainEqual({ player: '3', reason: 'DEAD' });
 
+    G.day = 5;
     G.severedEdges = [edgeKey('VO', 'TEMPLE')];
     const restored = broadcastFromVillageOffice(G, leader, 'connection restored');
     expect(restored.recipients).toContain('1');

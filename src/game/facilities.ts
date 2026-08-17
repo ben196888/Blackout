@@ -6,6 +6,7 @@ import type {
   MessageOutcome,
   NodeId,
   PlayerID,
+  RadioChoiceEvidence,
   TruthState,
 } from '../types';
 import { requireRule } from './errors';
@@ -14,6 +15,12 @@ import { distancesFrom } from './map';
 const PLAYER_IDS: PlayerID[] = ['0', '1', '2', '3'];
 export const BULLETIN_BOARD_IDS: BulletinBoardId[] = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
 export const RADIO_SILENT_NOTICE = 'The radio went silent.';
+export const RADIO_NO_NEWS_NOTICE = 'The radio carried nothing new tonight.';
+
+/** JSON-compatible game data may be an Immer Proxy inside a boardgame.io reducer. */
+function cloneSerializable<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
 
 function actor(G: TruthState, playerID: string): { id: PlayerID; player: TruthState['players'][PlayerID] } {
   requireRule(PLAYER_IDS.includes(playerID as PlayerID), 'INVALID_PLAYER');
@@ -31,7 +38,7 @@ export function ensureBulletinBoards(G: TruthState): Record<BulletinBoardId, Bul
 
 function rememberPost(G: TruthState, playerID: PlayerID, post: BulletinPost): void {
   const notebook = G.players[playerID].bulletinNotebook ??= [];
-  if (!notebook.some(({ id }) => id === post.id)) notebook.push(structuredClone(post));
+  if (!notebook.some(({ id }) => id === post.id)) notebook.push(cloneSerializable(post));
   if (post.official) {
     const existing = G.players[playerID].rendezvousKnowledge;
     if (existing?.location !== G.rendezvous || existing.learnedDay < G.day) {
@@ -108,9 +115,34 @@ export function resolveNightRadio(G: TruthState): BulletinPost | undefined {
   const price = BALANCE.communicationPrice.RADIO_NIGHTLY;
   for (const id of PLAYER_IDS) {
     const player = G.players[id];
-    if (!player.radioListen) continue;
+    const listened = player.radioListen;
+    const batteryBefore = player.inventory.battery;
     player.radioListen = false;
-    if (!player.alive) continue;
+    let evidence: RadioChoiceEvidence;
+    if (!listened) {
+      evidence = {
+        day: G.day,
+        player: id,
+        outcome: 'SKIP',
+        reason: player.alive ? 'NOT_SELECTED' : 'PLAYER_DEAD',
+        batteryBefore,
+        batteryCharged: 0,
+      };
+      (G.radioChoiceEvidence ??= []).push(evidence);
+      continue;
+    }
+    if (!player.alive) {
+      evidence = {
+        day: G.day,
+        player: id,
+        outcome: 'LISTEN_FAILURE',
+        reason: 'PLAYER_DEAD',
+        batteryBefore,
+        batteryCharged: 0,
+      };
+      (G.radioChoiceEvidence ??= []).push(evidence);
+      continue;
+    }
     if (player.inventory.battery < price) {
       player.inbox.push({ day: G.day, from: 'SYSTEM', method: 'RADIO', text: RADIO_SILENT_NOTICE });
       (G.messageOutcomes ??= []).push({
@@ -125,6 +157,15 @@ export function resolveNightRadio(G: TruthState): BulletinPost | undefined {
         excluded: [],
         truncated: false,
       });
+      evidence = {
+        day: G.day,
+        player: id,
+        outcome: 'LISTEN_FAILURE',
+        reason: 'INSUFFICIENT_BATTERY',
+        batteryBefore,
+        batteryCharged: 0,
+      };
+      (G.radioChoiceEvidence ??= []).push(evidence);
       continue;
     }
     player.inventory.battery -= price;
@@ -135,7 +176,35 @@ export function resolveNightRadio(G: TruthState): BulletinPost | undefined {
         learnedDay: G.day,
         source: 'RADIO',
       };
+    } else {
+      player.inbox.push({
+        day: G.day,
+        from: 'SYSTEM',
+        method: 'RADIO',
+        text: RADIO_NO_NEWS_NOTICE,
+      });
+      (G.messageOutcomes ??= []).push({
+        day: G.day,
+        sender: 'SYSTEM',
+        method: 'RADIO',
+        target: id,
+        rawText: RADIO_NO_NEWS_NOTICE,
+        deliveredText: RADIO_NO_NEWS_NOTICE,
+        recipients: [id],
+        dropped: [],
+        excluded: [],
+        truncated: false,
+      });
     }
+    evidence = {
+      day: G.day,
+      player: id,
+      outcome: 'LISTEN_SUCCESS',
+      reason: G.day === 4 ? 'RENDEZVOUS_RECEIVED' : 'NO_NEW_BROADCAST',
+      batteryBefore,
+      batteryCharged: price,
+    };
+    (G.radioChoiceEvidence ??= []).push(evidence);
   }
 
   if (G.day !== 4) return undefined;
@@ -184,7 +253,7 @@ export const postBulletin: MoveFn<TruthState> = ({ G, playerID, log }, text: str
   const post = appendBulletinPost(G, id, text);
   const outcome = outcomeForPost(G, id, post);
   (G.messageOutcomes ??= []).push(outcome);
-  log.setMetadata({ paceMessage: structuredClone(outcome) });
+  log.setMetadata({ paceMessage: cloneSerializable(outcome) });
 };
 
 /** Read the complete local board into the living visitor's private durable notebook. */
@@ -194,7 +263,7 @@ export function readCurrentBulletin(G: TruthState, playerID: PlayerID): Bulletin
   requireRule(isBoard(player.location), 'NO_BULLETIN_BOARD');
   const posts = ensureBulletinBoards(G)[player.location];
   for (const post of posts) rememberPost(G, playerID, post);
-  return structuredClone(posts);
+  return cloneSerializable(posts);
 }
 
 /** Resolve a one-way Village Office broadcaster message with no sender receipt. */
@@ -208,12 +277,14 @@ export function broadcastFromVillageOffice(
   requireRule(!leader.ready, 'READY_LOCKED');
   requireRule(leader.character === 'VILLAGE_LEADER', 'NOT_VILLAGE_LEADER');
   requireRule(leader.location === 'VO', 'NOT_AT_VILLAGE_OFFICE');
+  requireRule(leader.villageBroadcastDay !== G.day, 'VILLAGE_BROADCAST_USED');
   requireRule(typeof text === 'string' && text.length > 0, 'INVALID_MESSAGE');
   const rawText = text;
   const deliveredText = Array.from(text).slice(0, BALANCE.payloadCap.VILLAGE_BROADCAST).join('');
   const recipients: PlayerID[] = [];
   const excluded: MessageOutcome['excluded'] = [];
   const coverage = distancesFrom('VO', G.severedEdges);
+  leader.villageBroadcastDay = G.day;
   for (const id of PLAYER_IDS) {
     if (id === playerID) continue;
     const recipient = G.players[id];
@@ -252,5 +323,5 @@ export function broadcastFromVillageOffice(
 export const leaderBroadcast: MoveFn<TruthState> = ({ G, playerID, log }, text: string) => {
   const { id } = actor(G, playerID);
   const outcome = broadcastFromVillageOffice(G, id, text);
-  log.setMetadata({ paceMessage: structuredClone(outcome) });
+  log.setMetadata({ paceMessage: cloneSerializable(outcome) });
 };

@@ -155,7 +155,7 @@ describe('clear road and night economy', () => {
     G.players['1'].location = 'SCHOOL';
     G.players['0'].inventory.food = 3;
     G.players['1'].inventory.food = 3;
-    resolveNightEconomy(G);
+    resolveNightEconomy(G, true);
     expect(G.players['0'].inventory.food).toBe(2);
     expect(G.players['1'].inventory.food).toBe(1);
   });

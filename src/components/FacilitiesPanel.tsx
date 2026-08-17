@@ -15,6 +15,7 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
   const atBoard = BOARD_IDS.includes(you.location as BulletinBoardId);
   const canPost = atBoard && you.methods.includes('BULLETIN');
   const canBroadcast = you.character === 'VILLAGE_LEADER' && you.location === 'VO';
+  const broadcastUsed = you.villageBroadcastDay === G.day;
   const ready = G.publicPlayers[playerID as keyof typeof G.publicPlayers].ready;
 
   return (
@@ -38,8 +39,9 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
 
       {canBroadcast && <>
         <label>Village Office broadcast<textarea aria-label="Village broadcast" maxLength={BALANCE.payloadCap.VILLAGE_BROADCAST} value={broadcast} onChange={(event) => setBroadcast(event.target.value)} /></label>
-        <p className="counter">{Array.from(broadcast).length} / {BALANCE.payloadCap.VILLAGE_BROADCAST} characters · one-way, no delivery feedback</p>
-        <button disabled={!broadcast} onClick={() => { moves.leaderBroadcast!(broadcast); setBroadcast(''); }}>Broadcast</button>
+        <p className="counter">{Array.from(broadcast).length} / {BALANCE.payloadCap.VILLAGE_BROADCAST} characters · once per day · one-way, no delivery feedback</p>
+        {broadcastUsed && <p>Today’s Village Office broadcast has already been used.</p>}
+        <button disabled={!broadcast || broadcastUsed} onClick={() => { moves.leaderBroadcast!(broadcast); setBroadcast(''); }}>Broadcast</button>
       </>}
     </section>
   );

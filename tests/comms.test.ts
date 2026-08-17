@@ -83,7 +83,7 @@ describe('remote delivery privacy, costs, caps, and drops', () => {
     equip(G, 'SMS', '0');
     const result = deliver(G, '0', { method: 'SMS', target: '1', text: 'WHERE ARE YOU' }, () => 0.9);
     expect(result).toEqual({ state: 'sent' });
-    expect(G.players['0'].lastSend).toEqual({ day: 1, state: 'sent' });
+    expect(G.players['0'].lastSend).toMatchObject({ day: 1, state: 'sent' });
     expect(G.players['1'].inbox).toHaveLength(0);
     expect(G.messageOutcomes?.at(-1)).toMatchObject({
       recipients: [],
@@ -266,8 +266,25 @@ describe('local and durable methods', () => {
     const before = G.players['0'].inventory.battery;
     const result = deliver(G, '0', { method: 'FACE_TO_FACE', target: null, text: 'x'.repeat(100) }, () => 0);
     expect(result).toEqual({ state: 'delivered', recipients: ['1'] });
+    expect(G.players['0'].lastSend).toEqual({
+      sequence: 1, day: 4, state: 'delivered', recipientCount: 1,
+    });
     expect(G.players['1'].inbox[0]?.text).toHaveLength(100);
     expect(G.players['0'].inventory.battery).toBe(before);
+  });
+
+  it('acknowledges an empty face-to-face audience without claiming delivery', () => {
+    const G = state();
+    G.day = 4;
+    G.players['0'].location = 'VO';
+    G.players['1'].location = 'SCHOOL';
+    G.players['2'].location = 'COOP';
+    G.players['3'].location = 'FOREST';
+    expect(deliver(G, '0', { method: 'FACE_TO_FACE', target: null, text: 'Anyone?' }, () => 0))
+      .toEqual({ state: 'delivered', recipients: [] });
+    expect(G.players['0'].lastSend).toEqual({
+      sequence: 1, day: 4, state: 'delivered', recipientCount: 0,
+    });
   });
 
   it('routes bulletin messages through the local append-only facility', () => {

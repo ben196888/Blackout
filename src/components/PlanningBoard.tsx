@@ -2,6 +2,7 @@ import type { BoardProps } from 'boardgame.io/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CHARACTER_LABELS, METHOD_IDS, METHOD_LABELS } from '../constants';
 import type { CommsPlanInput, MethodId, PlayerID, PlayerViewState } from '../types';
+import { GameBoard } from './GameBoard';
 
 type PaceBoardProps = BoardProps<PlayerViewState>;
 
@@ -33,23 +34,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
   }
 
   if (ctx.phase !== 'planning') {
-    return (
-      <main className="game-shell">
-        <header className="statusbar">
-          <strong>Day {G.day || 1}</strong>
-          <span>{ctx.phase === 'move' ? 'Move' : 'Contact'}</span>
-          <span>{isConnected ? 'Connected' : 'Reconnecting…'}</span>
-        </header>
-        <section className="panel">
-          <h2>{CHARACTER_LABELS[you!.character]}</h2>
-          <p>Food {you!.inventory.food} · Battery {you!.inventory.battery}</p>
-          <p>Location {you!.location} · Actions {publicYou?.actionsLeft}</p>
-          <button onClick={() => ctx.phase === 'move' ? moves.done!() : moves.ready!()}>
-            {ctx.phase === 'move' ? 'Done moving' : 'Ready for night'}
-          </button>
-        </section>
-      </main>
-    );
+    return <GameBoard G={G} ctx={ctx} moves={moves} playerID={playerID} isConnected={isConnected} />;
   }
 
   return (

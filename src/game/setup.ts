@@ -6,6 +6,7 @@ import {
   STARTING_NODES,
 } from '../constants';
 import type { CharacterId, Inventory, PlayerID, PlayerTruth, TruthState } from '../types';
+import { MAP_NODES, NODE_IDS, initialCaches } from './map';
 
 const PLAYER_IDS: PlayerID[] = ['0', '1', '2', '3'];
 
@@ -26,6 +27,7 @@ export function assignCharacters(random: Pick<RandomAPI, 'Shuffle'>): CharacterI
 
 export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthState {
   const characters = assignCharacters(random);
+  const caches = initialCaches();
   const players = Object.fromEntries(
     PLAYER_IDS.map((playerID, index) => {
       const character = characters[index];
@@ -36,6 +38,14 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
       if (inventory.food + inventory.battery > capacity) {
         throw new Error(`Starting inventory exceeds capacity for ${character}`);
       }
+      const homeRegion = MAP_NODES[location].region;
+      const knownCaches = Object.fromEntries(
+        NODE_IDS.filter((node) => MAP_NODES[node].region === homeRegion).map((node) => [node, {
+          value: { ...caches[node] },
+          asOfDay: 0,
+          source: 'setup' as const,
+        }]),
+      );
       const player: PlayerTruth = {
         character,
         methods: [],
@@ -43,7 +53,7 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
         capacity,
         location,
         inbox: [],
-        knowledge: {},
+        knowledge: { positions: {}, caches: knownCaches, bodies: {} },
         alive: true,
         starvationNights: 0,
         actionsLeft: ACTIONS_PER_DAY,
@@ -58,6 +68,9 @@ export function createInitialState(random: Pick<RandomAPI, 'Shuffle'>): TruthSta
     day: 0,
     rendezvous: DEFAULT_RENDEZVOUS,
     players,
+    caches,
+    severedEdges: [],
+    clearRoadProposals: {},
     commsPlan: {
       revision: 0,
       fallbackRendezvous: DEFAULT_RENDEZVOUS,

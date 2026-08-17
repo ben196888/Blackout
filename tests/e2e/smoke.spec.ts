@@ -58,12 +58,16 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       if (playerIndex === 3) await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       else await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Ready');
     }
-    for (const page of pages) {
+    const starts = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
+    for (const [playerIndex, page] of pages.entries()) {
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Move', { exact: true })).toBeVisible();
+      await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
+      await expect(page.getByLabel('Village map')).toBeVisible();
       await page.reload();
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Connected')).toBeVisible();
+      await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
     }
   } finally {
     await Promise.all(contexts.map((context) => context.close()));

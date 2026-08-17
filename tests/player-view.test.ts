@@ -8,9 +8,10 @@ describe('playerView secrecy boundary', () => {
   it('publishes method/readiness booleans but only the owner exact state', () => {
     const truth = createInitialState(random);
     truth.players['1'].inventory = { food: 17, battery: 19 };
-    truth.players['1'].location = 'SECRET_NODE';
+    truth.players['1'].location = 'MTNRD';
     truth.players['1'].inbox.push({ day: 1, from: 'SYSTEM', method: 'RADIO', text: 'SECRET_TEXT' });
     truth.players['1'].alive = false;
+    truth.caches.MTNRD = { food: 23, battery: 29 };
 
     const view = playerView({ G: truth, playerID: '0' });
     expect(view.publicPlayers['1']).toEqual(expect.objectContaining({
@@ -20,10 +21,11 @@ describe('playerView secrecy boundary', () => {
       ready: false,
     }));
     const serialized = JSON.stringify(view);
-    expect(serialized).not.toContain('SECRET_NODE');
+    expect(serialized).not.toContain('MTNRD');
     expect(serialized).not.toContain('SECRET_TEXT');
     expect(serialized).not.toContain('"food":17');
     expect(serialized).not.toContain('"alive":false');
+    expect(serialized).not.toContain('"food":23');
     expect(view.you?.location).toBe('VO');
   });
 

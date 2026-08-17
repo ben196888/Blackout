@@ -2,6 +2,15 @@ import type { Game, MoveFn } from 'boardgame.io';
 import { ActivePlayers } from 'boardgame.io/core';
 import { ACTIONS_PER_DAY, GAME_NAME, METHOD_IDS, PLAYER_COUNT } from '../constants';
 import type { CommsPlanInput, MethodId, PlayerID, PlayerViewState, TruthState } from '../types';
+import {
+  cancelAllRoadProposals,
+  clearRoad,
+  dropItems,
+  finishMove,
+  movePlayer,
+  resolveNightEconomy,
+  scavenge,
+} from './actions';
 import { requireRule, withErrorBoundary } from './errors';
 import { createInitialState } from './setup';
 
@@ -44,13 +53,6 @@ const readyPlanning: MoveFn<TruthState> = ({ G, playerID }) => {
   player.ready = true;
 };
 
-const doneMove: MoveFn<TruthState> = ({ G, playerID }) => {
-  const player = actor(G, playerID);
-  requireRule(player.alive, 'PLAYER_DEAD');
-  player.ready = true;
-  player.actionsLeft = 0;
-};
-
 const readyContact: MoveFn<TruthState> = ({ G, playerID }) => {
   const player = actor(G, playerID);
   requireRule(player.alive, 'PLAYER_DEAD');
@@ -83,6 +85,9 @@ export function playerView({ G, playerID }: { G: TruthState; playerID?: string |
     publicRendezvous: 'SCHOOL',
     publicPlayers,
     commsPlan: structuredClone(G.commsPlan),
+    severedEdges: [...G.severedEdges],
+    startingLocations: { '0': 'VO', '1': 'SCHOOL', '2': 'COOP', '3': 'FOREST' },
+    localCache: you ? { ...G.caches[you.location] } : null,
     you,
   };
 }
@@ -119,9 +124,16 @@ export const BlackoutGame: Game<TruthState> = {
           G.players[id].ready = false;
         }
       },
-      moves: { done: { move: withErrorBoundary(doneMove), client: false } },
+      moves: {
+        move: { move: withErrorBoundary(movePlayer), client: false },
+        scavenge: { move: withErrorBoundary(scavenge), client: false },
+        dropItems: { move: withErrorBoundary(dropItems), client: false },
+        clearRoad: { move: withErrorBoundary(clearRoad), client: false },
+        done: { move: withErrorBoundary(finishMove), client: false },
+      },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
+        cancelAllRoadProposals(G);
         for (const id of ids) G.players[id].ready = false;
       },
       turn: { activePlayers: ActivePlayers.ALL },
@@ -134,6 +146,7 @@ export const BlackoutGame: Game<TruthState> = {
       moves: { ready: { move: withErrorBoundary(readyContact), client: false } },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
+        resolveNightEconomy(G);
         G.day += 1;
         for (const id of ids) G.players[id].ready = false;
       },

@@ -38,3 +38,19 @@ h2 { margin-top: .3rem; }
 .roster article span { color: var(--fresh); }
 .roster article small { color: var(--ink-muted); }
 .roster button { margin-top: 1rem; width: 100%; }
+.board-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(19rem, 1fr); gap: 1rem; margin-top: 1rem; }
+.side-stack { display: grid; align-content: start; gap: 1rem; }
+.map { width: 100%; min-height: 34rem; background: #121915; border: 1px solid var(--line); }
+.edge { stroke: #63766a; stroke-width: 3; }
+.edge.bridge { stroke: var(--signal); stroke-width: 5; }
+.edge.severed { stroke: var(--danger); stroke-dasharray: 10 8; }
+.node circle { fill: var(--paper); stroke: #63766a; stroke-width: 2; }
+.node.current circle { fill: #344f3e; stroke: var(--fresh); stroke-width: 4; }
+.node text { fill: #e8eee9; font-size: 11px; pointer-events: none; }
+.node .you-token { fill: var(--fresh); font-weight: 800; }
+.node .ghost { fill: var(--stale); font-style: italic; font-size: 10px; }
+.destinations { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: 1rem; }
+.actions { display: grid; gap: .75rem; }
+fieldset { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; border: 1px solid var(--line); }
+.memories p { border-bottom: 1px solid var(--line); padding-bottom: .5rem; }
+.as-of { color: var(--stale); display: block; font-size: .8rem; font-style: italic; }

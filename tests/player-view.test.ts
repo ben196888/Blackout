@@ -9,6 +9,7 @@ describe('playerView secrecy boundary', () => {
     const truth = createInitialState(random);
     truth.players['1'].inventory = { food: 17, battery: 19 };
     truth.players['1'].location = 'MTNRD';
+    truth.rendezvous = 'TEA';
     truth.players['1'].inbox.push({ day: 1, from: 'SYSTEM', method: 'RADIO', text: 'SECRET_TEXT' });
     truth.players['1'].alive = false;
     truth.players['1'].bulletinNotebook = [{
@@ -25,6 +26,7 @@ describe('playerView secrecy boundary', () => {
     }));
     const serialized = JSON.stringify(view);
     expect(serialized).not.toContain('MTNRD');
+    expect(serialized).not.toContain('TEA');
     expect(serialized).not.toContain('SECRET_TEXT');
     expect(serialized).not.toContain('Official rendezvous');
     expect(serialized).not.toContain('"food":17');

@@ -20,7 +20,12 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
   const methodLimit = you?.character === 'STUDENT' ? 5 : 4;
 
   useEffect(() => {
-    setPlan((current) => ({ ...current, expectedRevision: G.commsPlan.revision }));
+    setPlan({
+      expectedRevision: G.commsPlan.revision,
+      fallbackProtocol: G.commsPlan.fallbackProtocol,
+      reportingShorthand: G.commsPlan.reportingShorthand,
+      notes: G.commsPlan.notes,
+    });
   }, [G.commsPlan.revision]);
 
   const readyCount = useMemo(

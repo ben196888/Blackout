@@ -93,6 +93,14 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             </div>
           </section>
 
+          <section className="panel" data-testid="shared-comms-plan">
+            <p className="eyebrow">Shared comms plan · locked · revision {G.commsPlan.revision}</p>
+            <h3>{G.commsPlan.fallbackRendezvous} is the fallback rendezvous</h3>
+            <p><strong>Fallback protocol:</strong> {G.commsPlan.fallbackProtocol || 'Not specified'}</p>
+            <p><strong>Reporting shorthand:</strong> {G.commsPlan.reportingShorthand || 'Not specified'}</p>
+            <p><strong>Notes:</strong> {G.commsPlan.notes || 'None'}</p>
+          </section>
+
           {ctx.phase === 'move' && you.alive && !publicYou.ready && (
             <section className="panel actions">
               <p className="eyebrow">Move actions</p>

@@ -68,7 +68,11 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.getByLabel('Fallback protocol').fill('If isolated, reach SCHOOL after Day 7.');
     await pages[0]!.getByLabel('Reporting shorthand').fill('LOC / FOOD? / BAT?');
     await pages[0]!.getByRole('button', { name: 'Save shared plan' }).click();
-    for (const page of pages) await expect(page.getByText('Shared comms plan · revision 1')).toBeVisible();
+    for (const page of pages) {
+      await expect(page.getByText('Shared comms plan · revision 1')).toBeVisible();
+      await expect(page.getByLabel('Fallback protocol')).toHaveValue('If isolated, reach SCHOOL after Day 7.');
+      await expect(page.getByLabel('Reporting shorthand')).toHaveValue('LOC / FOOD? / BAT?');
+    }
     for (const [playerIndex, page] of pages.entries()) {
       if (playerIndex > 0) {
         await expect(page.getByText(`Seat ${playerIndex}`).locator('..')).toContainText('Ready');
@@ -81,6 +85,9 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     for (const [playerIndex, page] of pages.entries()) {
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Move', { exact: true })).toBeVisible();
+      await expect(page.getByTestId('shared-comms-plan')).toContainText('Shared comms plan · locked');
+      await expect(page.getByTestId('shared-comms-plan')).toContainText('If isolated, reach SCHOOL after Day 7.');
+      await expect(page.getByTestId('shared-comms-plan')).toContainText('LOC / FOOD? / BAT?');
       await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
       await expect(page.getByLabel('Village map')).toBeVisible();
       await expect(page.getByTestId(`player-public-${playerIndex}`)).toContainText('Mobile data');

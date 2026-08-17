@@ -31,26 +31,36 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       await expect(page.getByText(/Waiting room|Day 0/)).toBeVisible();
     }
 
-    for (const page of pages) {
+    for (const [playerIndex, page] of pages.entries()) {
       await expect(page.getByText('Day 0 · Planning')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Connected')).toBeVisible();
+      if (playerIndex > 0) {
+        await expect(page.getByText(`Seat ${playerIndex}`).locator('..')).toContainText('Mobile data');
+      }
       const rolePanel = page.getByText('Your role').locator('..');
       const isStudent = await rolePanel.getByRole('heading', { name: 'Student' }).isVisible().catch(() => false);
       const needed = isStudent ? 5 : 4;
       const checkboxes = rolePanel.getByRole('checkbox');
       for (let index = 0; index < needed; index += 1) await checkboxes.nth(index).check();
       await rolePanel.getByRole('button', { name: 'Save methods' }).click();
+      await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Mobile data');
     }
 
     await pages[0]!.getByLabel('Fallback protocol').fill('If isolated, reach SCHOOL after Day 7.');
     await pages[0]!.getByLabel('Reporting shorthand').fill('LOC / FOOD? / BAT?');
     await pages[0]!.getByRole('button', { name: 'Save shared plan' }).click();
-    for (const page of pages) {
+    for (const page of pages) await expect(page.getByText('Shared comms plan · revision 1')).toBeVisible();
+    for (const [playerIndex, page] of pages.entries()) {
+      if (playerIndex > 0) {
+        await expect(page.getByText(`Seat ${playerIndex}`).locator('..')).toContainText('Ready');
+      }
       await page.getByRole('button', { name: 'Ready — lock my choices' }).click();
+      if (playerIndex === 3) await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
+      else await expect(page.getByText(`Seat ${playerIndex + 1}`).locator('..')).toContainText('Ready');
     }
     for (const page of pages) {
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
-      await expect(page.getByText('Move')).toBeVisible();
+      await expect(page.getByText('Move', { exact: true })).toBeVisible();
       await page.reload();
       await expect(page.getByText('Day 1')).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText('Connected')).toBeVisible();

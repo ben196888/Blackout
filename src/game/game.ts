@@ -11,6 +11,7 @@ import {
   resolveNightEconomy,
   scavenge,
 } from './actions';
+import { exchange, sendMessage, senderMethodStatus } from './comms';
 import { requireRule, withErrorBoundary } from './errors';
 import { createInitialState } from './setup';
 
@@ -80,6 +81,12 @@ export function playerView({ G, playerID }: { G: TruthState; playerID?: string |
   const you = playerID && ids.includes(playerID as PlayerID)
     ? structuredClone(G.players[playerID as PlayerID])
     : null;
+  const methodConnectivity = playerID && ids.includes(playerID as PlayerID)
+    ? Object.fromEntries(G.players[playerID as PlayerID].methods.map((method) => [
+        method,
+        senderMethodStatus(G, playerID as PlayerID, method),
+      ]))
+    : {};
   return {
     day: G.day,
     publicRendezvous: 'SCHOOL',
@@ -88,6 +95,7 @@ export function playerView({ G, playerID }: { G: TruthState; playerID?: string |
     severedEdges: [...G.severedEdges],
     startingLocations: { '0': 'VO', '1': 'SCHOOL', '2': 'COOP', '3': 'FOREST' },
     localCache: you ? { ...G.caches[you.location] } : null,
+    methodConnectivity,
     you,
   };
 }
@@ -143,7 +151,11 @@ export const BlackoutGame: Game<TruthState> = {
       onBegin: ({ G }) => {
         for (const id of ids) G.players[id].ready = false;
       },
-      moves: { ready: { move: withErrorBoundary(readyContact), client: false } },
+      moves: {
+        sendMessage: { move: withErrorBoundary(sendMessage), client: false, redact: true },
+        exchange: { move: withErrorBoundary(exchange), client: false, redact: true },
+        ready: { move: withErrorBoundary(readyContact), client: false },
+      },
       endIf: ({ G }) => livingReady(G),
       onEnd: ({ G }) => {
         resolveNightEconomy(G);

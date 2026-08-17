@@ -69,6 +69,21 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       await expect(page.getByText('Connected')).toBeVisible();
       await expect(page.getByTestId('current-location')).toHaveText(starts[playerIndex]!);
     }
+
+    for (const [playerIndex, page] of pages.entries()) {
+      if (playerIndex > 0) await expect(page.getByTestId(`player-state-${playerIndex - 1}`)).toContainText('Ready');
+      page.once('dialog', (dialog) => dialog.accept());
+      await page.getByRole('button', { name: 'Done moving' }).click();
+      if (playerIndex === 3) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
+      else await expect(page.getByTestId(`player-state-${playerIndex}`)).toContainText('Ready');
+    }
+    for (const page of pages) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
+
+    await pages[0]!.getByLabel('Method').selectOption('SMS');
+    await pages[0]!.getByLabel('Message').fill('MEET AT SCHOOL');
+    await pages[0]!.getByRole('button', { name: 'Send', exact: true }).click();
+    await expect(pages[0]!.getByRole('status')).toHaveText('Sent');
+    await expect(pages[1]!.getByText('MEET AT SCHOOL')).toBeVisible({ timeout: 15_000 });
   } finally {
     await Promise.all(contexts.map((context) => context.close()));
   }

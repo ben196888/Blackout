@@ -3,6 +3,7 @@ import type { CHARACTER_IDS, METHOD_IDS, STARTING_NODES } from './constants';
 export type PlayerID = '0' | '1' | '2' | '3';
 export type CharacterId = (typeof CHARACTER_IDS)[number];
 export type MethodId = (typeof METHOD_IDS)[number];
+export type DeliveryMethodId = MethodId | 'FACE_TO_FACE';
 export type NodeId =
   | (typeof STARTING_NODES)[number]
   | 'TEMPLE'
@@ -45,6 +46,33 @@ export interface PlayerTruth {
   actionsLeft: number;
   ready: boolean;
   radioListen: boolean;
+  /** Lazily reset by the comms engine when the game day changes. */
+  commsUsage?: DailyCommsUsage;
+  /** The only remote-send outcome exposed back to the sender. */
+  lastSend?: { day: number; state: 'sent' };
+}
+
+export interface DailyCommsUsage {
+  day: number;
+  sends: Partial<Record<MethodId, number>>;
+  infrastructureCharged: Partial<Record<'MOBILE_DATA' | 'MOBILE_VOICE' | 'SMS', true>>;
+  landlineDialed: boolean;
+}
+
+export interface MessageOutcome {
+  day: number;
+  sender: PlayerID;
+  method: DeliveryMethodId;
+  target: PlayerID | NodeId | null;
+  rawText: string;
+  deliveredText: string;
+  recipients: PlayerID[];
+  dropped: PlayerID[];
+  excluded: Array<{
+    player: PlayerID;
+    reason: 'DEAD' | 'METHOD_NOT_HELD' | 'NOT_CONNECTED';
+  }>;
+  truncated: boolean;
 }
 
 export interface Memory<T> {
@@ -73,6 +101,8 @@ export interface TruthState {
   severedEdges: string[];
   clearRoadProposals: Record<string, ClearRoadProposal>;
   commsPlan: CommsPlan;
+  /** Server-authoritative delivery facts. Never included in PlayerViewState. */
+  messageOutcomes?: MessageOutcome[];
 }
 
 export interface PublicPlayer {
@@ -92,6 +122,7 @@ export interface PlayerViewState {
   severedEdges: string[];
   startingLocations: Record<PlayerID, NodeId>;
   localCache: Inventory | null;
+  methodConnectivity: Partial<Record<MethodId, { available: boolean; reason?: string }>>;
   you: PlayerTruth | null;
 }
 

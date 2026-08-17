@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { Server } from 'boardgame.io/server';
 import serve from 'koa-static';
 import { BlackoutGame } from './game/game';
+import { LoggingInMemory } from './server/storage';
 
 const port = Number(process.env.PORT ?? 8080);
 const dist = join(process.cwd(), 'dist');
@@ -12,7 +13,7 @@ const origins = [
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];
-const server = Server({ games: [BlackoutGame], origins, apiOrigins: origins });
+const server = Server({ games: [BlackoutGame], db: new LoggingInMemory(), origins, apiOrigins: origins });
 
 server.app.use(async (ctx, next) => {
   if (ctx.path === '/health') {

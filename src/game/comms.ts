@@ -358,7 +358,9 @@ export function senderMethodStatus(G: TruthState, playerID: PlayerID, method: Me
   const multiplier = G.day === 5 ? BALANCE.communicationPrice.DAY_5_MULTIPLIER : 1;
   if (INFRASTRUCTURE_METHODS.includes(method as (typeof INFRASTRUCTURE_METHODS)[number])) {
     const infra = method as (typeof INFRASTRUCTURE_METHODS)[number];
-    cost = usage?.infrastructureCharged[infra] ? 0 : multiplier;
+    cost = usage?.infrastructureCharged[infra]
+      ? 0
+      : BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE * multiplier;
   } else if (method === 'MESH' || method === 'WALKIE') {
     const quota = METHOD_SPECS[method].batteryPerSends!;
     const sends = usage?.sends[method] ?? 0;

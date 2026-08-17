@@ -33,8 +33,8 @@ export interface DayScheduleEntry {
     mobileVoiceDropRate: number | null;
     smsDropRate: number | null;
     landlineUp: boolean;
-    batteryCostMultiplier: 1 | 2;
-    radioBatteryCost: 1;
+    batteryCostMultiplier: number;
+    radioBatteryCost: number;
   };
 }
 

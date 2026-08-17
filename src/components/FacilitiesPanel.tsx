@@ -27,7 +27,7 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
           onChange={(event) => moves.setRadioListen!(event.target.checked)}
           type="checkbox"
         />
-        <span>Listen to the nightly radio (private · costs 1 Battery at night)</span>
+        <span>Listen to the nightly radio (private · costs {BALANCE.communicationPrice.RADIO_NIGHTLY} Battery at night)</span>
       </label>
 
       {atBoard && <p>You are at the {MAP_NODES[you.location].label} bulletin board.</p>}

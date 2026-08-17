@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { BALANCE } from '../src/constants';
 import {
   METHOD_SPECS,
   deliver,
   exchangeItems,
+  senderMethodStatus,
 } from '../src/game/comms';
 import { playerView } from '../src/game/game';
 import { createInitialState } from '../src/game/setup';
@@ -42,6 +44,17 @@ describe('method specifications and schedule', () => {
 });
 
 describe('remote delivery privacy, costs, caps, and drops', () => {
+  it('uses the tuned infrastructure price in private availability feedback', () => {
+    const G = state();
+    G.day = 1;
+    equip(G, 'SMS', '0');
+    G.players['0'].inventory.battery = BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE - 1;
+    expect(senderMethodStatus(G, '0', 'SMS')).toEqual({
+      available: false,
+      reason: `Needs ${BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE} Battery.`,
+    });
+  });
+
   it('locks all sends after the sender declares Contact Ready', () => {
     const G = state();
     G.day = 1;

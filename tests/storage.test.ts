@@ -36,4 +36,36 @@ describe('message logging storage', () => {
     expect(event.serverTime).toEqual(expect.any(String));
     expect(JSON.stringify(event)).not.toContain('credential');
   });
+
+  it('emits every automatic night message attached to one transition', () => {
+    const write = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const storage = new LoggingInMemory();
+    const state = { G: {}, ctx: {} } as State;
+    const base = {
+      day: 4,
+      sender: 'SYSTEM',
+      target: null,
+      dropped: [],
+      excluded: [],
+      truncated: false,
+    };
+    const entry = {
+      phase: 'contact',
+      metadata: {
+        paceMessages: [
+          { ...base, method: 'RADIO', rawText: 'radio', deliveredText: 'radio', recipients: ['0'] },
+          { ...base, method: 'BULLETIN', rawText: 'board', deliveredText: 'board', recipients: ['1'] },
+        ],
+      },
+    } as unknown as LogEntry;
+
+    storage.setState('match-night', state, [entry]);
+
+    expect(write).toHaveBeenCalledTimes(2);
+    expect(write.mock.calls.map(([line]) => JSON.parse(String(line)) as Record<string, unknown>))
+      .toEqual([
+        expect.objectContaining({ match: 'match-night', sender: 'SYSTEM', method: 'RADIO', rawText: 'radio' }),
+        expect.objectContaining({ match: 'match-night', sender: 'SYSTEM', method: 'BULLETIN', rawText: 'board' }),
+      ]);
+  });
 });

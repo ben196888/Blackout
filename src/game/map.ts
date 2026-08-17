@@ -1,3 +1,4 @@
+import { BALANCE } from '../constants';
 import type { Inventory, NodeId } from '../types';
 
 export type Region = 'CORE' | 'SCHOOL' | 'FARM' | 'MOUNTAIN' | 'LINK';
@@ -31,22 +32,22 @@ export const RENDEZVOUS_CENTRE_NODES: NodeId[] = [
 ];
 
 export const MAP_NODES: Record<NodeId, NodeSpec> = {
-  VO: { id: 'VO', label: 'Village Office', region: 'CORE', open: false, landline: true, bulletin: true, cache: { food: 0, battery: 2 } },
-  TEMPLE: { id: 'TEMPLE', label: 'Temple', region: 'CORE', open: true, cache: { food: 3, battery: 0 } },
-  STORE: { id: 'STORE', label: 'Store', region: 'CORE', open: false, cache: { food: 9, battery: 0 } },
-  SCHOOL: { id: 'SCHOOL', label: 'School', region: 'SCHOOL', open: true, landline: true, bulletin: true, cache: { food: 4, battery: 0 } },
-  CLINIC: { id: 'CLINIC', label: 'Clinic', region: 'SCHOOL', open: false, landline: true, cache: { food: 2, battery: 2 } },
-  FIELD: { id: 'FIELD', label: 'Field', region: 'SCHOOL', open: true, cache: { food: 0, battery: 0 } },
-  COOP: { id: 'COOP', label: 'Co-op', region: 'FARM', open: false, bulletin: true, cache: { food: 0, battery: 8 } },
-  TEA: { id: 'TEA', label: 'Tea fields', region: 'FARM', open: true, cache: { food: 3, battery: 0 } },
-  POND: { id: 'POND', label: 'Pond', region: 'FARM', open: true, cache: { food: 1, battery: 0 } },
-  SHRINE: { id: 'SHRINE', label: 'Shrine', region: 'MOUNTAIN', open: true, highGround: true, cache: { food: 2, battery: 0 } },
-  QUARRY: { id: 'QUARRY', label: 'Quarry', region: 'MOUNTAIN', open: true, cache: { food: 0, battery: 0 } },
-  FOREST: { id: 'FOREST', label: 'Forest Station', region: 'MOUNTAIN', open: false, landline: true, bulletin: true, cache: { food: 0, battery: 0 } },
-  BRIDGE_N: { id: 'BRIDGE_N', label: 'Bridge North', region: 'LINK', open: true, cache: { food: 0, battery: 0 } },
-  BRIDGE_S: { id: 'BRIDGE_S', label: 'Bridge South', region: 'LINK', open: true, cache: { food: 0, battery: 0 } },
-  MTNRD: { id: 'MTNRD', label: 'Mountain Road', region: 'LINK', open: true, cache: { food: 0, battery: 0 } },
-  FORD: { id: 'FORD', label: 'Ford', region: 'LINK', open: true, cache: { food: 0, battery: 0 } },
+  VO: { id: 'VO', label: 'Village Office', region: 'CORE', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.VO } },
+  TEMPLE: { id: 'TEMPLE', label: 'Temple', region: 'CORE', open: true, cache: { ...BALANCE.mapSupply.TEMPLE } },
+  STORE: { id: 'STORE', label: 'Store', region: 'CORE', open: false, cache: { ...BALANCE.mapSupply.STORE } },
+  SCHOOL: { id: 'SCHOOL', label: 'School', region: 'SCHOOL', open: true, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.SCHOOL } },
+  CLINIC: { id: 'CLINIC', label: 'Clinic', region: 'SCHOOL', open: false, landline: true, cache: { ...BALANCE.mapSupply.CLINIC } },
+  FIELD: { id: 'FIELD', label: 'Field', region: 'SCHOOL', open: true, cache: { ...BALANCE.mapSupply.FIELD } },
+  COOP: { id: 'COOP', label: 'Co-op', region: 'FARM', open: false, bulletin: true, cache: { ...BALANCE.mapSupply.COOP } },
+  TEA: { id: 'TEA', label: 'Tea fields', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.TEA } },
+  POND: { id: 'POND', label: 'Pond', region: 'FARM', open: true, cache: { ...BALANCE.mapSupply.POND } },
+  SHRINE: { id: 'SHRINE', label: 'Shrine', region: 'MOUNTAIN', open: true, highGround: true, cache: { ...BALANCE.mapSupply.SHRINE } },
+  QUARRY: { id: 'QUARRY', label: 'Quarry', region: 'MOUNTAIN', open: true, cache: { ...BALANCE.mapSupply.QUARRY } },
+  FOREST: { id: 'FOREST', label: 'Forest Station', region: 'MOUNTAIN', open: false, landline: true, bulletin: true, cache: { ...BALANCE.mapSupply.FOREST } },
+  BRIDGE_N: { id: 'BRIDGE_N', label: 'Bridge North', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_N } },
+  BRIDGE_S: { id: 'BRIDGE_S', label: 'Bridge South', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.BRIDGE_S } },
+  MTNRD: { id: 'MTNRD', label: 'Mountain Road', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.MTNRD } },
+  FORD: { id: 'FORD', label: 'Ford', region: 'LINK', open: true, cache: { ...BALANCE.mapSupply.FORD } },
 };
 
 export const MAP_EDGES: EdgeSpec[] = [

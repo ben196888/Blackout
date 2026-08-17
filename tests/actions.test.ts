@@ -36,6 +36,15 @@ describe('movement, economy and fog', () => {
     expect(G.players['0'].actionsLeft).toBe(2);
   });
 
+  it('locks even a zero-cost bridge crossing after Move Ready', () => {
+    const G = createInitialState(random);
+    G.players['0'].location = 'BRIDGE_N';
+    G.players['0'].actionsLeft = 0;
+    G.players['0'].ready = true;
+    expect(() => movePlayer(context(G, '0'), ['BRIDGE_S'])).toThrowError('READY_LOCKED');
+    expect(G.players['0'].location).toBe('BRIDGE_N');
+  });
+
   it('copies a board history when a living player enters its node', () => {
     const G = createInitialState(random);
     G.players['0'].methods.push('BULLETIN');

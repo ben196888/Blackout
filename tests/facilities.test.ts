@@ -51,6 +51,10 @@ describe('night radio', () => {
     expect(G.players['0'].inbox.at(-1)).toMatchObject({
       from: 'SYSTEM', method: 'RADIO', text: RADIO_SILENT_NOTICE,
     });
+    expect(G.messageOutcomes?.[0]).toMatchObject({
+      sender: 'SYSTEM', method: 'RADIO', target: '0', recipients: ['0'],
+      rawText: RADIO_SILENT_NOTICE,
+    });
     expect(G.players['1'].inbox).toHaveLength(0);
   });
 
@@ -71,6 +75,10 @@ describe('night radio', () => {
     expect(ensureBulletinBoards(G).SCHOOL).toHaveLength(0);
     expect(ensureBulletinBoards(G).COOP).toHaveLength(0);
     expect(ensureBulletinBoards(G).FOREST).toHaveLength(0);
+    expect(G.messageOutcomes?.map(({ sender, method }) => ({ sender, method }))).toEqual([
+      { sender: 'SYSTEM', method: 'RADIO' },
+      { sender: 'SYSTEM', method: 'BULLETIN' },
+    ]);
   });
 });
 
@@ -86,6 +94,14 @@ describe('bulletin boards', () => {
     G.players['0'].methods.push('BULLETIN');
     G.players['0'].location = 'TEMPLE';
     expect(() => appendBulletinPost(G, '0', 'notice')).toThrow('NO_BULLETIN_BOARD');
+  });
+
+  it('locks bulletin posts after Contact Ready', () => {
+    const G = state();
+    G.players['0'].methods.push('BULLETIN');
+    G.players['0'].ready = true;
+    expect(() => appendBulletinPost(G, '0', 'too late')).toThrow('READY_LOCKED');
+    expect(ensureBulletinBoards(G).VO).toHaveLength(0);
   });
 
   it('appends immutable-history posts and immediately records them for current occupants', () => {
@@ -121,6 +137,14 @@ describe('bulletin boards', () => {
 });
 
 describe('Village Leader broadcaster', () => {
+  it('locks the office broadcaster after Contact Ready', () => {
+    const G = state();
+    const leader = leaderID(G);
+    G.players[leader].location = 'VO';
+    G.players[leader].ready = true;
+    expect(() => broadcastFromVillageOffice(G, leader, 'too late')).toThrow('READY_LOCKED');
+    expect(G.messageOutcomes).toBeUndefined();
+  });
   it('requires the living Leader at VO and uses no selected method or Battery', () => {
     const G = state();
     const leader = leaderID(G);

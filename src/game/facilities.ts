@@ -1,4 +1,5 @@
 import type { MoveFn } from 'boardgame.io';
+import { BALANCE } from '../constants';
 import type {
   BulletinBoardId,
   BulletinPost,
@@ -67,7 +68,7 @@ function appendPost(
   return post;
 }
 
-function outcomeForPost(G: TruthState, author: PlayerID, post: BulletinPost): MessageOutcome {
+function outcomeForPost(G: TruthState, author: PlayerID | 'SYSTEM', post: BulletinPost): MessageOutcome {
   const recipients = PLAYER_IDS.filter((id) =>
     G.players[id].alive && G.players[id].location === post.board);
   return {
@@ -103,17 +104,32 @@ export const setRadioListen: MoveFn<TruthState> = ({ G, playerID }, listening: b
  * one Battery, including Day 5. Day 4 listeners learn the current true rendezvous.
  */
 export function resolveNightRadio(G: TruthState): BulletinPost | undefined {
+  const successfulListeners: PlayerID[] = [];
+  const price = BALANCE.communicationPrice.RADIO_NIGHTLY;
   for (const id of PLAYER_IDS) {
     const player = G.players[id];
     if (!player.radioListen) continue;
     player.radioListen = false;
     if (!player.alive) continue;
-    if (player.inventory.battery < 1) {
+    if (player.inventory.battery < price) {
       player.inbox.push({ day: G.day, from: 'SYSTEM', method: 'RADIO', text: RADIO_SILENT_NOTICE });
+      (G.messageOutcomes ??= []).push({
+        day: G.day,
+        sender: 'SYSTEM',
+        method: 'RADIO',
+        target: id,
+        rawText: RADIO_SILENT_NOTICE,
+        deliveredText: RADIO_SILENT_NOTICE,
+        recipients: [id],
+        dropped: [],
+        excluded: [],
+        truncated: false,
+      });
       continue;
     }
-    player.inventory.battery -= 1;
+    player.inventory.battery -= price;
     if (G.day === 4) {
+      successfulListeners.push(id);
       player.rendezvousKnowledge = {
         location: G.rendezvous,
         learnedDay: G.day,
@@ -123,21 +139,40 @@ export function resolveNightRadio(G: TruthState): BulletinPost | undefined {
   }
 
   if (G.day !== 4) return undefined;
+  const announcement = `Official rendezvous: ${G.rendezvous}`;
+  if (successfulListeners.length) {
+    (G.messageOutcomes ??= []).push({
+      day: G.day,
+      sender: 'SYSTEM',
+      method: 'RADIO',
+      target: null,
+      rawText: announcement,
+      deliveredText: announcement,
+      recipients: successfulListeners,
+      dropped: [],
+      excluded: [],
+      truncated: false,
+    });
+  }
   const boards = ensureBulletinBoards(G);
   const existing = boards.VO.find((post) => post.official && post.day === 4);
-  return existing ?? appendPost(
+  if (existing) return existing;
+  const post = appendPost(
     G,
     'VO',
     'SYSTEM',
-    `Official rendezvous: ${G.rendezvous}`,
+    announcement,
     true,
   );
+  (G.messageOutcomes ??= []).push(outcomeForPost(G, 'SYSTEM', post));
+  return post;
 }
 
 /** Append a player-authored post to the board at their current location. */
 export function appendBulletinPost(G: TruthState, playerID: PlayerID, text: string): BulletinPost {
   const player = G.players[playerID];
   requireRule(player?.alive, 'PLAYER_DEAD');
+  requireRule(!player.ready, 'READY_LOCKED');
   requireRule(player.methods.includes('BULLETIN'), 'METHOD_NOT_HELD');
   requireRule(isBoard(player.location), 'NO_BULLETIN_BOARD');
   requireRule(typeof text === 'string' && text.trim().length > 0, 'INVALID_MESSAGE');
@@ -170,11 +205,12 @@ export function broadcastFromVillageOffice(
 ): MessageOutcome {
   const leader = G.players[playerID];
   requireRule(leader?.alive, 'PLAYER_DEAD');
+  requireRule(!leader.ready, 'READY_LOCKED');
   requireRule(leader.character === 'VILLAGE_LEADER', 'NOT_VILLAGE_LEADER');
   requireRule(leader.location === 'VO', 'NOT_AT_VILLAGE_OFFICE');
   requireRule(typeof text === 'string' && text.length > 0, 'INVALID_MESSAGE');
   const rawText = text;
-  const deliveredText = Array.from(text).slice(0, 60).join('');
+  const deliveredText = Array.from(text).slice(0, BALANCE.payloadCap.VILLAGE_BROADCAST).join('');
   const recipients: PlayerID[] = [];
   const excluded: MessageOutcome['excluded'] = [];
   const coverage = distancesFrom('VO', G.severedEdges);
@@ -207,7 +243,7 @@ export function broadcastFromVillageOffice(
     recipients,
     dropped: [],
     excluded,
-    truncated: Array.from(rawText).length > 60,
+    truncated: Array.from(rawText).length > BALANCE.payloadCap.VILLAGE_BROADCAST,
   };
   (G.messageOutcomes ??= []).push(outcome);
   return outcome;

@@ -1,4 +1,5 @@
 import type { MoveFn } from 'boardgame.io';
+import { BALANCE } from '../constants';
 import type {
   DailyCommsUsage,
   DeliveryMethodId,
@@ -51,7 +52,7 @@ export const METHOD_SPECS: Record<DeliveryMethodId, MethodSpec> = {
   MOBILE_DATA: {
     id: 'MOBILE_DATA', target: 'PLAYER', reach: 'ANY', relayable: false,
     audience: 'ADDRESSEE', payloadCap: null, batteryPerSends: null,
-    dailyFirstUseBattery: 1, infraDependent: true,
+    dailyFirstUseBattery: BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE, infraDependent: true,
     availability: {
       1: down(), 2: down(), 3: down(), 4: down(), 5: down(),
       6: up('DAY_6_ZONES'), 7: down(),
@@ -60,18 +61,18 @@ export const METHOD_SPECS: Record<DeliveryMethodId, MethodSpec> = {
   MOBILE_VOICE: {
     id: 'MOBILE_VOICE', target: 'PLAYER', reach: 'ANY', relayable: false,
     audience: 'ADDRESSEE', payloadCap: null, batteryPerSends: null,
-    dailyFirstUseBattery: 1, infraDependent: true,
+    dailyFirstUseBattery: BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE, infraDependent: true,
     availability: {
-      1: up('GLOBAL', 0.5), 2: down(), 3: down(), 4: down(), 5: down(),
+      1: up('GLOBAL', BALANCE.dropRate.MOBILE_VOICE_DAY_1), 2: down(), 3: down(), 4: down(), 5: down(),
       6: down(), 7: down(),
     },
   },
   SMS: {
     id: 'SMS', target: 'PLAYER', reach: 'ANY', relayable: false,
-    audience: 'ADDRESSEE', payloadCap: 20, batteryPerSends: null,
-    dailyFirstUseBattery: 1, infraDependent: true,
+    audience: 'ADDRESSEE', payloadCap: BALANCE.payloadCap.SMS, batteryPerSends: null,
+    dailyFirstUseBattery: BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE, infraDependent: true,
     availability: {
-      1: up('GLOBAL'), 2: up('GLOBAL', 0.25), 3: down(), 4: down(),
+      1: up('GLOBAL'), 2: up('GLOBAL', BALANCE.dropRate.SMS_DAY_2), 3: down(), 4: down(),
       5: down(), 6: down(), 7: down(),
     },
   },
@@ -87,13 +88,15 @@ export const METHOD_SPECS: Record<DeliveryMethodId, MethodSpec> = {
   },
   MESH: {
     id: 'MESH', target: 'PLAYER', reach: 1, relayable: true,
-    audience: 'ADDRESSEE', payloadCap: 40, batteryPerSends: 2,
+    audience: 'ADDRESSEE', payloadCap: BALANCE.payloadCap.MESH,
+    batteryPerSends: BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY,
     dailyFirstUseBattery: null, infraDependent: false,
     availability: everyDay(up('LOCAL')),
   },
   WALKIE: {
     id: 'WALKIE', target: 'HERE', reach: 1, relayable: false,
-    audience: 'IN_RANGE', payloadCap: 40, batteryPerSends: 3,
+    audience: 'IN_RANGE', payloadCap: BALANCE.payloadCap.WALKIE,
+    batteryPerSends: BALANCE.communicationPrice.WALKIE_SENDS_PER_BATTERY,
     dailyFirstUseBattery: null, infraDependent: false,
     availability: everyDay(up('LOCAL')),
   },
@@ -193,7 +196,7 @@ function batteryCost(G: TruthState, playerID: PlayerID, method: DeliveryMethodId
   if (method === 'FACE_TO_FACE' || method === 'LANDLINE' || method === 'BULLETIN') return 0;
   const spec = METHOD_SPECS[method];
   const usage = usageFor(G, playerID);
-  const multiplier = G.day === 5 ? 2 : 1;
+  const multiplier = G.day === 5 ? BALANCE.communicationPrice.DAY_5_MULTIPLIER : 1;
   if (INFRASTRUCTURE_METHODS.includes(method as (typeof INFRASTRUCTURE_METHODS)[number])) {
     const infraMethod = method as (typeof INFRASTRUCTURE_METHODS)[number];
     return usage.infrastructureCharged[infraMethod] ? 0 : (spec.dailyFirstUseBattery ?? 0) * multiplier;
@@ -263,6 +266,7 @@ export function deliver(
   requireRule(PLAYER_IDS.includes(senderID), 'INVALID_PLAYER');
   const sender = G.players[senderID];
   requireRule(sender.alive, 'PLAYER_DEAD');
+  requireRule(!sender.ready, 'READY_LOCKED');
   requireRule(request.method in METHOD_SPECS, 'UNKNOWN_METHOD');
   requireRule(typeof request.text === 'string' && request.text.length > 0, 'INVALID_MESSAGE');
   requireRule(request.method === 'FACE_TO_FACE' || sender.methods.includes(request.method), 'METHOD_NOT_HELD');
@@ -351,7 +355,7 @@ export function senderMethodStatus(G: TruthState, playerID: PlayerID, method: Me
     return { available: false, reason: 'Daily dial already used.' };
   }
   let cost = 0;
-  const multiplier = G.day === 5 ? 2 : 1;
+  const multiplier = G.day === 5 ? BALANCE.communicationPrice.DAY_5_MULTIPLIER : 1;
   if (INFRASTRUCTURE_METHODS.includes(method as (typeof INFRASTRUCTURE_METHODS)[number])) {
     const infra = method as (typeof INFRASTRUCTURE_METHODS)[number];
     cost = usage?.infrastructureCharged[infra] ? 0 : multiplier;
@@ -382,6 +386,7 @@ export function exchangeItems(
   const sender = G.players[senderID];
   const recipient = G.players[recipientID];
   requireRule(sender.alive && recipient.alive, 'PLAYER_DEAD');
+  requireRule(!sender.ready, 'READY_LOCKED');
   requireRule(sender.location === recipient.location, 'NOT_COLOCATED');
   requireRule(validItems(items), 'INVALID_QUANTITY');
   requireRule(items.food + items.battery > 0, 'ZERO_QUANTITY');

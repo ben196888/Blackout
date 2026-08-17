@@ -98,7 +98,11 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
       page.once('dialog', (dialog) => dialog.accept());
       await page.getByRole('button', { name: 'Done moving' }).click();
       if (playerIndex === 3) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
-      else await expect(page.getByTestId(`player-state-${playerIndex}`)).toContainText('Ready');
+      else {
+        await expect(page.getByTestId(`player-state-${playerIndex}`)).toContainText('Ready');
+        await expect(page.getByText('Ready locked.')).toBeVisible();
+        await expect(page.getByText('Move actions')).toHaveCount(0);
+      }
     }
     for (const page of pages) await expect(page.getByText('Contact', { exact: true })).toBeVisible({ timeout: 15_000 });
     for (const page of pages) await expect(page.getByText('Local facilities')).toBeVisible();
@@ -283,6 +287,8 @@ test('four isolated players complete seven nights to the same outcome', async ({
         await pages[playerIndex]!.getByRole('button', { name: 'Ready for night' }).click();
         if (livingIndex < living.length - 1) {
           await expect(pages[0]!.getByTestId(`player-state-${playerIndex}`)).toContainText('Ready');
+          await expect(pages[playerIndex]!.getByText('Ready locked.')).toBeVisible();
+          await expect(pages[playerIndex]!.getByText('Comms', { exact: true })).toHaveCount(0);
         }
       }
     }

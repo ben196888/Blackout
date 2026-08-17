@@ -3,6 +3,7 @@ import type { MessageOutcome } from '../types';
 
 interface PaceLogMetadata {
   paceMessage?: MessageOutcome;
+  paceMessages?: MessageOutcome[];
 }
 
 /** In-memory boardgame.io storage with private authoritative message stdout events. */
@@ -25,24 +26,27 @@ export class LoggingInMemory implements StorageAPI.Sync {
     if (deltalog?.length) {
       this.logs.set(matchID, [...(this.logs.get(matchID) ?? []), ...deltalog]);
       for (const entry of deltalog) {
-        const outcome = (entry.metadata as PaceLogMetadata | undefined)?.paceMessage;
-        if (!outcome) continue;
-        console.log(JSON.stringify({
-          event: 'pace.message.v1',
-          match: matchID,
-          serverTime: new Date().toISOString(),
-          gameDay: outcome.day,
-          phase: entry.phase,
-          sender: outcome.sender,
-          method: outcome.method,
-          target: outcome.target,
-          rawText: outcome.rawText,
-          deliveredText: outcome.deliveredText,
-          recipients: outcome.recipients,
-          dropped: outcome.dropped,
-          excluded: outcome.excluded,
-          truncated: outcome.truncated,
-        }));
+        const metadata = entry.metadata as PaceLogMetadata | undefined;
+        const outcomes = metadata?.paceMessages
+          ?? (metadata?.paceMessage ? [metadata.paceMessage] : []);
+        for (const outcome of outcomes) {
+          console.log(JSON.stringify({
+            event: 'pace.message.v1',
+            match: matchID,
+            serverTime: new Date().toISOString(),
+            gameDay: outcome.day,
+            phase: entry.phase,
+            sender: outcome.sender,
+            method: outcome.method,
+            target: outcome.target,
+            rawText: outcome.rawText,
+            deliveredText: outcome.deliveredText,
+            recipients: outcome.recipients,
+            dropped: outcome.dropped,
+            excluded: outcome.excluded,
+            truncated: outcome.truncated,
+          }));
+        }
       }
     }
     this.states.set(matchID, state);

@@ -1,5 +1,5 @@
 import type { MoveFn } from 'boardgame.io';
-import { ACTIONS_PER_DAY } from '../constants';
+import { ACTIONS_PER_DAY, BALANCE } from '../constants';
 import type { Inventory, NodeId, PlayerID, TruthState } from '../types';
 import { requireRule } from './errors';
 import { readCurrentBulletin } from './facilities';
@@ -11,6 +11,7 @@ function playerFor(G: TruthState, playerID: string) {
   requireRule(PLAYER_IDS.includes(playerID as PlayerID), 'INVALID_PLAYER');
   const player = G.players[playerID as PlayerID];
   requireRule(player.alive, 'PLAYER_DEAD');
+  requireRule(!player.ready, 'READY_LOCKED');
   return player;
 }
 
@@ -114,7 +115,9 @@ export const scavenge: MoveFn<TruthState> = ({ G, playerID }, request: Inventory
   requireRule(nonNegativeIntegers(request), 'INVALID_QUANTITY');
   const total = request.food + request.battery;
   requireRule(total > 0, 'ZERO_QUANTITY');
-  const yieldLimit = player.character === 'OFFICE_WORKER' ? 3 : 2;
+  const yieldLimit = player.character === 'OFFICE_WORKER'
+    ? BALANCE.scavengeYield.OFFICE_WORKER
+    : BALANCE.scavengeYield.DEFAULT;
   requireRule(total <= yieldLimit, 'OVER_YIELD');
   requireRule(player.actionsLeft > 0, 'NO_ACTIONS');
   const room = player.capacity - player.inventory.food - player.inventory.battery;

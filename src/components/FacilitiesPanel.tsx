@@ -1,5 +1,6 @@
 import type { BoardProps } from 'boardgame.io/react';
 import { useState } from 'react';
+import { BALANCE } from '../constants';
 import { MAP_NODES } from '../game/map';
 import type { BulletinBoardId, PlayerViewState } from '../types';
 
@@ -36,8 +37,8 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
       </>}
 
       {canBroadcast && <>
-        <label>Village Office broadcast<textarea aria-label="Village broadcast" maxLength={60} value={broadcast} onChange={(event) => setBroadcast(event.target.value)} /></label>
-        <p className="counter">{Array.from(broadcast).length} / 60 characters · one-way, no delivery feedback</p>
+        <label>Village Office broadcast<textarea aria-label="Village broadcast" maxLength={BALANCE.payloadCap.VILLAGE_BROADCAST} value={broadcast} onChange={(event) => setBroadcast(event.target.value)} /></label>
+        <p className="counter">{Array.from(broadcast).length} / {BALANCE.payloadCap.VILLAGE_BROADCAST} characters · one-way, no delivery feedback</p>
         <button disabled={!broadcast} onClick={() => { moves.leaderBroadcast!(broadcast); setBroadcast(''); }}>Broadcast</button>
       </>}
     </section>

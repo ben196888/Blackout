@@ -1,6 +1,7 @@
 import type { RandomAPI } from 'boardgame.io/dist/types/src/plugins/random/random';
 import {
   ACTIONS_PER_DAY,
+  BALANCE,
   CHARACTER_IDS,
   DEFAULT_RENDEZVOUS,
   STARTING_NODES,
@@ -11,12 +12,18 @@ import { MAP_NODES, NODE_IDS, initialCaches } from './map';
 const PLAYER_IDS: PlayerID[] = ['0', '1', '2', '3'];
 
 export function startingInventory(character: CharacterId): Inventory {
-  if (character === 'STORE_OWNER') return { food: 6, battery: 4 };
-  return { food: 3, battery: 3 };
+  const inventory = character === 'STORE_OWNER'
+    ? BALANCE.startingInventory.STORE_OWNER
+    : character === 'OFFICE_WORKER'
+      ? BALANCE.startingInventory.OFFICE_WORKER
+      : BALANCE.startingInventory.DEFAULT;
+  return { ...inventory };
 }
 
 export function capacityFor(character: CharacterId): number {
-  return character === 'OFFICE_WORKER' ? 12 : 10;
+  return character === 'OFFICE_WORKER'
+    ? BALANCE.capacity.OFFICE_WORKER
+    : BALANCE.capacity.DEFAULT;
 }
 
 export function assignCharacters(random: Pick<RandomAPI, 'Shuffle'>): CharacterId[] {

@@ -42,6 +42,16 @@ describe('method specifications and schedule', () => {
 });
 
 describe('remote delivery privacy, costs, caps, and drops', () => {
+  it('locks all sends after the sender declares Contact Ready', () => {
+    const G = state();
+    G.day = 1;
+    equip(G, 'SMS', '0', '1');
+    G.players['0'].ready = true;
+    expect(() => deliver(G, '0', { method: 'SMS', target: '1', text: 'too late' }, () => 0.9))
+      .toThrow('READY_LOCKED');
+    expect(G.players['1'].inbox).toHaveLength(0);
+    expect(G.messageOutcomes).toBeUndefined();
+  });
   it('requires both parties to hold a method and reports only sent to the sender', () => {
     const G = state();
     G.day = 1;
@@ -234,6 +244,14 @@ describe('local and durable methods', () => {
 });
 
 describe('exchange', () => {
+  it('locks gifts after the sender declares Contact Ready', () => {
+    const G = state();
+    G.players['1'].location = G.players['0'].location;
+    G.players['0'].ready = true;
+    expect(() => exchangeItems(G, '0', '1', { food: 1, battery: 0 })).toThrow('READY_LOCKED');
+    expect(G.players['0'].inventory).toEqual({ food: 3, battery: 3 });
+    expect(G.players['1'].inventory).toEqual({ food: 3, battery: 3 });
+  });
   it('moves positive quantities atomically without spending a Contact action', () => {
     const G = state();
     G.players['0'].location = 'SCHOOL';

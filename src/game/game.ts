@@ -35,7 +35,9 @@ const chooseMethods: MoveFn<TruthState> = ({ G, playerID }, methods: MethodId[])
   player.methods = unique;
 };
 
-const saveCommsPlan: MoveFn<TruthState> = ({ G }, input: CommsPlanInput) => {
+const saveCommsPlan: MoveFn<TruthState> = ({ G, playerID }, input: CommsPlanInput) => {
+  const player = actor(G, playerID);
+  requireRule(!player.ready, 'READY_LOCKED');
   requireRule(!G.commsPlan.locked, 'PLAN_LOCKED');
   requireRule(input.expectedRevision === G.commsPlan.revision, 'STALE_REVISION');
   G.commsPlan = {
@@ -50,15 +52,26 @@ const saveCommsPlan: MoveFn<TruthState> = ({ G }, input: CommsPlanInput) => {
 
 const readyPlanning: MoveFn<TruthState> = ({ G, playerID }) => {
   const player = actor(G, playerID);
+  requireRule(!player.ready, 'READY_LOCKED');
   const required = player.character === 'STUDENT' ? 5 : 4;
   requireRule(player.methods.length === required, 'METHODS_REQUIRED');
   player.ready = true;
 };
 
-const readyContact: MoveFn<TruthState> = ({ G, playerID }) => {
+const readyContact: MoveFn<TruthState> = ({ G, playerID, random, log }) => {
   const player = actor(G, playerID);
   requireRule(player.alive, 'PLAYER_DEAD');
+  requireRule(!player.ready, 'READY_LOCKED');
   player.ready = true;
+  if (!livingReady(G)) return;
+
+  const firstNightMessage = G.messageOutcomes?.length ?? 0;
+  const outcome = resolveScheduledNight(G, random);
+  const nightMessages = G.messageOutcomes?.slice(firstNightMessage) ?? [];
+  if (nightMessages.length) {
+    log.setMetadata({ paceMessages: structuredClone(nightMessages) });
+  }
+  if (!outcome) G.day += 1;
 };
 
 function livingReady(G: TruthState) {
@@ -171,9 +184,7 @@ export const BlackoutGame: Game<TruthState> = {
         ready: { move: withErrorBoundary(readyContact), client: false },
       },
       endIf: ({ G }) => livingReady(G),
-      onEnd: ({ G, random }) => {
-        const outcome = resolveScheduledNight(G, random);
-        if (!outcome) G.day += 1;
+      onEnd: ({ G }) => {
         for (const id of ids) G.players[id].ready = false;
       },
       turn: { activePlayers: ActivePlayers.ALL },

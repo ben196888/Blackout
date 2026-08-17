@@ -67,7 +67,7 @@ export interface DailyCommsUsage {
 
 export interface MessageOutcome {
   day: number;
-  sender: PlayerID;
+  sender: PlayerID | 'SYSTEM';
   method: DeliveryMethodId | FacilityMethodId;
   target: PlayerID | NodeId | null;
   rawText: string;

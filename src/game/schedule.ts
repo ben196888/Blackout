@@ -1,4 +1,4 @@
-import { DEFAULT_RENDEZVOUS } from '../constants';
+import { BALANCE, DEFAULT_RENDEZVOUS } from '../constants';
 import type {
   GameDay,
   NodeId,
@@ -47,8 +47,8 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     exposureNight: false,
     rendezvousChange: false,
     communication: {
-      mobileData: 'DOWN', mobileVoiceDropRate: 0.5, smsDropRate: 0,
-      landlineUp: true, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      mobileData: 'DOWN', mobileVoiceDropRate: BALANCE.dropRate.MOBILE_VOICE_DAY_1, smsDropRate: 0,
+      landlineUp: true, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -58,8 +58,8 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     exposureNight: true,
     rendezvousChange: false,
     communication: {
-      mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: 0.25,
-      landlineUp: true, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: BALANCE.dropRate.SMS_DAY_2,
+      landlineUp: true, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -70,7 +70,7 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     rendezvousChange: false,
     communication: {
       mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: null,
-      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -81,7 +81,7 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     rendezvousChange: true,
     communication: {
       mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: null,
-      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -92,7 +92,8 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     rendezvousChange: false,
     communication: {
       mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: null,
-      landlineUp: false, batteryCostMultiplier: 2, radioBatteryCost: 1,
+      landlineUp: false, batteryCostMultiplier: BALANCE.communicationPrice.DAY_5_MULTIPLIER,
+      radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -103,7 +104,7 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     rendezvousChange: false,
     communication: {
       mobileData: 'RADIUS_2_ZONES', mobileVoiceDropRate: null, smsDropRate: null,
-      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
   {
@@ -114,7 +115,7 @@ export const SEVEN_DAY_SCHEDULE: readonly DayScheduleEntry[] = [
     rendezvousChange: false,
     communication: {
       mobileData: 'DOWN', mobileVoiceDropRate: null, smsDropRate: null,
-      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: 1,
+      landlineUp: false, batteryCostMultiplier: 1, radioBatteryCost: BALANCE.communicationPrice.RADIO_NIGHTLY,
     },
   },
 ] as const;

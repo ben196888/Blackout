@@ -69,6 +69,10 @@ describe('planning phase', () => {
     expect(sender.you.lastSend).toEqual({ day: 1, state: 'sent' });
     expect(sender.messageOutcomes).toBeUndefined();
     expect(recipient.you.inbox.at(-1)?.text).toBe('MEET AT SCHOOL');
+    clients[0]?.moves.ready!();
+    clients[0]?.moves.sendMessage!({ method: 'SMS', target: '1', text: 'TOO LATE' });
+    const lockedRecipient = clients[1]?.getState()?.G as unknown as { you: { inbox: Array<{ text: string }> } };
+    expect(lockedRecipient.you.inbox.map(({ text }) => text)).toEqual(['MEET AT SCHOOL']);
     clients.forEach((client) => client.stop());
   });
 
@@ -139,6 +143,14 @@ describe('planning phase', () => {
     expect(office.bulletinNotebook).toHaveLength(1);
     expect(unaware.rendezvousKnowledge).toBeUndefined();
     expect(unaware.bulletinNotebook).toBeUndefined();
+    const nightLog = clients[0]!.getState()?.log.find((entry) =>
+      Boolean((entry.metadata as { paceMessages?: unknown } | undefined)?.paceMessages))?.metadata as {
+      paceMessages?: Array<{ sender: string; method: string }>;
+    } | undefined;
+    expect(nightLog?.paceMessages).toEqual(expect.arrayContaining([
+      expect.objectContaining({ sender: 'SYSTEM', method: 'RADIO' }),
+      expect.objectContaining({ sender: 'SYSTEM', method: 'BULLETIN' }),
+    ]));
     clients.forEach((client) => client.stop());
   });
 

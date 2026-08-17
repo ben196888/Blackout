@@ -61,7 +61,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
               );
             })}
           </svg>
-          {ctx.phase === 'move' && you.alive && (
+          {ctx.phase === 'move' && you.alive && !publicYou.ready && (
             <div className="destinations">
               <strong>Reachable:</strong>
               {reachable.map((node) => <button key={node} onClick={() => moves.move!(shortestPath(you.location, node, G.severedEdges)!)}>{MAP_NODES[node].label}</button>)}
@@ -88,7 +88,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             </div>
           </section>
 
-          {ctx.phase === 'move' && you.alive && (
+          {ctx.phase === 'move' && you.alive && !publicYou.ready && (
             <section className="panel actions">
               <p className="eyebrow">Move actions</p>
               <ResourceFields label="Scavenge" value={take} onChange={setTake} />
@@ -120,7 +120,8 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             {you.inbox.map((message, index) => <article key={`${message.day}-${index}`}><strong>{message.method} · from {message.from === 'SYSTEM' ? 'System' : `Seat ${Number(message.from) + 1}`}</strong><span className="as-of">received on Day {message.day}</span><p>{message.text}</p></article>)}
           </section>
 
-          {ctx.phase === 'contact' && you.alive && <><CommsPanel G={G} moves={moves} playerID={playerID} /><FacilitiesPanel G={G} moves={moves} playerID={playerID} /><section className="panel"><button className="primary" onClick={() => moves.ready!()}>Ready for night</button></section></>}
+          {ctx.phase === 'contact' && you.alive && !publicYou.ready && <><CommsPanel G={G} moves={moves} playerID={playerID} /><FacilitiesPanel G={G} moves={moves} playerID={playerID} /><section className="panel"><button className="primary" onClick={() => moves.ready!()}>Ready for night</button></section></>}
+          {you.alive && publicYou.ready && <section className="panel"><p><strong>Ready locked.</strong> Waiting for the phase transition.</p></section>}
           {!you.alive && <section className="panel"><p>You can no longer act or speak.</p></section>}
         </aside>
       </div>

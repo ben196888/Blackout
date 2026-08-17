@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { BALANCE } from '../src/constants';
 import {
   BULLETIN_BOARD_IDS,
   RADIO_SILENT_NOTICE,
@@ -22,9 +23,10 @@ function leaderID(G: TruthState): PlayerID {
 }
 
 describe('night radio', () => {
-  it('keeps listen intent private/editable and charges exactly one Battery on Day 5', () => {
+  it('keeps listen intent private/editable and charges the tuned flat price on Day 5', () => {
     const G = state();
     G.day = 5;
+    G.players['0'].inventory.battery = BALANCE.communicationPrice.RADIO_NIGHTLY + 2;
     const before = G.players['0'].inventory.battery;
     setRadioListenIntent(G, '0', true);
     setRadioListenIntent(G, '0', false);
@@ -32,7 +34,8 @@ describe('night radio', () => {
     expect(G.players['0'].radioListen).toBe(true);
 
     resolveNightRadio(G);
-    expect(G.players['0'].inventory.battery).toBe(before - 1);
+    expect(G.players['0'].inventory.battery)
+      .toBe(before - BALANCE.communicationPrice.RADIO_NIGHTLY);
     expect(G.players['0'].radioListen).toBe(false);
     expect(G.players['0'].rendezvousKnowledge).toBeUndefined();
   });
@@ -63,6 +66,7 @@ describe('night radio', () => {
     G.day = 4;
     G.rendezvous = 'QUARRY';
     G.players['0'].location = 'SCHOOL';
+    G.players['0'].inventory.battery = BALANCE.communicationPrice.RADIO_NIGHTLY;
     setRadioListenIntent(G, '0', true);
 
     const official = resolveNightRadio(G);
@@ -163,7 +167,7 @@ describe('Village Leader broadcaster', () => {
     expect(() => broadcastFromVillageOffice(G, leader, 'no')).toThrow('PLAYER_DEAD');
   });
 
-  it('caps at 60 characters and reaches only living graph-connected recipients', () => {
+  it('uses the tuned cap and reaches only living graph-connected recipients', () => {
     const G = state();
     G.day = 4;
     const leader = leaderID(G);
@@ -173,8 +177,13 @@ describe('Village Leader broadcaster', () => {
     G.players['3'].alive = false;
     G.severedEdges = [edgeKey('VO', 'TEMPLE'), edgeKey('VO', 'BRIDGE_N')];
 
-    const cut = broadcastFromVillageOffice(G, leader, 'x'.repeat(61));
-    expect(cut).toMatchObject({ recipients: [], truncated: true, deliveredText: 'x'.repeat(60) });
+    const raw = 'x'.repeat(BALANCE.payloadCap.VILLAGE_BROADCAST + 1);
+    const cut = broadcastFromVillageOffice(G, leader, raw);
+    expect(cut).toMatchObject({
+      recipients: [],
+      truncated: true,
+      deliveredText: 'x'.repeat(BALANCE.payloadCap.VILLAGE_BROADCAST),
+    });
     expect(cut.excluded).toContainEqual({ player: '1', reason: 'NOT_CONNECTED' });
     expect(cut.excluded).toContainEqual({ player: '2', reason: 'NOT_CONNECTED' });
     expect(cut.excluded).toContainEqual({ player: '3', reason: 'DEAD' });

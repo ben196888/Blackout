@@ -270,7 +270,7 @@ export function deliver(
   requireRule(request.method in METHOD_SPECS, 'UNKNOWN_METHOD');
   requireRule(typeof request.text === 'string' && request.text.length > 0, 'INVALID_MESSAGE');
   requireRule(request.method === 'FACE_TO_FACE' || sender.methods.includes(request.method), 'METHOD_NOT_HELD');
-  requireRule(request.method !== 'BULLETIN', 'BULLETIN_DEFERRED');
+  requireRule(request.method !== 'BULLETIN', 'USE_BULLETIN_BOARD');
   requireRule(senderConnected(G, senderID, request.method), 'METHOD_UNAVAILABLE');
 
   // Costs precede audience resolution. A valid empty landline call therefore burns its dial.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_RENDEZVOUS } from '../src/constants';
+import { BALANCE, DEFAULT_RENDEZVOUS } from '../src/constants';
 import { ensureBulletinBoards } from '../src/game/facilities';
 import { BRIDGE_SPAN, DAY_2_EDGE, RENDEZVOUS_CENTRE_NODES, connectedComponents } from '../src/game/map';
 import {
@@ -37,13 +37,13 @@ describe('pinned seven-day schedule', () => {
       multiplier: entry.communication.batteryCostMultiplier,
       radio: entry.communication.radioBatteryCost,
     }))).toEqual([
-      { day: 1, edge: null, exposure: false, data: 'DOWN', voice: 0.5, sms: 0, landline: true, multiplier: 1, radio: 1 },
-      { day: 2, edge: DAY_2_EDGE, exposure: true, data: 'DOWN', voice: null, sms: 0.25, landline: true, multiplier: 1, radio: 1 },
-      { day: 3, edge: BRIDGE_SPAN, exposure: true, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: 1 },
-      { day: 4, edge: null, exposure: false, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: 1 },
-      { day: 5, edge: null, exposure: true, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 2, radio: 1 },
-      { day: 6, edge: null, exposure: false, data: 'RADIUS_2_ZONES', voice: null, sms: null, landline: false, multiplier: 1, radio: 1 },
-      { day: 7, edge: null, exposure: false, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: 1 },
+      { day: 1, edge: null, exposure: false, data: 'DOWN', voice: BALANCE.dropRate.MOBILE_VOICE_DAY_1, sms: 0, landline: true, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 2, edge: DAY_2_EDGE, exposure: true, data: 'DOWN', voice: null, sms: BALANCE.dropRate.SMS_DAY_2, landline: true, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 3, edge: BRIDGE_SPAN, exposure: true, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 4, edge: null, exposure: false, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 5, edge: null, exposure: true, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: BALANCE.communicationPrice.DAY_5_MULTIPLIER, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 6, edge: null, exposure: false, data: 'RADIUS_2_ZONES', voice: null, sms: null, landline: false, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
+      { day: 7, edge: null, exposure: false, data: 'DOWN', voice: null, sms: null, landline: false, multiplier: 1, radio: BALANCE.communicationPrice.RADIO_NIGHTLY },
     ]);
   });
 
@@ -103,7 +103,10 @@ describe('Day 4 rendezvous and night ordering', () => {
     G.day = 4;
     G.players['0'].location = 'SCHOOL';
     G.players['0'].radioListen = true;
-    G.players['0'].inventory = { food: 5, battery: 2 };
+    G.players['0'].inventory = {
+      food: 5,
+      battery: BALANCE.communicationPrice.RADIO_NIGHTLY + 1,
+    };
 
     resolveScheduledNight(G, fixed('SHRINE'));
     expect(G.rendezvous).toBe('SHRINE');

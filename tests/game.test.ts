@@ -2,7 +2,7 @@ import type { Game } from 'boardgame.io';
 import { Client } from 'boardgame.io/client';
 import { Local } from 'boardgame.io/multiplayer';
 import { describe, expect, it } from 'vitest';
-import { METHOD_IDS } from '../src/constants';
+import { BALANCE, METHOD_IDS } from '../src/constants';
 import { BlackoutGame } from '../src/game/game';
 import { BRIDGE_SPAN, DAY_2_EDGE, RENDEZVOUS_CENTRE_NODES } from '../src/game/map';
 import { createInitialState } from '../src/game/setup';
@@ -134,7 +134,8 @@ describe('planning phase', () => {
 
     expect(RENDEZVOUS_CENTRE_NODES).toContain(radio.rendezvousKnowledge?.location);
     expect(radio.rendezvousKnowledge).toMatchObject({ source: 'RADIO' });
-    expect(radio.inventory.battery).toBe(batteryBefore - 1);
+    expect(radio.inventory.battery)
+      .toBe(batteryBefore - BALANCE.communicationPrice.RADIO_NIGHTLY);
     expect(office.rendezvousKnowledge).toEqual({
       location: radio.rendezvousKnowledge?.location,
       learnedDay: 4,

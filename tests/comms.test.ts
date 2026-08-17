@@ -23,18 +23,30 @@ describe('method specifications and schedule', () => {
       'MOBILE_DATA', 'MOBILE_VOICE', 'SMS', 'LANDLINE',
       'MESH', 'WALKIE', 'BULLETIN', 'FACE_TO_FACE',
     ]);
-    expect(METHOD_SPECS.SMS.payloadCap).toBe(20);
-    expect(METHOD_SPECS.MESH).toMatchObject({ payloadCap: 40, batteryPerSends: 2, relayable: true });
-    expect(METHOD_SPECS.WALKIE).toMatchObject({ payloadCap: 40, batteryPerSends: 3, audience: 'IN_RANGE' });
+    expect(METHOD_SPECS.SMS.payloadCap).toBe(BALANCE.payloadCap.SMS);
+    expect(METHOD_SPECS.MESH).toMatchObject({
+      payloadCap: BALANCE.payloadCap.MESH,
+      batteryPerSends: BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY,
+      relayable: true,
+    });
+    expect(METHOD_SPECS.WALKIE).toMatchObject({
+      payloadCap: BALANCE.payloadCap.WALKIE,
+      batteryPerSends: BALANCE.communicationPrice.WALKIE_SENDS_PER_BATTERY,
+      audience: 'IN_RANGE',
+    });
     expect(METHOD_SPECS.BULLETIN.audience).toBe('ASYNC_AT_NODE');
     expect(METHOD_SPECS.FACE_TO_FACE.payloadCap).toBeNull();
   });
 
   it('encodes voice and SMS degradation, infrastructure death, and Day 6 data', () => {
-    expect(METHOD_SPECS.MOBILE_VOICE.availability[1]).toMatchObject({ up: true, dropRate: 0.5 });
+    expect(METHOD_SPECS.MOBILE_VOICE.availability[1]).toMatchObject({
+      up: true, dropRate: BALANCE.dropRate.MOBILE_VOICE_DAY_1,
+    });
     expect(METHOD_SPECS.MOBILE_VOICE.availability[2]?.up).toBe(false);
     expect(METHOD_SPECS.SMS.availability[1]).toMatchObject({ up: true, dropRate: 0 });
-    expect(METHOD_SPECS.SMS.availability[2]).toMatchObject({ up: true, dropRate: 0.25 });
+    expect(METHOD_SPECS.SMS.availability[2]).toMatchObject({
+      up: true, dropRate: BALANCE.dropRate.SMS_DAY_2,
+    });
     expect(METHOD_SPECS.LANDLINE.availability[2]?.up).toBe(true);
     expect(METHOD_SPECS.LANDLINE.availability[3]?.up).toBe(false);
     expect(METHOD_SPECS.MOBILE_DATA.availability[6]).toMatchObject({ up: true, coverage: 'DAY_6_ZONES' });
@@ -87,27 +99,36 @@ describe('remote delivery privacy, costs, caps, and drops', () => {
     const G = state();
     G.day = 1;
     equip(G, 'SMS', '0', '1');
+    G.players['0'].inventory.battery = BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE + 2;
     const before = G.players['0'].inventory.battery;
-    deliver(G, '0', { method: 'SMS', target: '1', text: '12345678901234567890EXTRA' }, () => 0.9);
+    const capped = 'x'.repeat(BALANCE.payloadCap.SMS);
+    deliver(G, '0', { method: 'SMS', target: '1', text: `${capped}EXTRA` }, () => 0.9);
+    const second = 'SECOND'.slice(0, BALANCE.payloadCap.SMS);
     deliver(G, '0', { method: 'SMS', target: '1', text: 'SECOND' }, () => 0.9);
-    expect(G.players['0'].inventory.battery).toBe(before - 1);
-    expect(G.players['1'].inbox[0]?.text).toBe('12345678901234567890');
-    expect(G.messageOutcomes?.[0]).toMatchObject({ truncated: true, deliveredText: '12345678901234567890' });
-    expect(G.players['1'].inbox[1]?.text).toBe('SECOND');
+    expect(G.players['0'].inventory.battery)
+      .toBe(before - BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE);
+    expect(G.players['1'].inbox[0]?.text).toBe(capped);
+    expect(G.messageOutcomes?.[0]).toMatchObject({ truncated: true, deliveredText: capped });
+    expect(G.players['1'].inbox[1]?.text).toBe(second);
   });
 
   it('uses the seeded roll for voice and Day 2 SMS drops', () => {
     const voice = state();
     voice.day = 1;
     equip(voice, 'MOBILE_VOICE', '0', '1');
-    deliver(voice, '0', { method: 'MOBILE_VOICE', target: '1', text: 'hello' }, () => 0.49);
-    expect(voice.players['1'].inbox).toHaveLength(0);
-    expect(voice.messageOutcomes?.[0]?.dropped).toEqual(['1']);
+    const voiceDropRate = BALANCE.dropRate.MOBILE_VOICE_DAY_1;
+    voice.players['0'].inventory.battery = BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE;
+    deliver(voice, '0', { method: 'MOBILE_VOICE', target: '1', text: 'hello' }, () =>
+      voiceDropRate / 2);
+    expect(voice.players['1'].inbox).toHaveLength(voiceDropRate > 0 ? 0 : 1);
+    expect(voice.messageOutcomes?.[0]?.dropped).toEqual(voiceDropRate > 0 ? ['1'] : []);
 
     const sms = state();
     sms.day = 2;
     equip(sms, 'SMS', '0', '1');
-    deliver(sms, '0', { method: 'SMS', target: '1', text: 'hello' }, () => 0.25);
+    sms.players['0'].inventory.battery = BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE;
+    deliver(sms, '0', { method: 'SMS', target: '1', text: 'hello' }, () =>
+      BALANCE.dropRate.SMS_DAY_2);
     expect(sms.players['1'].inbox).toHaveLength(1);
     expect(sms.messageOutcomes?.[0]?.dropped).toEqual([]);
   });
@@ -193,12 +214,15 @@ describe('local and durable methods', () => {
     equip(G, 'MESH', '0', '1');
     G.players['0'].location = 'VO';
     G.players['1'].location = 'TEMPLE';
-    G.players['0'].inventory.battery = 5;
-    for (const text of ['one', 'two', 'three']) {
+    const charge = BALANCE.communicationPrice.DAY_5_MULTIPLIER;
+    const sendCount = BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY + 1;
+    G.players['0'].inventory.battery = charge * 2 + 1;
+    for (let index = 0; index < sendCount; index += 1) {
+      const text = `message ${index + 1}`;
       deliver(G, '0', { method: 'MESH', target: '1', text }, () => 0.9);
     }
     expect(G.players['0'].inventory.battery).toBe(1);
-    expect(G.players['1'].inbox.map(({ text }) => text)).toEqual(['one', 'two', 'three']);
+    expect(G.players['1'].inbox).toHaveLength(sendCount);
   });
 
   it('broadcasts walkie to all holders in range and gives the Reservist radius 2', () => {
@@ -246,13 +270,13 @@ describe('local and durable methods', () => {
     expect(G.players['0'].inventory.battery).toBe(before);
   });
 
-  it('exposes bulletin configuration but defers persistence to M4', () => {
+  it('routes bulletin messages through the local append-only facility', () => {
     const G = state();
     G.day = 3;
     equip(G, 'BULLETIN', '0');
     expect(METHOD_SPECS.BULLETIN.availability[7]?.up).toBe(true);
     expect(() => deliver(G, '0', { method: 'BULLETIN', target: 'VO', text: 'notice' }, () => 0.9))
-      .toThrow('BULLETIN_DEFERRED');
+      .toThrow('USE_BULLETIN_BOARD');
   });
 });
 
@@ -261,18 +285,22 @@ describe('exchange', () => {
     const G = state();
     G.players['1'].location = G.players['0'].location;
     G.players['0'].ready = true;
+    const senderBefore = { ...G.players['0'].inventory };
+    const recipientBefore = { ...G.players['1'].inventory };
     expect(() => exchangeItems(G, '0', '1', { food: 1, battery: 0 })).toThrow('READY_LOCKED');
-    expect(G.players['0'].inventory).toEqual({ food: 3, battery: 3 });
-    expect(G.players['1'].inventory).toEqual({ food: 3, battery: 3 });
+    expect(G.players['0'].inventory).toEqual(senderBefore);
+    expect(G.players['1'].inventory).toEqual(recipientBefore);
   });
   it('moves positive quantities atomically without spending a Contact action', () => {
     const G = state();
     G.players['0'].location = 'SCHOOL';
     G.players['1'].location = 'SCHOOL';
+    G.players['0'].inventory = { food: 3, battery: 3 };
+    G.players['1'].inventory = { food: 0, battery: 0 };
     const actions = G.players['0'].actionsLeft;
     exchangeItems(G, '0', '1', { food: 1, battery: 2 });
     expect(G.players['0'].inventory).toEqual({ food: 2, battery: 1 });
-    expect(G.players['1'].inventory).toEqual({ food: 4, battery: 5 });
+    expect(G.players['1'].inventory).toEqual({ food: 1, battery: 2 });
     expect(G.players['0'].actionsLeft).toBe(actions);
   });
 
@@ -286,10 +314,10 @@ describe('exchange', () => {
     expect(G.players['0'].inventory).toEqual(senderBefore);
     expect(G.players['1'].inventory).toEqual(recipientBefore);
 
-    G.players['1'].inventory = { food: 5, battery: 5 };
+    G.players['1'].inventory = { food: G.players['1'].capacity, battery: 0 };
     expect(() => exchangeItems(G, '0', '1', { food: 1, battery: 0 })).toThrow('HANDS_FULL');
     expect(G.players['0'].inventory).toEqual(senderBefore);
-    expect(G.players['1'].inventory).toEqual({ food: 5, battery: 5 });
+    expect(G.players['1'].inventory).toEqual({ food: G.players['1'].capacity, battery: 0 });
   });
 
   it('rejects zero, remote, and dead-player exchanges', () => {

@@ -10,6 +10,7 @@ import {
   distancesFrom,
   eccentricity,
 } from '../src/game/map';
+import { BALANCE } from '../src/constants';
 
 describe('resolved 16-node map', () => {
   it('pins graph size, connectivity, diameter and centre set', () => {
@@ -37,8 +38,12 @@ describe('resolved 16-node map', () => {
       food: total.food + MAP_NODES[node as keyof typeof MAP_NODES].cache.food,
       battery: total.battery + MAP_NODES[node as keyof typeof MAP_NODES].cache.battery,
     }), { food: 0, battery: 0 });
-    expect(supplies(north)).toEqual({ food: 14, battery: 2 });
-    expect(supplies(south)).toEqual({ food: 10, battery: 10 });
+    const tunedSupplies = (nodes: string[]) => nodes.reduce((total, node) => {
+      const supply = BALANCE.mapSupply[node as keyof typeof BALANCE.mapSupply];
+      return { food: total.food + supply.food, battery: total.battery + supply.battery };
+    }, { food: 0, battery: 0 });
+    expect(supplies(north)).toEqual(tunedSupplies(north));
+    expect(supplies(south)).toEqual(tunedSupplies(south));
   });
 
   it('has bulletin boards only at the four resolved locations', () => {

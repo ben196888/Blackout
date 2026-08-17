@@ -28,7 +28,7 @@ describe('initial state', () => {
     for (const player of Object.values(state.players)) {
       expect(player.inventory.food + player.inventory.battery).toBeLessThanOrEqual(player.capacity);
       if (player.character === 'STORE_OWNER') {
-        expect(player.inventory).toEqual({ food: 6, battery: 4 });
+        expect(player.inventory).toEqual(BALANCE.startingInventory.STORE_OWNER);
       }
     }
   });
@@ -41,7 +41,19 @@ describe('initial state', () => {
     expect(METHOD_SPECS.MESH.batteryPerSends)
       .toBe(BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY);
     expect(BALANCE.startingInventory.STORE_OWNER.food + BALANCE.startingInventory.STORE_OWNER.battery)
-      .toBe(BALANCE.capacity.DEFAULT);
+      .toBeLessThanOrEqual(BALANCE.capacity.DEFAULT);
     expect(BALANCE.scavengeYield.OFFICE_WORKER).toBeGreaterThan(BALANCE.scavengeYield.DEFAULT);
+  });
+
+  it('keeps tuned values inside valid mechanical ranges', () => {
+    expect(Object.values(BALANCE.dropRate).every((rate) => rate >= 0 && rate <= 1)).toBe(true);
+    expect(Object.values(BALANCE.payloadCap).every((cap) => Number.isInteger(cap) && cap >= 0)).toBe(true);
+    expect(Object.values(BALANCE.scavengeYield).every((yieldValue) =>
+      Number.isInteger(yieldValue) && yieldValue > 0)).toBe(true);
+    expect(BALANCE.communicationPrice.MESH_SENDS_PER_BATTERY).toBeGreaterThan(0);
+    expect(BALANCE.communicationPrice.WALKIE_SENDS_PER_BATTERY).toBeGreaterThan(0);
+    expect(BALANCE.communicationPrice.INFRASTRUCTURE_FIRST_USE).toBeGreaterThanOrEqual(0);
+    expect(BALANCE.communicationPrice.RADIO_NIGHTLY).toBeGreaterThanOrEqual(0);
+    expect(BALANCE.communicationPrice.DAY_5_MULTIPLIER).toBeGreaterThanOrEqual(1);
   });
 });

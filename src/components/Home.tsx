@@ -24,11 +24,13 @@ export function Home() {
 
   return (
     <main className="home">
-      <section className="hero panel">
-        <p className="eyebrow">A four-player communication survival POC</p>
+      <section className="hero card">
+        <p className="kicker">PACE POC · FOUR SEATS · SEVEN NIGHTS</p>
         <h1>BLACKOUT</h1>
-        <p>
-          Seven days. Broken connections. One shared plan—and private fragments of the truth.
+        <p className="lede">
+          Four survivors are scattered across a village after a blackout. Each has private
+          information, a private inventory, and a limited set of ways to reach the others. You spend
+          Day 0 negotiating who covers which method, then live with those choices for seven nights.
         </p>
         <SettingPremise />
         <TrialNotice />
@@ -42,9 +44,10 @@ export function Home() {
             value={name}
           />
         </label>
-        <button disabled={busy} onClick={() => void createGame()}>
-          {busy ? 'Creating…' : 'Create game'}
+        <button className="primary" disabled={busy} onClick={() => void createGame()}>
+          {busy ? 'CREATING…' : 'CREATE GAME'}
         </button>
+        <a className="hud-link" href="/rules">Read the rules first →</a>
         {error && <p className="error" role="alert">{error}</p>}
       </section>
     </main>

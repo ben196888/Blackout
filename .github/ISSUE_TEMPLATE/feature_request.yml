@@ -1,0 +1,32 @@
+name: Feature or balance proposal
+description: Propose a rule change, balance tuning, or scoped enhancement.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a proof of concept with a deliberately narrow scope. Spectators, timers, rematches, persistence, a development harness, and multi-machine deployment are intentional omissions. See [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What coordination or play problem does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Trial evidence
+      description: For balance changes, summarize the trial observations that motivate it. Do not quote participants.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This fits the POC scope described in CONTRIBUTING.md

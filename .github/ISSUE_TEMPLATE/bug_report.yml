@@ -1,0 +1,53 @@
+name: Bug report
+description: Report incorrect game, communication, or secrecy behaviour.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste trial log dumps, player-authored message text, or private delivery outcomes into a public issue. Summarize instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The observed behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Include the game day, phase, seat, and communication method where relevant.
+      placeholder: |
+        1. Create a match and seat four players
+        2. On Day 2, send an SMS from seat 0 to seat 3
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did you see it
+      options:
+        - Local dev server (pnpm dev)
+        - Local smoke (pnpm smoke)
+        - Production (pace-poc.fly.dev)
+        - Unit tests (pnpm test)
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit or version
+      placeholder: e.g. 9fcd369 or 0.1.0
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Node version, pnpm version, OS, browser.

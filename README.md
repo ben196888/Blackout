@@ -43,7 +43,13 @@ pnpm smoke
 pnpm exec playwright install --with-deps chromium
 ```
 
-It drives four isolated browser contexts through the thin Lobby REST flow, socket connection, Day 0 planning, a credential-preserving refresh, the complete seven-night schedule, and the shared terminal outcome. Every main-branch release runs the same smoke locally, deploys the tested commit, then repeats it against the deployed app.
+It drives four isolated browser contexts through the thin Lobby REST flow, socket connection, Day 0 planning, a credential-preserving refresh, the complete seven-night schedule, and the shared terminal outcome.
+
+## Deploying
+
+Pushing to `main` verifies but never deploys. Production is reached only by manually dispatching the **Verify and deploy** workflow, which runs the full local gate, deploys the tested commit, then repeats the four-player smoke against the deployed app.
+
+This is deliberate. Match state is held in memory, so an automatic deploy on merge would abort any live trial. Requiring a human dispatch means production only ever changes when someone decides it should.
 
 ## Layout
 

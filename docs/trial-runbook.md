@@ -11,7 +11,7 @@ Use this checklist for every PACE POC trial. A trial counts only when four human
 
 ## 2. Prove production before admitting players
 
-Dispatch **Verify and deploy** from GitHub Actions and wait for the entire run, including **Production four-player smoke**, to pass. Do not create the human match while that workflow is running.
+Deploys are manual: pushing to `main` only verifies. Dispatch **Verify and deploy** from GitHub Actions and wait for the entire run, including **Production four-player smoke**, to pass. Do not create the human match while that workflow is running.
 
 ```sh
 gh workflow run release.yml --repo ben196888/Blackout --ref main

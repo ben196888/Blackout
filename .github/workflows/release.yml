@@ -14,6 +14,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Runs for every event, including pull requests from forks. Holds no secrets
+  # and cannot reach production.
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -50,12 +52,44 @@ jobs:
       - name: Local four-player smoke
         run: pnpm smoke
 
+  # Production is reachable only through a deliberate human dispatch of this
+  # workflow, and only from this repository. Pushing to main verifies but never
+  # deploys, so a merge can never abort a live trial. The `production`
+  # environment scopes FLY_API_TOKEN and records the deployment; add required
+  # reviewers to it in repository settings to gate this job behind an approval.
+  deploy:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'ben196888/Blackout'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://pace-poc.fly.dev
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 11.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Set up flyctl
-        if: github.event_name != 'pull_request'
         uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1
 
       - name: Deploy tested commit
-        if: github.event_name != 'pull_request'
         run: |
           flyctl deploy --remote-only --ha=false --app pace-poc
           flyctl scale count 1 --yes --app pace-poc
@@ -63,5 +97,4 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Production four-player smoke
-        if: github.event_name != 'pull_request'
         run: pnpm smoke:production

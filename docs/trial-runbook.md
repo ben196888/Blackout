@@ -14,8 +14,8 @@ Use this checklist for every PACE POC trial. A trial counts only when four human
 Dispatch **Verify and deploy** from GitHub Actions and wait for the entire run, including **Production four-player smoke**, to pass. Do not create the human match while that workflow is running.
 
 ```sh
-gh workflow run release.yml --repo ben196888/PACE-POC --ref main
-gh run list --repo ben196888/PACE-POC --workflow release.yml --limit 1
+gh workflow run release.yml --repo ben196888/Blackout --ref main
+gh run list --repo ben196888/Blackout --workflow release.yml --limit 1
 ```
 
 After the run is green, freeze deployments and Fly Machine restarts until the terminal outcome and log dump verification are complete. Match state is in memory; either operation aborts the trial.

@@ -55,8 +55,9 @@ jobs:
   # Production is reachable only through a deliberate human dispatch of this
   # workflow, and only from this repository. Pushing to main verifies but never
   # deploys, so a merge can never abort a live trial. The `production`
-  # environment scopes FLY_API_TOKEN and records the deployment; add required
-  # reviewers to it in repository settings to gate this job behind an approval.
+  # environment records the deployment; add required reviewers to it in
+  # repository settings to gate this job behind an approval, and move
+  # FLY_API_TOKEN into it to stop any job outside this one referencing it.
   deploy:
     needs: verify
     if: github.event_name == 'workflow_dispatch' && github.repository == 'ben196888/Blackout'

@@ -78,6 +78,8 @@ Four-human sessions must follow the private-log capture and verification checkli
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for scope, setup, the verification gate, and the rules around balance changes and trial data. Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
 
+To report a security issue, including any break in player-view secrecy or seat identity, follow the [security policy](SECURITY.md) rather than opening a public issue.
+
 ## License
 
 [MIT](LICENSE) © Ben Liu

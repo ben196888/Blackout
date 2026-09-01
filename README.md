@@ -1,6 +1,6 @@
 # PACE POC — BLACKOUT
 
-[![Verify and deploy](https://github.com/ben196888/PACE-POC/actions/workflows/release.yml/badge.svg)](https://github.com/ben196888/PACE-POC/actions/workflows/release.yml)
+[![Verify and deploy](https://github.com/ben196888/Blackout/actions/workflows/release.yml/badge.svg)](https://github.com/ben196888/Blackout/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A four-player hidden-information communication survival game, built to test whether method-coverage planning and imperfect communication produce useful coordination decisions.
@@ -13,7 +13,7 @@ The research question is not "is this fun". It is whether PACE-style method-cove
 
 ## Status
 
-Proof of concept. Scope is deliberately narrow and several omissions are intentional — see [Runtime limits](#runtime-limits). The implementation plan lives in [issue #1](https://github.com/ben196888/PACE-POC/issues/1).
+Proof of concept. Scope is deliberately narrow and several omissions are intentional — see [Runtime limits](#runtime-limits). The implementation plan lives in [issue #1](https://github.com/ben196888/Blackout/issues/1).
 
 ## Quick start
 

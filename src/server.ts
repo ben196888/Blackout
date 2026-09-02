@@ -15,7 +15,11 @@ const origins = [
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];
-const server = Server({ games: [BlackoutGame], db: new LoggingInMemory(), origins, apiOrigins: origins });
+// Screenshot baselines need the same characters dealt every run. Real matches leave
+// this unset and keep boardgame.io's time-based seed.
+const seed = process.env.BLACKOUT_SEED;
+const game = seed ? { ...BlackoutGame, seed } : BlackoutGame;
+const server = Server({ games: [game], db: new LoggingInMemory(), origins, apiOrigins: origins });
 
 server.router.post('/games/:name/:id/auth', async (ctx) => {
   ctx.set('Cache-Control', 'no-store');

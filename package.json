@@ -15,7 +15,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "playwright test",
-    "smoke:production": "PLAYWRIGHT_BASE_URL=https://pace-poc.fly.dev playwright test"
+    "smoke:production": "PLAYWRIGHT_BASE_URL=https://pace-poc.fly.dev playwright test",
+    "shots": "bash scripts/screenshots.sh",
+    "shots:update": "bash scripts/screenshots.sh --update"
   },
   "dependencies": {
     "boardgame.io": "0.50.2",

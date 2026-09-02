@@ -50,6 +50,19 @@ jobs:
       - name: Local four-player smoke
         run: pnpm smoke
 
+      - name: Stage screenshots
+        run: pnpm shots
+
+      - name: Upload screenshot diffs
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
       - name: Set up flyctl
         if: github.event_name != 'pull_request'
         uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1

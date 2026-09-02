@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { BALANCE, METHOD_IDS } from '../src/constants';
 import { BlackoutGame } from '../src/game/game';
 import { BRIDGE_SPAN, DAY_2_EDGE, RENDEZVOUS_CENTRE_NODES } from '../src/game/map';
-import { createInitialState } from '../src/game/setup';
-import type { PlayerID, TruthState } from '../src/types';
+import { createInitialState, startingInventory } from '../src/game/setup';
+import type { CharacterId, PlayerID, TruthState } from '../src/types';
 
 describe('planning phase', () => {
   it('broadcasts and logs unrestricted public Day 0 discussion', async () => {
@@ -198,6 +198,12 @@ describe('planning phase', () => {
       numPlayers: 4,
     }));
     clients.forEach((client) => client.start());
+    // Characters are dealt at random and their starting battery differs, so read
+    // seat 0's rather than assuming the common three.
+    const seatZeroCharacter = (clients[0]!.getState()?.G as unknown as {
+      you: { character: CharacterId };
+    }).you.character;
+    const seatZeroBattery = startingInventory(seatZeroCharacter).battery;
     clients.forEach((client, index) => {
       const projected = client.getState()?.G as unknown as { you: { character: string } };
       const count = projected.you.character === 'STUDENT' ? 5 : 4;
@@ -225,7 +231,7 @@ describe('planning phase', () => {
       Boolean((entry.metadata as { paceRadioChoices?: unknown } | undefined)?.paceRadioChoices));
     expect((radioLog?.metadata as { paceRadioChoices: Array<{ outcome: string }> })
       .paceRadioChoices).toEqual([
-        expect.objectContaining({ player: '0', outcome: 'LISTEN_SUCCESS', batteryBefore: 3 }),
+        expect.objectContaining({ player: '0', outcome: 'LISTEN_SUCCESS', batteryBefore: seatZeroBattery }),
         expect.objectContaining({ player: '1', outcome: 'SKIP', batteryBefore: expect.any(Number) }),
         expect.objectContaining({ player: '2', outcome: 'SKIP', batteryBefore: expect.any(Number) }),
         expect.objectContaining({ player: '3', outcome: 'SKIP', batteryBefore: expect.any(Number) }),

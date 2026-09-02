@@ -45,6 +45,8 @@ pnpm exec playwright install --with-deps chromium
 
 It drives four isolated browser contexts through the thin Lobby REST flow, socket connection, Day 0 planning, a credential-preserving refresh, the complete seven-night schedule, and the shared terminal outcome. Every main-branch release runs the same smoke locally, deploys the tested commit, then repeats it against the deployed app.
 
+`pnpm shots` compares five screens — lobby, Day 0 discussion, move, action, contact — against the baselines in [`tests/e2e/__screenshots__/`](tests/e2e/__screenshots__), so an unintended visual change fails the build. It runs in a pinned Playwright image and needs Docker; see [CONTRIBUTING.md](CONTRIBUTING.md) for how to refresh the baselines.
+
 ## Layout
 
 | Path | Contents |

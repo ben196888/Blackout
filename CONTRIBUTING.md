@@ -43,6 +43,19 @@ pnpm smoke
 
 `pnpm smoke` is the mandatory four-player browser smoke. It drives four isolated browser contexts through the Lobby REST flow, socket connection, Day 0 planning, a credential-preserving refresh, the complete seven-night schedule, and the shared terminal outcome. A change is not done until it passes.
 
+## Screenshot baselines
+
+`tests/e2e/screenshots.spec.ts` walks a four-player match and compares five screens — lobby, Day 0 discussion, move, action, contact — against the PNGs in `tests/e2e/__screenshots__/`. The match runs against a seeded server (`BLACKOUT_SEED`) so the same characters are dealt every time.
+
+Text metrics vary enough between machines to move the page by a pixel, which fails a full-page comparison, so the baselines and every comparison run inside one pinned Playwright image. Both commands need Docker:
+
+```sh
+pnpm shots
+pnpm shots:update
+```
+
+`pnpm shots` is what CI runs. `pnpm shots:update` re-renders the baselines, for a pull request that changes the interface on purpose. A plain `pnpm smoke` skips this file. Review an updated baseline like any other change — one that moved without a matching interface change means something drifted.
+
 ## Balance changes
 
 Balance is a single tuning surface: the `BALANCE` object in [`src/constants.ts`](src/constants.ts). Balance-only pull requests must edit that object and nothing else, and must cite the trial evidence that motivates the change. Numbers changed on intuition alone will be sent back.

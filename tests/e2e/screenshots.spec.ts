@@ -8,12 +8,15 @@ const VIEWPORT = { width: 1440, height: 980 };
 // smoke` on a laptop or a bare CI runner skips this file rather than failing on
 // antialiasing. The deployed server has no fixed seed, so it is skipped too.
 
-async function shot(page: Page, name: string, mask: Locator[] = []) {
-  // A missing webfont changes every glyph on the page, so fail on the font rather
-  // than on a wall of pixel diffs.
+/** A missing webfont changes every glyph, so fail on the font, not on a pixel wall. */
+async function awaitFonts(page: Page) {
   await page.evaluate(() => document.fonts.ready);
   const pixelFontLoaded = await page.evaluate(() => document.fonts.check('12px "Press Start 2P"'));
   expect(pixelFontLoaded, 'Press Start 2P did not load; the screenshot cannot match its baseline').toBe(true);
+}
+
+async function shot(page: Page, name: string, mask: Locator[] = []) {
+  await awaitFonts(page);
   await expect(page).toHaveScreenshot(`${name}.png`, {
     fullPage: true,
     mask,
@@ -47,6 +50,10 @@ test('every stage matches its screenshot baseline', async ({ browser }) => {
       pages.push(page);
     }
     const host = pages[0]!;
+    // Installed before the first navigation so the last shot can freeze the clock.
+    // Resumed straight away, so the socket and the game keep real time until then.
+    await host.clock.install();
+    await host.clock.resume();
 
     await host.goto('/');
     await host.getByLabel('Your name').fill('Survivor 1');
@@ -130,7 +137,62 @@ test('every stage matches its screenshot baseline', async ({ browser }) => {
     await host.getByRole('button', { name: 'SEND', exact: true }).click();
     await expect(host.getByRole('status')).toContainText('Sent. Delivery is unknown.');
     await shot(host, '05-communication-stage');
+
+    // --- 6. the toast that tells you the click landed ---
+    const toasts = host.getByRole('log', { name: 'Action feedback' }).locator('.toast');
+    const listen = host.getByLabel(/Listen to the nightly radio/);
+    // Wait the earlier toasts out, so exactly one is up and its text does not depend
+    // on how many actions this run happened to take.
+    // The box is server-controlled, so click and wait for the state rather than
+    // using check/uncheck, which want the change to land on the click itself.
+    if (await listen.isChecked()) {
+      await listen.click();
+      await expect(listen).not.toBeChecked();
+    }
+    await expect(toasts).toHaveCount(0, { timeout: 15_000 });
+    await listen.click();
+    await expect(listen).toBeChecked();
+    await expect(toasts).toHaveCount(1);
+    // Toasts expire on a timer, so freeze the page clock: nothing else stops this one
+    // ageing out mid-capture. A small margin ahead, because pauseAt refuses to travel
+    // backwards and the page clock moves on while the instruction is in flight.
+    await host.clock.pauseAt(await host.evaluate(() => Date.now() + 200));
+    await awaitFonts(host);
+    // The toast itself, not the transparent full-width region holding it, so the
+    // board behind it cannot bleed into the comparison.
+    await expect(toasts).toHaveScreenshot('06-action-toast.png');
   } finally {
     await Promise.all(contexts.map((context) => context.close()));
+  }
+});
+
+test('the reach explorer matches its screenshot baselines', async ({ browser }) => {
+  test.skip(!process.env.BLACKOUT_SHOTS, 'run `pnpm shots`; baselines only match inside the pinned Playwright image');
+  // No match and no dealt characters here, so this one is safe against a deployed
+  // server too — but it shares the image requirement.
+  const context = await browser.newContext({ viewport: VIEWPORT });
+  try {
+    const page = await context.newPage();
+    await page.goto('/rules');
+    const stand = page.getByRole('group', { name: 'Stand at' });
+
+    // Mesh: the green ring it reaches alone beside the amber ring it only reaches
+    // when a third player stands in the gap.
+    await page.getByRole('button', { name: /^Mesh 1 hop \+ relay$/ }).click();
+    await expect(page.getByLabel(/showing Mesh reach from the School/)).toBeVisible();
+    await shot(page, '07-rules-mesh-relay');
+
+    // The vantage is movable on mesh, and the reach follows it.
+    await stand.getByRole('button', { name: 'Co-op' }).click();
+    await expect(page.getByLabel(/showing Mesh reach from the Co-op/)).toBeVisible();
+    await shot(page, '08-rules-mesh-moved');
+
+    // High ground is sight, not reach: every open node, none of the enclosed five.
+    await page.getByRole('button', { name: /^High ground/ }).click();
+    await expect(page.getByLabel(/showing High ground reach from the Mountain Shrine/)).toBeVisible();
+    await expect(stand).toHaveCount(0);
+    await shot(page, '09-rules-high-ground');
+  } finally {
+    await context.close();
   }
 });

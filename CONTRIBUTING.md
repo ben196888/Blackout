@@ -45,7 +45,7 @@ pnpm smoke
 
 ## Screenshot baselines
 
-`tests/e2e/screenshots.spec.ts` walks a four-player match and compares five screens — lobby, Day 0 discussion, move, action, contact — against the PNGs in `tests/e2e/__screenshots__/`. The match runs against a seeded server (`BLACKOUT_SEED`) so the same characters are dealt every time.
+`tests/e2e/screenshots.spec.ts` walks a four-player match and compares the lobby, Day 0 discussion, move, action and contact screens, plus an action toast, against the PNGs in `tests/e2e/__screenshots__/`. A second test does the same for the rules page reach explorer. The match runs against a seeded server (`BLACKOUT_SEED`) so the same characters are dealt every time, and the toast shot freezes the page clock so it cannot age out mid-capture.
 
 Text metrics vary enough between machines to move the page by a pixel, which fails a full-page comparison, so the baselines and every comparison run inside one pinned Playwright image. Both commands need Docker:
 

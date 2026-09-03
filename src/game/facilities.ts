@@ -317,6 +317,13 @@ export function broadcastFromVillageOffice(
     truncated: Array.from(rawText).length > BALANCE.payloadCap.VILLAGE_BROADCAST,
   };
   (G.messageOutcomes ??= []).push(outcome);
+  (leader.outbox ??= []).push({
+    day: G.day,
+    method: 'VILLAGE_BROADCAST',
+    target: null,
+    text: deliveredText,
+    truncated: outcome.truncated,
+  });
   return outcome;
 }
 

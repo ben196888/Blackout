@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { CHARACTER_ABILITY_TEXT, CharacterAbility } from '../src/components/CharacterAbility';
 import { receiptDetail, sendAcknowledgementText } from '../src/components/CommsPanel';
 import { DayStamp } from '../src/components/DayStamp';
-import { cacheShorthand, clearableEdgesAt } from '../src/components/GameBoard';
+import { cacheShorthand, clearableEdgesAt, outboxTarget } from '../src/components/GameBoard';
 import { REACH_SPECS } from '../src/components/RulesPage';
 import { NODE_CODES, NODE_POSITIONS, NODE_SHORT_NAMES, VillageMap, nodeGlyph } from '../src/components/VillageMap';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, isDeadOnDay } from '../src/components/methodDisplay';
@@ -132,5 +132,20 @@ describe('rules page reach explorer', () => {
     expect(byId.SMS!.reach('SCHOOL')).toHaveLength(NODE_IDS.length - 1);
     expect(byId.MOBILE_DATA!.reach('SCHOOL')).toContain('FORD');
     expect(byId.FACE_TO_FACE!.reach('SCHOOL')).toEqual(['SCHOOL']);
+  });
+
+
+
+
+
+});
+
+describe('channel log book', () => {
+  it('names what a send was aimed at in the sender\u2019s own terms', () => {
+    expect(outboxTarget('2', 'SMS')).toBe('Seat 3');
+    expect(outboxTarget('VO', 'LANDLINE')).toBe('Village Office 村辦公處');
+    expect(outboxTarget(null, 'WALKIE')).toBe('everyone in range');
+    expect(outboxTarget(null, 'FACE_TO_FACE')).toBe('everyone standing here');
+    expect(outboxTarget(null, 'VILLAGE_BROADCAST')).toBe('the whole village');
   });
 });

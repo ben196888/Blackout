@@ -60,6 +60,17 @@ export interface PlayerTruth {
   rendezvousKnowledge?: RendezvousKnowledge;
   /** Lazily reset by the comms engine when the game day changes. */
   commsUsage?: DailyCommsUsage;
+  /**
+   * Owner-private copy of what this player sent, so the channel reads as one log
+   * book. It records the send, never the delivery — that stays unknowable.
+   */
+  outbox?: Array<{
+    day: number;
+    method: string;
+    target: PlayerID | NodeId | null;
+    text: string;
+    truncated: boolean;
+  }>;
   /** Owner-private acknowledgement. Remote sends never expose delivery facts. */
   lastSend?:
     | { sequence: number; day: number; state: 'sent' }

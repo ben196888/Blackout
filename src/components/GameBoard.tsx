@@ -30,6 +30,8 @@ export function cacheShorthand(inventory: Inventory): string {
 
 interface ChannelEntry {
   key: string;
+  /** Sort key: Day 0 planning first, then each day's traffic in the order it happened. */
+  day: number;
   who: string;
   stamp: string;
   meta: string;
@@ -37,6 +39,17 @@ interface ChannelEntry {
   tone: 'you' | 'received' | '';
 }
 
+/** "Seat 3", a node label, or nothing — what the sender aimed at, in their words. */
+export function outboxTarget(
+  target: PlayerID | NodeId | null,
+  method: string,
+): string {
+  if (method === 'VILLAGE_BROADCAST') return 'the whole village';
+  if (method === 'FACE_TO_FACE') return 'everyone standing here';
+  if (target === null) return 'everyone in range';
+  if (/^[0-3]$/.test(target)) return `Seat ${Number(target) + 1}`;
+  return MAP_NODES[target as NodeId]?.label ?? target;
+}
 
 type GameBoardProps = Pick<BoardProps<PlayerViewState>, 'G' | 'ctx' | 'moves' | 'playerID' | 'isConnected'>;
 
@@ -98,6 +111,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
   const channel = useMemo<ChannelEntry[]>(() => {
     const planning: ChannelEntry[] = G.planningMessages.map((message) => ({
       key: `plan-${message.id}`,
+      day: 0,
       who: CHARACTER_LABELS[G.publicPlayers[message.author]!.character].toUpperCase(),
       stamp: 'DAY 0',
       meta: 'OPEN CHANNEL · no cost, no limit',
@@ -106,6 +120,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }));
     const inbox: ChannelEntry[] = you.inbox.map((message, index) => ({
       key: `in-${message.day}-${index}`,
+      day: message.day,
       who: message.from === 'SYSTEM'
         ? 'SYSTEM'
         : `${CHARACTER_LABELS[G.publicPlayers[message.from]!.character].toUpperCase()}`,
@@ -116,14 +131,29 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }));
     const bulletins: ChannelEntry[] = (you.bulletinNotebook ?? []).map((post) => ({
       key: `bul-${post.id}`,
+      day: post.day,
       who: post.official ? 'OFFICIAL' : `SEAT ${Number(post.author) + 1}`,
       stamp: `DAY ${post.day} · BULLETIN`,
       meta: `${MAP_NODES[post.board].label} board · read in person`,
       text: post.text,
       tone: '',
     }));
-    return [...planning, ...inbox, ...bulletins];
-  }, [G.planningMessages, G.publicPlayers, playerID, you.bulletinNotebook, you.inbox]);
+    // Your own sends, so the channel reads as one log book rather than an inbox.
+    // The game never tells you whether these landed, and neither does this.
+    const sent: ChannelEntry[] = (you.outbox ?? []).map((message, index) => ({
+      key: `out-${message.day}-${index}`,
+      day: message.day,
+      who: 'YOU',
+      stamp: `DAY ${message.day} · ${message.method}`,
+      meta: `SENT to ${outboxTarget(message.target, message.method)}${message.truncated ? ' · cut to the cap' : ''}`,
+      text: message.text,
+      tone: 'you',
+    }));
+    return [...planning, ...inbox, ...bulletins, ...sent]
+      .map((entry, index) => ({ entry, index }))
+      .sort((a, b) => a.entry.day - b.entry.day || a.index - b.index)
+      .map(({ entry }) => entry);
+  }, [G.planningMessages, G.publicPlayers, playerID, you.bulletinNotebook, you.inbox, you.outbox]);
 
   useEffect(() => {
     const log = logRef.current;

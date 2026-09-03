@@ -6,8 +6,9 @@ import type { Inventory, NodeId, PlayerID, PlayerViewState } from '../types';
 import { CharacterAbility } from './CharacterAbility';
 import { CommsPanel } from './CommsPanel';
 import { DayStamp, dayAge } from './DayStamp';
-import { FacilitiesPanel } from './FacilitiesPanel';
+import { FacilitiesPanel, RadioCard } from './FacilitiesPanel';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, isDeadOnDay } from './methodDisplay';
+import { useToast } from './Toaster';
 import { VillageMap, type CacheNote, type GhostMarker } from './VillageMap';
 
 const SEAT_IDS: PlayerID[] = ['0', '1', '2', '3'];
@@ -29,11 +30,25 @@ export function cacheShorthand(inventory: Inventory): string {
 
 interface ChannelEntry {
   key: string;
+  /** Sort key: Day 0 planning first, then each day's traffic in the order it happened. */
+  day: number;
   who: string;
   stamp: string;
   meta: string;
   text: string;
   tone: 'you' | 'received' | '';
+}
+
+/** "Seat 3", a node label, or nothing — what the sender aimed at, in their words. */
+export function outboxTarget(
+  target: PlayerID | NodeId | null,
+  method: string,
+): string {
+  if (method === 'VILLAGE_BROADCAST') return 'the whole village';
+  if (method === 'FACE_TO_FACE') return 'everyone standing here';
+  if (target === null) return 'everyone in range';
+  if (/^[0-3]$/.test(target)) return `Seat ${Number(target) + 1}`;
+  return MAP_NODES[target as NodeId]?.label ?? target;
 }
 
 type GameBoardProps = Pick<BoardProps<PlayerViewState>, 'G' | 'ctx' | 'moves' | 'playerID' | 'isConnected'>;
@@ -45,6 +60,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
   /** Mirrors `take` synchronously so two fast stepper clicks in one tick both land. */
   const takeRef = useRef<Inventory>(take);
   const [drop, setDrop] = useState<Inventory>({ food: 0, battery: 0 });
+  const toast = useToast();
   const [note, setNote] = useState<{ title: string; body: string } | null>(null);
   const [error, setError] = useState<{ title: string; body: string } | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -95,6 +111,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
   const channel = useMemo<ChannelEntry[]>(() => {
     const planning: ChannelEntry[] = G.planningMessages.map((message) => ({
       key: `plan-${message.id}`,
+      day: 0,
       who: CHARACTER_LABELS[G.publicPlayers[message.author]!.character].toUpperCase(),
       stamp: 'DAY 0',
       meta: 'OPEN CHANNEL · no cost, no limit',
@@ -103,6 +120,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }));
     const inbox: ChannelEntry[] = you.inbox.map((message, index) => ({
       key: `in-${message.day}-${index}`,
+      day: message.day,
       who: message.from === 'SYSTEM'
         ? 'SYSTEM'
         : `${CHARACTER_LABELS[G.publicPlayers[message.from]!.character].toUpperCase()}`,
@@ -113,14 +131,29 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }));
     const bulletins: ChannelEntry[] = (you.bulletinNotebook ?? []).map((post) => ({
       key: `bul-${post.id}`,
+      day: post.day,
       who: post.official ? 'OFFICIAL' : `SEAT ${Number(post.author) + 1}`,
       stamp: `DAY ${post.day} · BULLETIN`,
       meta: `${MAP_NODES[post.board].label} board · read in person`,
       text: post.text,
       tone: '',
     }));
-    return [...planning, ...inbox, ...bulletins];
-  }, [G.planningMessages, G.publicPlayers, playerID, you.bulletinNotebook, you.inbox]);
+    // Your own sends, so the channel reads as one log book rather than an inbox.
+    // The game never tells you whether these landed, and neither does this.
+    const sent: ChannelEntry[] = (you.outbox ?? []).map((message, index) => ({
+      key: `out-${message.day}-${index}`,
+      day: message.day,
+      who: 'YOU',
+      stamp: `DAY ${message.day} · ${message.method}`,
+      meta: `SENT to ${outboxTarget(message.target, message.method)}${message.truncated ? ' · cut to the cap' : ''}`,
+      text: message.text,
+      tone: 'you',
+    }));
+    return [...planning, ...inbox, ...bulletins, ...sent]
+      .map((entry, index) => ({ entry, index }))
+      .sort((a, b) => a.entry.day - b.entry.day || a.index - b.index)
+      .map(({ entry }) => entry);
+  }, [G.planningMessages, G.publicPlayers, playerID, you.bulletinNotebook, you.inbox, you.outbox]);
 
   useEffect(() => {
     const log = logRef.current;
@@ -186,11 +219,13 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }
     applyTake({ food: 0, battery: 0 });
     moves.move!(path);
+    toast(`Walked to ${MAP_NODES[node].label}.`);
   }
 
   function submitDone() {
     if (publicYou.actionsLeft > 0 && !window.confirm('Finish Move and give up unused actions?')) return;
     moves.done!(true);
+    toast('Move locked. Waiting for the others.', 'info');
   }
 
   return (
@@ -276,7 +311,12 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
                 </div>
               )}
               {clearableEdges.map(({ key, label }) => (
-                <button className="quiet" key={key} onClick={() => moves.clearRoad!(key)} style={{ marginTop: '.6rem', width: '100%', textAlign: 'left' }}>
+                <button
+                  className="quiet"
+                  key={key}
+                  onClick={() => { moves.clearRoad!(key); toast(`Working on the road ${label}.`, 'info'); }}
+                  style={{ marginTop: '.6rem', width: '100%', textAlign: 'left' }}
+                >
                   Clear the road {label} — 1 action each
                 </button>
               ))}
@@ -328,7 +368,11 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
               <button
                 className={lifted ? 'primary' : ''}
                 disabled={!lifted}
-                onClick={() => { moves.scavenge!(take); applyTake({ food: 0, battery: 0 }); }}
+                onClick={() => {
+                  moves.scavenge!(take);
+                  toast(`Picked up ${[take.food ? `${take.food} food` : '', take.battery ? `${take.battery} battery` : ''].filter(Boolean).join(' and ')} — 1 action.`);
+                  applyTake({ food: 0, battery: 0 });
+                }}
                 style={{ marginTop: '.75rem', width: '100%' }}
               >
                 {lifted ? `TAKE ${lifted} — 1 ACTION` : 'PICK SOMETHING UP'}
@@ -340,7 +384,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
                     <label>Food<input min="0" onChange={(event) => setDrop({ ...drop, food: Number(event.target.value) })} type="number" value={drop.food} /></label>
                     <label>Battery<input min="0" onChange={(event) => setDrop({ ...drop, battery: Number(event.target.value) })} type="number" value={drop.battery} /></label>
                   </div>
-                  <button className="quiet" onClick={() => moves.dropItems!(drop)}>Drop items</button>
+                  <button className="quiet" onClick={() => { moves.dropItems!(drop); toast('Left in this cache.'); }}>Drop items</button>
                 </details>
               )}
             </section>
@@ -529,8 +573,14 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             </div>
             {contacting && <CommsPanel G={G} moves={moves} playerID={playerID} />}
             {contacting && (
-              <div className="composer" style={{ borderTop: 0, paddingTop: 0 }}>
-                <button className="ghost" onClick={() => moves.ready!()}>READY FOR NIGHT</button>
+              <div className="composer night-close" style={{ borderTop: 0, paddingTop: 0 }}>
+                <RadioCard G={G} moves={moves} playerID={playerID} />
+                <button
+                  className="ghost"
+                  onClick={() => { moves.ready!(); toast('Ready for night. Waiting for the others.', 'info'); }}
+                >
+                  READY FOR NIGHT
+                </button>
               </div>
             )}
             {you.alive && publicYou.ready && (

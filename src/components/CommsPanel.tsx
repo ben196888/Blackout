@@ -5,6 +5,7 @@ import { METHOD_SPECS, type SendRequest } from '../game/comms';
 import { MAP_NODES, NODE_IDS } from '../game/map';
 import type { DeliveryMethodId, Inventory, NodeId, PlayerID, PlayerViewState } from '../types';
 import { METHOD_SHORT } from './methodDisplay';
+import { useToast } from './Toaster';
 
 type Props = Pick<BoardProps<PlayerViewState>, 'G' | 'moves' | 'playerID'>;
 
@@ -33,6 +34,7 @@ export function receiptDetail(
 
 export function CommsPanel({ G, moves, playerID }: Props) {
   const you = G.you!;
+  const toast = useToast();
   const [method, setMethod] = useState<DeliveryMethodId>('FACE_TO_FACE');
   const [targetPlayer, setTargetPlayer] = useState<PlayerID>(playerID === '0' ? '1' : '0');
   const [targetNode, setTargetNode] = useState<NodeId>('VO');
@@ -178,7 +180,10 @@ export function CommsPanel({ G, moves, playerID }: Props) {
           <label>Food<input min="0" onChange={(event) => setGift({ ...gift, food: Number(event.target.value) })} type="number" value={gift.food} /></label>
           <label>Battery<input min="0" onChange={(event) => setGift({ ...gift, battery: Number(event.target.value) })} type="number" value={gift.battery} /></label>
         </div>
-        <button className="quiet" onClick={() => moves.exchange!(giftTarget, gift)}>Give immediately</button>
+        <button
+          className="quiet"
+          onClick={() => { moves.exchange!(giftTarget, gift); toast('Handed over.'); }}
+        >Give immediately</button>
       </details>
     </div>
   );

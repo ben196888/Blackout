@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { CHARACTER_ABILITY_TEXT, CharacterAbility } from '../src/components/CharacterAbility';
 import { receiptDetail, sendAcknowledgementText } from '../src/components/CommsPanel';
 import { DayStamp } from '../src/components/DayStamp';
-import { cacheShorthand, clearableEdgesAt } from '../src/components/GameBoard';
+import { cacheShorthand, clearableEdgesAt, outboxTarget } from '../src/components/GameBoard';
 import { REACH_SPECS } from '../src/components/RulesPage';
 import { NODE_CODES, NODE_POSITIONS, NODE_SHORT_NAMES, VillageMap, nodeGlyph } from '../src/components/VillageMap';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, isDeadOnDay } from '../src/components/methodDisplay';
 import { CHARACTER_IDS, METHOD_IDS } from '../src/constants';
-import { NODE_IDS, edgeKey } from '../src/game/map';
+import { MAP_NODES, NODE_IDS, edgeKey } from '../src/game/map';
 
 describe('authoritative communication feedback', () => {
   it('does not imply remote delivery and distinguishes an empty face-to-face audience', () => {
@@ -132,5 +132,64 @@ describe('rules page reach explorer', () => {
     expect(byId.SMS!.reach('SCHOOL')).toHaveLength(NODE_IDS.length - 1);
     expect(byId.MOBILE_DATA!.reach('SCHOOL')).toContain('FORD');
     expect(byId.FACE_TO_FACE!.reach('SCHOOL')).toEqual(['SCHOOL']);
+  });
+
+  it('shows mesh relay as the ring one road beyond its own reach', () => {
+    const byId = Object.fromEntries(REACH_SPECS.map((spec) => [spec.id, spec]));
+    const mesh = byId.MESH!;
+    expect(mesh.reach('SCHOOL').sort()).toEqual(['BRIDGE_N', 'BRIDGE_S', 'CLINIC', 'FIELD']);
+    // Two roads out: reachable only because somebody stands in the gap. BRIDGE_N is
+    // one road from SCHOOL because the bridge span is free, so it is direct, not relay.
+    expect(mesh.relay!('SCHOOL').sort()).toEqual(['FORD', 'VO']);
+    expect(mesh.relay!('SCHOOL').some((node) => mesh.reach('SCHOOL').includes(node))).toBe(false);
+  });
+
+  it('gives the Student unaided what mesh otherwise needs a relay for', () => {
+    const byId = Object.fromEntries(REACH_SPECS.map((spec) => [spec.id, spec]));
+    const student = byId.MESH_STUDENT!.reach('SCHOOL');
+    for (const node of [...byId.MESH!.reach('SCHOOL'), ...byId.MESH!.relay!('SCHOOL')]) {
+      expect(student).toContain(node);
+    }
+    expect(byId.MESH_STUDENT!.relay).toBeUndefined();
+  });
+
+  it('lets the reader walk the vantage only on the two methods reach follows them on', () => {
+    const movable = REACH_SPECS.filter((spec) => spec.movable).map((spec) => spec.id);
+    expect(movable).toEqual(['WALKIE', 'MESH']);
+    for (const spec of REACH_SPECS) expect(spec.movable && spec.origin).toBeFalsy();
+  });
+
+  it('sees every open node from the high ground and no enclosed one', () => {
+    const byId = Object.fromEntries(REACH_SPECS.map((spec) => [spec.id, spec]));
+    const sight = byId.HIGH_GROUND!;
+    expect(sight.origin).toBe('SHRINE');
+    const seen = sight.reach('SHRINE');
+    expect(seen).not.toContain('SHRINE');
+    for (const node of NODE_IDS) {
+      if (node === 'SHRINE') continue;
+      expect(seen.includes(node)).toBe(MAP_NODES[node].open);
+    }
+    // The buildings people hide in stay hidden.
+    for (const enclosed of ['VO', 'STORE', 'CLINIC', 'COOP', 'FOREST'] as const) {
+      expect(seen).not.toContain(enclosed);
+    }
+  });
+
+  it('broadcasts from the Village Office, not from where the reader stands', () => {
+    const byId = Object.fromEntries(REACH_SPECS.map((spec) => [spec.id, spec]));
+    const broadcaster = byId.VO_BROADCAST!;
+    expect(broadcaster.origin).toBe('VO');
+    // Every seat still joined to the Office by road, however far away.
+    expect(broadcaster.reach('VO')).toHaveLength(NODE_IDS.length - 1);
+  });
+});
+
+describe('channel log book', () => {
+  it('names what a send was aimed at in the sender\u2019s own terms', () => {
+    expect(outboxTarget('2', 'SMS')).toBe('Seat 3');
+    expect(outboxTarget('VO', 'LANDLINE')).toBe('Village Office 村辦公處');
+    expect(outboxTarget(null, 'WALKIE')).toBe('everyone in range');
+    expect(outboxTarget(null, 'FACE_TO_FACE')).toBe('everyone standing here');
+    expect(outboxTarget(null, 'VILLAGE_BROADCAST')).toBe('the whole village');
   });
 });

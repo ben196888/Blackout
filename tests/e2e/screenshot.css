@@ -1,0 +1,4 @@
+/* Applied only while a baseline screenshot is taken. Toasts expire on a timer, so
+   whether one is still up depends on how fast the run was; smoke.spec.ts asserts
+   them instead. */
+.toaster { visibility: hidden !important; }

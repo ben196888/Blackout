@@ -72,6 +72,9 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.getByRole('textbox', { name: 'Planning message', exact: true })
       .fill('Who can cover walkie and mesh?');
     await pages[0]!.getByRole('button', { name: 'Send to everyone' }).click();
+    // A click that worked and one that never registered otherwise look the same.
+    await expect(pages[0]!.getByRole('log', { name: 'Action feedback' }))
+      .toContainText('Sent to the open channel.');
     for (const page of pages) {
       await expect(page.getByLabel('Planning messages', { exact: true }))
         .toContainText('Who can cover walkie and mesh?');
@@ -135,6 +138,9 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.getByRole('button', { name: 'SEND', exact: true }).click();
     await expect(pages[0]!.getByRole('status')).toContainText('Sent. Delivery is unknown.');
     await expect(pages[1]!.getByText('MEET AT SCHOOL')).toBeVisible({ timeout: 15_000 });
+    // The sender keeps their own copy in the channel, without learning it landed.
+    await expect(pages[0]!.getByLabel('Open channel')).toContainText('SENT to Seat 2');
+    await expect(pages[0]!.getByLabel('Open channel')).toContainText('MEET AT SCHOOL');
 
     await pages[0]!.evaluate((id) => {
       const key = `pace.identity.${id}`;

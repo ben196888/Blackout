@@ -68,6 +68,8 @@ export interface VillageMapProps {
   you?: NodeId | null;
   /** Nodes to ring as reachable right now. */
   reach?: readonly NodeId[];
+  /** Nodes reachable only because a third player stands in between and relays. */
+  relay?: readonly NodeId[];
   /** Edge keys in game/map.ts `edgeKey` form. */
   severedEdges?: readonly string[];
   /** Remembered sightings of other seats, drawn under the node. */
@@ -86,6 +88,7 @@ export interface VillageMapProps {
 export function VillageMap({
   you = null,
   reach = [],
+  relay = [],
   severedEdges = [],
   ghosts = [],
   caches = {},
@@ -154,6 +157,21 @@ export function VillageMap({
             <circle
               cx={position[0]} cy={position[1]} key={`reach-${node}`} r={s.r + 9}
               style={{ fill: 'none', stroke: '#8bd8a7', strokeWidth: 2, strokeDasharray: '4 5' }}
+            />
+          );
+        })}
+      </g>
+
+      <g>
+        {relay.map((node) => {
+          const position = NODE_POSITIONS[node];
+          if (!position) return null;
+          // A second, wider ring in the signal colour: reachable, but only through
+          // somebody else's radio.
+          return (
+            <circle
+              cx={position[0]} cy={position[1]} key={`relay-${node}`} r={s.r + 9}
+              style={{ fill: 'none', stroke: '#e3b94f', strokeWidth: 2, strokeDasharray: '2 6' }}
             />
           );
         })}

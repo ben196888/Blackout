@@ -323,6 +323,13 @@ export function deliver(
     truncated: delivered.truncated,
   };
   (G.messageOutcomes ??= []).push(outcome);
+  (sender.outbox ??= []).push({
+    day: G.day,
+    method: request.method,
+    target: request.target,
+    text: delivered.text,
+    truncated: delivered.truncated,
+  });
 
   const sequence = (sender.lastSend?.sequence ?? 0) + 1;
   if (request.method === 'FACE_TO_FACE') {

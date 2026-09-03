@@ -90,9 +90,20 @@ describe('remote delivery privacy, costs, caps, and drops', () => {
       excluded: [{ player: '1', reason: 'METHOD_NOT_HELD' }],
     });
 
+    // The sender keeps their own copy — they wrote it — but learns nothing about
+    // where it went. No recipients, no exclusions, no drop.
+    expect(playerView({ G, playerID: '0' }).you?.outbox).toEqual([
+      { day: 1, method: 'SMS', target: '1', text: 'WHERE ARE YOU', truncated: false },
+    ]);
     const senderView = JSON.stringify(playerView({ G, playerID: '0' }));
-    expect(senderView).not.toContain('WHERE ARE YOU');
     expect(senderView).not.toContain('METHOD_NOT_HELD');
+    expect(senderView).not.toContain('recipients');
+    expect(senderView).not.toContain('excluded');
+
+    // Nobody else sees the send at all — not the text, not that it happened.
+    for (const other of ['1', '2', '3'] as const) {
+      expect(JSON.stringify(playerView({ G, playerID: other }))).not.toContain('WHERE ARE YOU');
+    }
   });
 
   it('charges infrastructure once per method per day and truncates SMS by characters', () => {

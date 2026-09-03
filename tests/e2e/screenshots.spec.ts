@@ -14,7 +14,12 @@ async function shot(page: Page, name: string, mask: Locator[] = []) {
   await page.evaluate(() => document.fonts.ready);
   const pixelFontLoaded = await page.evaluate(() => document.fonts.check('12px "Press Start 2P"'));
   expect(pixelFontLoaded, 'Press Start 2P did not load; the screenshot cannot match its baseline').toBe(true);
-  await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true, mask });
+  await expect(page).toHaveScreenshot(`${name}.png`, {
+    fullPage: true,
+    mask,
+    // Relative to the repo root, which is where Playwright runs from.
+    stylePath: 'tests/e2e/screenshot.css',
+  });
 }
 
 /** Day 0 claims are buttons; the quota is printed on the save button. */

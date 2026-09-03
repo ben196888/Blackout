@@ -3,33 +3,65 @@ import { ACTIONS_PER_DAY, DEFAULT_RENDEZVOUS } from '../constants';
 import { MAP_NODES, NODE_IDS, distancesFrom } from '../game/map';
 import type { DeliveryMethodId, NodeId } from '../types';
 import { TrialNotice } from './TrialNotice';
-import { VillageMap } from './VillageMap';
+import { NODE_SHORT_NAMES, VillageMap } from './VillageMap';
 
 /** The explorer stands you at the fallback rendezvous, the one node everyone knows. */
 const VANTAGE: NodeId = DEFAULT_RENDEZVOUS;
 
 interface ReachSpec {
-  id: DeliveryMethodId;
+  id: string;
   label: string;
   tag: string;
   blurb: string;
+  /** Where the sender must stand. Pinned methods ignore the movable vantage. */
+  origin?: NodeId;
+  /** Whether the reader may walk the vantage around the map on this method. */
+  movable?: true;
+  /** High ground is sight, not a message; the panel and legend say so. */
+  sight?: true;
   reach: (from: NodeId) => NodeId[];
+  /** Nodes this method only reaches through a third player standing in between. */
+  relay?: (from: NodeId) => NodeId[];
 }
 
 const within = (from: NodeId, radius: number) =>
   NODE_IDS.filter((node) => node !== from && distancesFrom(from)[node] <= radius);
+
+const ringAt = (from: NodeId, radius: number) =>
+  NODE_IDS.filter((node) => node !== from && distancesFrom(from)[node] === radius);
 
 /** Reach is derived from the live map so this page cannot drift from the engine. */
 export const REACH_SPECS: ReachSpec[] = [
   {
     id: 'WALKIE', label: 'Walkie-talkie', tag: '1 hop',
     blurb: 'Everyone within one road hears it, whether you meant them to or not. 40 characters. One battery buys three sends. The Reservist reaches two roads.',
+    movable: true,
     reach: (from) => within(from, 1),
   },
   {
     id: 'MESH', label: 'Mesh', tag: '1 hop + relay',
-    blurb: 'One hop, but a third player standing between you and your target relays it for free. 40 characters, one battery per two sends. The Student sends two hops unaided.',
+    blurb: 'On its own it goes one road, like the walkie. But a third living player standing one road from you and one road from your target passes it on for free — so anyone two roads out is reachable whenever somebody is standing in the gap. That relay costs the relay nothing and they are never told they did it. 40 characters, one battery per two sends.',
+    movable: true,
     reach: (from) => within(from, 1),
+    relay: (from) => ringAt(from, 2),
+  },
+  {
+    id: 'MESH_STUDENT', label: 'Mesh · the Student', tag: '2 hops unaided',
+    blurb: 'The Student\u2019s mesh carries two roads with nobody in between, so the amber ring above becomes solid reach. It is the one seat that can hold the two halves of the village together on its own — which is also why the Student claims five methods instead of four.',
+    reach: (from) => within(from, 2),
+  },
+  {
+    id: 'VO_BROADCAST', label: 'Village Office broadcaster', tag: 'the Village Leader',
+    blurb: 'Not a claimed method — a fixture the Village Leader operates by standing at the Village Office. One push reaches every seat still joined to the Office by road, however far, once a day, 60 characters, one way. After Day 4 it is one of only two places the changed rendezvous is ever spoken; the other is the nightly radio.',
+    origin: 'VO',
+    reach: (from) => NODE_IDS.filter((node) => node !== from && Number.isFinite(distancesFrom(from)[node])),
+  },
+  {
+    id: 'HIGH_GROUND', label: 'High ground', tag: 'sight, not reach',
+    sight: true,
+    blurb: 'Not a message at all. Standing on the Mountain Shrine 山神廟 — the one high-ground node — you simply see every living player who is out in the open, anywhere on the map, however far away. Anyone inside an enclosed building stays hidden: the Village Office, the Store, the Clinic, the Co-op and the Forest Station. It is passive, so it costs no action and no battery, and the people you spot are never told they were seen.',
+    origin: 'SHRINE',
+    reach: () => NODE_IDS.filter((node) => node !== 'SHRINE' && MAP_NODES[node].open),
   },
   {
     id: 'BULLETIN', label: 'Bulletin board', tag: 'here only',
@@ -92,9 +124,12 @@ const PHASES = [
 ];
 
 export function RulesPage() {
-  const [method, setMethod] = useState<DeliveryMethodId>('WALKIE');
+  const [method, setMethod] = useState<string>('WALKIE');
+  const [vantage, setVantage] = useState<NodeId>(VANTAGE);
   const selected = REACH_SPECS.find((spec) => spec.id === method) ?? REACH_SPECS[0]!;
-  const reach = useMemo(() => selected.reach(VANTAGE), [selected]);
+  const origin = selected.origin ?? vantage;
+  const reach = useMemo(() => selected.reach(origin), [selected, origin]);
+  const relay = useMemo(() => selected.relay?.(origin) ?? [], [selected, origin]);
 
   return (
     <main className="rules">
@@ -128,7 +163,14 @@ export function RulesPage() {
       <section className="rules-section">
         <h2>02 · Who can you actually reach</h2>
         <p className="sub">
-          You are standing at the {MAP_NODES[VANTAGE].label}. Pick a method to see how far it carries.
+          You are standing at the {MAP_NODES[origin].label}. Pick a method to see how far it carries.
+          {selected.movable
+            ? ' Click any node to stand there instead — the reach follows you.'
+            : selected.origin === 'SHRINE'
+              ? ' This one only works from the high ground, so the map moves you there.'
+              : selected.origin
+                ? ` This one only works from the ${MAP_NODES[selected.origin].label}, so the map moves you there.`
+                : ''}
         </p>
         <div className="reach-explorer">
           <div>
@@ -146,23 +188,43 @@ export function RulesPage() {
               ))}
             </div>
             <div className="reach-blurb">
-              <p className="card-title">Reach</p>
+              <p className="card-title">{selected.sight ? 'Sight' : 'Reach'}</p>
               <p>{selected.blurb}</p>
             </div>
           </div>
           <div className="map-frame">
             <VillageMap
-              ariaLabel={`Village map showing ${selected.label} reach from the ${MAP_NODES[VANTAGE].label}`}
+              ariaLabel={`Village map showing ${selected.label} reach from the ${MAP_NODES[origin].label}`}
               height={520}
+              onNodeClick={selected.movable ? setVantage : undefined}
               reach={reach}
-              you={VANTAGE}
+              relay={relay}
+              you={origin}
             />
+            {selected.movable && (
+              // Every clickable node is also a button, so standing somewhere else
+              // never depends on hitting a circle with a pointer.
+              <div aria-label="Stand at" className="reach-stand" role="group">
+                <span className="sig">STAND AT</span>
+                {NODE_IDS.map((node) => (
+                  <button
+                    aria-pressed={node === origin}
+                    key={node}
+                    onClick={() => setVantage(node)}
+                    type="button"
+                  >{NODE_SHORT_NAMES[node]}</button>
+                ))}
+              </div>
+            )}
             <div className="map-legend">
               <span className="sig">B bulletin board</span>
               <span className="sig">P landline phone</span>
               <span className="sig">H high ground</span>
               <span className="sig">━ free bridge crossing</span>
-              <span className="grn">◌ reachable on this method</span>
+              <span className="grn">
+                ◌ {selected.sight ? 'a living player here would be visible' : 'reachable on this method'}
+              </span>
+              {relay.length > 0 && <span className="sig">◌ only if someone relays from between</span>}
             </div>
           </div>
         </div>

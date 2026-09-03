@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { BALANCE } from '../constants';
 import { MAP_NODES } from '../game/map';
 import type { BulletinBoardId, PlayerViewState } from '../types';
+import { useToast } from './Toaster';
 
 type Props = Pick<BoardProps<PlayerViewState>, 'G' | 'moves' | 'playerID'>;
 
@@ -10,6 +11,7 @@ const BOARD_IDS: BulletinBoardId[] = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
 
 export function FacilitiesPanel({ G, moves, playerID }: Props) {
   const you = G.you!;
+  const toast = useToast();
   const [post, setPost] = useState('');
   const [broadcast, setBroadcast] = useState('');
   const atBoard = BOARD_IDS.includes(you.location as BulletinBoardId);
@@ -31,7 +33,10 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
             aria-label={`Listen to the nightly radio · costs ${radioCost} battery`}
             checked={you.radioListen}
             disabled={ready}
-            onChange={(event) => moves.setRadioListen!(event.target.checked)}
+            onChange={(event) => {
+              moves.setRadioListen!(event.target.checked);
+              toast(event.target.checked ? `Listening tonight · −${radioCost} battery` : 'Not listening tonight', 'info');
+            }}
             type="checkbox"
           />
           <span>
@@ -57,7 +62,15 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
               <label>Append a local notice
                 <textarea aria-label="Bulletin notice" onChange={(event) => setPost(event.target.value)} value={post} />
               </label>
-              <button className="quiet" disabled={!post.trim()} onClick={() => { moves.postBulletin!(post); setPost(''); }}>
+              <button
+                className="quiet"
+                disabled={!post.trim()}
+                onClick={() => {
+                  moves.postBulletin!(post);
+                  setPost('');
+                  toast(`Pinned to the ${MAP_NODES[you.location].label} board.`);
+                }}
+              >
                 Post to this board
               </button>
             </div>
@@ -79,7 +92,15 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
                 {Array.from(broadcast).length} / {BALANCE.payloadCap.VILLAGE_BROADCAST} characters · once per day · one-way, no delivery feedback
               </p>
               {broadcastUsed && <p className="hint warn">Today&rsquo;s Village Office broadcast has already been used.</p>}
-              <button className="quiet" disabled={!broadcast || broadcastUsed} onClick={() => { moves.leaderBroadcast!(broadcast); setBroadcast(''); }}>
+              <button
+                className="quiet"
+                disabled={!broadcast || broadcastUsed}
+                onClick={() => {
+                  moves.leaderBroadcast!(broadcast);
+                  setBroadcast('');
+                  toast('Broadcast sent. One-way — no delivery feedback.', 'info');
+                }}
+              >
                 Broadcast
               </button>
             </div>

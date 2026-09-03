@@ -8,6 +8,7 @@ import { GameBoard } from './GameBoard';
 import { OutcomeBoard } from './OutcomeBoard';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, METHOD_TAG } from './methodDisplay';
 import { VillageMap } from './VillageMap';
+import { useToast } from './Toaster';
 
 type PaceBoardProps = BoardProps<PlayerViewState>;
 
@@ -20,6 +21,7 @@ function startingNode(id: PlayerID): NodeId {
 
 export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoardProps) {
   const you = G.you;
+  const toast = useToast();
   const publicYou = playerID ? G.publicPlayers[playerID as PlayerID] : null;
   const [methods, setMethods] = useState<MethodId[]>(you?.methods ?? []);
   const [discussion, setDiscussion] = useState('');
@@ -148,7 +150,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
             <button
               className="quiet"
               disabled={locked || methods.length !== methodLimit || selectionMatchesSaved}
-              onClick={() => moves.chooseMethods!(methods)}
+              onClick={() => { moves.chooseMethods!(methods); toast(`Claimed ${methods.length} methods.`); }}
               style={{ marginTop: '.85rem', width: '100%' }}
             >
               {selectionMatchesSaved && saved ? 'Methods saved' : `Save ${methodLimit} methods`}
@@ -177,7 +179,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
             <button
               className="primary"
               disabled={locked || !saved}
-              onClick={() => moves.ready!()}
+              onClick={() => { moves.ready!(); toast('Ready. Day 1 starts once all four are locked.', 'info'); }}
               style={{ marginTop: '.9rem', width: '100%' }}
             >
               {locked
@@ -290,7 +292,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
             <button
               className="quiet"
               disabled={locked}
-              onClick={() => moves.saveCommsPlan!(plan)}
+              onClick={() => { moves.saveCommsPlan!(plan); toast('Shared plan saved for everyone.'); }}
               style={{ marginTop: '.75rem' }}
             >
               Save shared plan
@@ -345,7 +347,7 @@ export function PlanningBoard({ G, ctx, moves, playerID, isConnected }: PaceBoar
               <button
                 className="primary"
                 disabled={locked || !discussion.trim()}
-                onClick={() => { moves.sendPlanningMessage!(discussion); setDiscussion(''); }}
+                onClick={() => { moves.sendPlanningMessage!(discussion); setDiscussion(''); toast('Sent to the open channel.'); }}
               >
                 SEND TO EVERYONE
               </button>

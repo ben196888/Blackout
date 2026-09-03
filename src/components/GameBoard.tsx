@@ -8,6 +8,7 @@ import { CommsPanel } from './CommsPanel';
 import { DayStamp, dayAge } from './DayStamp';
 import { FacilitiesPanel } from './FacilitiesPanel';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, isDeadOnDay } from './methodDisplay';
+import { useToast } from './Toaster';
 import { VillageMap, type CacheNote, type GhostMarker } from './VillageMap';
 
 const SEAT_IDS: PlayerID[] = ['0', '1', '2', '3'];
@@ -36,6 +37,7 @@ interface ChannelEntry {
   tone: 'you' | 'received' | '';
 }
 
+
 type GameBoardProps = Pick<BoardProps<PlayerViewState>, 'G' | 'ctx' | 'moves' | 'playerID' | 'isConnected'>;
 
 export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardProps) {
@@ -45,6 +47,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
   /** Mirrors `take` synchronously so two fast stepper clicks in one tick both land. */
   const takeRef = useRef<Inventory>(take);
   const [drop, setDrop] = useState<Inventory>({ food: 0, battery: 0 });
+  const toast = useToast();
   const [note, setNote] = useState<{ title: string; body: string } | null>(null);
   const [error, setError] = useState<{ title: string; body: string } | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -186,11 +189,13 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
     }
     applyTake({ food: 0, battery: 0 });
     moves.move!(path);
+    toast(`Walked to ${MAP_NODES[node].label}.`);
   }
 
   function submitDone() {
     if (publicYou.actionsLeft > 0 && !window.confirm('Finish Move and give up unused actions?')) return;
     moves.done!(true);
+    toast('Move locked. Waiting for the others.', 'info');
   }
 
   return (
@@ -276,7 +281,12 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
                 </div>
               )}
               {clearableEdges.map(({ key, label }) => (
-                <button className="quiet" key={key} onClick={() => moves.clearRoad!(key)} style={{ marginTop: '.6rem', width: '100%', textAlign: 'left' }}>
+                <button
+                  className="quiet"
+                  key={key}
+                  onClick={() => { moves.clearRoad!(key); toast(`Working on the road ${label}.`, 'info'); }}
+                  style={{ marginTop: '.6rem', width: '100%', textAlign: 'left' }}
+                >
                   Clear the road {label} — 1 action each
                 </button>
               ))}
@@ -328,7 +338,11 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
               <button
                 className={lifted ? 'primary' : ''}
                 disabled={!lifted}
-                onClick={() => { moves.scavenge!(take); applyTake({ food: 0, battery: 0 }); }}
+                onClick={() => {
+                  moves.scavenge!(take);
+                  toast(`Picked up ${[take.food ? `${take.food} food` : '', take.battery ? `${take.battery} battery` : ''].filter(Boolean).join(' and ')} — 1 action.`);
+                  applyTake({ food: 0, battery: 0 });
+                }}
                 style={{ marginTop: '.75rem', width: '100%' }}
               >
                 {lifted ? `TAKE ${lifted} — 1 ACTION` : 'PICK SOMETHING UP'}
@@ -340,7 +354,7 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
                     <label>Food<input min="0" onChange={(event) => setDrop({ ...drop, food: Number(event.target.value) })} type="number" value={drop.food} /></label>
                     <label>Battery<input min="0" onChange={(event) => setDrop({ ...drop, battery: Number(event.target.value) })} type="number" value={drop.battery} /></label>
                   </div>
-                  <button className="quiet" onClick={() => moves.dropItems!(drop)}>Drop items</button>
+                  <button className="quiet" onClick={() => { moves.dropItems!(drop); toast('Left in this cache.'); }}>Drop items</button>
                 </details>
               )}
             </section>
@@ -530,7 +544,12 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             {contacting && <CommsPanel G={G} moves={moves} playerID={playerID} />}
             {contacting && (
               <div className="composer" style={{ borderTop: 0, paddingTop: 0 }}>
-                <button className="ghost" onClick={() => moves.ready!()}>READY FOR NIGHT</button>
+                <button
+                  className="ghost"
+                  onClick={() => { moves.ready!(); toast('Ready for night. Waiting for the others.', 'info'); }}
+                >
+                  READY FOR NIGHT
+                </button>
               </div>
             )}
             {you.alive && publicYou.ready && (

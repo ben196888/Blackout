@@ -175,10 +175,24 @@ test('the reach explorer matches its screenshot baselines', async ({ browser }) 
     const page = await context.newPage();
     await page.goto('/rules');
     const stand = page.getByRole('group', { name: 'Stand at' });
+    const picker = page.getByRole('group', { name: 'Ways to reach and see' });
+
+    // The list is grouped by what grants the entry: the methods a player claims on
+    // Day 0, then the two a role grants, then the one the map grants. A pixel diff
+    // would catch a reorder, but not say what moved.
+    await expect(picker.locator('.reach-group')).toHaveText([
+      'Telecom methods', 'Role abilities', 'Environment',
+    ]);
+    await expect(picker.getByRole('button')).toHaveText([
+      /^Walkie-talkie/, /^Mesh1 hop/, /^Bulletin board/, /^Landline/, /^SMS/,
+      /^Mobile voice/, /^Mobile data/, /^Face to face/,
+      /^Mesh · the Student/, /^Village Office broadcaster/,
+      /^High ground/,
+    ]);
 
     // Mesh: the green ring it reaches alone beside the amber ring it only reaches
     // when a third player stands in the gap.
-    await page.getByRole('button', { name: /^Mesh 1 hop \+ relay$/ }).click();
+    await picker.getByRole('button', { name: /^Mesh 1 hop \+ relay$/ }).click();
     await expect(page.getByLabel(/showing Mesh reach from the School/)).toBeVisible();
     await shot(page, '07-rules-mesh-relay');
 
@@ -188,7 +202,7 @@ test('the reach explorer matches its screenshot baselines', async ({ browser }) 
     await shot(page, '08-rules-mesh-moved');
 
     // High ground is sight, not reach: every open node, none of the enclosed five.
-    await page.getByRole('button', { name: /^High ground/ }).click();
+    await picker.getByRole('button', { name: /^High ground/ }).click();
     await expect(page.getByLabel(/showing High ground reach from the Mountain Shrine/)).toBeVisible();
     await expect(stand).toHaveCount(0);
     await shot(page, '09-rules-high-ground');

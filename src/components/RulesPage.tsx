@@ -177,7 +177,7 @@ export function RulesPage() {
         </p>
         <div className="reach-explorer">
           <div>
-            <div className="reach-picker" role="group" aria-label="Communication methods">
+            <div className="reach-picker" role="group" aria-label="Ways to reach and see">
               {REACH_SPECS.map((spec, index) => (
                 <Fragment key={spec.id}>
                   {spec.group !== REACH_SPECS[index - 1]?.group && (

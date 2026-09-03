@@ -324,12 +324,18 @@ test('four isolated players complete seven nights to the same outcome', async ({
         await expect(page.getByText(`DAY ${day}`, { exact: true })).toBeVisible({ timeout: 15_000 });
       }
       if (day <= 4) {
+        // Production deals random characters. The Store Owner starts full and
+        // has room for only one food after each night, unlike the screenshot deal.
+        const inventory = await pages[0]!.getByTestId('private-inventory').innerText();
+        const [load, capacity] = inventory.split('/').map(Number);
+        const foodToTake = Math.min(2, capacity! - load!);
+        expect(foodToTake).toBeGreaterThan(0);
         const takeMoreFood = pages[0]!.getByRole('button', { name: 'Take one more food' });
-        await takeMoreFood.click();
-        await expect(pages[0]!.getByTestId('take-food')).toHaveText('1');
-        await takeMoreFood.click();
-        await expect(pages[0]!.getByTestId('take-food')).toHaveText('2');
-        await pages[0]!.getByRole('button', { name: 'TAKE 2 — 1 ACTION' }).click();
+        for (let food = 1; food <= foodToTake; food += 1) {
+          await takeMoreFood.click();
+          await expect(pages[0]!.getByTestId('take-food')).toHaveText(String(food));
+        }
+        await pages[0]!.getByRole('button', { name: `TAKE ${foodToTake} — 1 ACTION` }).click();
         await expect(pages[0]!.getByText('1 ACTION LEFT')).toBeVisible();
       }
 

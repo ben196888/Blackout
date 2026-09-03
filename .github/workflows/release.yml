@@ -50,6 +50,12 @@ jobs:
       - name: Local four-player smoke
         run: pnpm smoke
 
+      - name: Store Owner seven-night regression
+        run: pnpm exec playwright test tests/e2e/smoke.spec.ts --grep 'complete seven nights'
+        env:
+          # Seat 0 starts at capacity; night 1 frees only one inventory slot.
+          BLACKOUT_SEED: smoke-store-owner-9
+
       - name: Stage screenshots
         run: pnpm shots
 

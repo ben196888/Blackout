@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { ACTIONS_PER_DAY, DEFAULT_RENDEZVOUS } from '../constants';
 import { MAP_NODES, NODE_IDS, distancesFrom } from '../game/map';
 import type { DeliveryMethodId, NodeId } from '../types';
@@ -8,8 +8,11 @@ import { NODE_SHORT_NAMES, VillageMap } from './VillageMap';
 /** The explorer stands you at the fallback rendezvous, the one node everyone knows. */
 const VANTAGE: NodeId = DEFAULT_RENDEZVOUS;
 
+type ReachGroup = 'Telecom methods' | 'Role abilities' | 'Environment';
+
 interface ReachSpec {
   id: string;
+  group: ReachGroup;
   label: string;
   tag: string;
   blurb: string;
@@ -33,65 +36,65 @@ const ringAt = (from: NodeId, radius: number) =>
 /** Reach is derived from the live map so this page cannot drift from the engine. */
 export const REACH_SPECS: ReachSpec[] = [
   {
-    id: 'WALKIE', label: 'Walkie-talkie', tag: '1 hop',
+    id: 'WALKIE', group: 'Telecom methods', label: 'Walkie-talkie', tag: '1 hop',
     blurb: 'Everyone within one road hears it, whether you meant them to or not. 40 characters. One battery buys three sends. The Reservist reaches two roads.',
     movable: true,
     reach: (from) => within(from, 1),
   },
   {
-    id: 'MESH', label: 'Mesh', tag: '1 hop + relay',
+    id: 'MESH', group: 'Telecom methods', label: 'Mesh', tag: '1 hop + relay',
     blurb: 'On its own it goes one road, like the walkie. But a third living player standing one road from you and one road from your target passes it on for free — so anyone two roads out is reachable whenever somebody is standing in the gap. That relay costs the relay nothing and they are never told they did it. 40 characters, one battery per two sends.',
     movable: true,
     reach: (from) => within(from, 1),
     relay: (from) => ringAt(from, 2),
   },
   {
-    id: 'MESH_STUDENT', label: 'Mesh · the Student', tag: '2 hops unaided',
-    blurb: 'The Student\u2019s mesh carries two roads with nobody in between, so the amber ring above becomes solid reach. It is the one seat that can hold the two halves of the village together on its own — which is also why the Student claims five methods instead of four.',
+    id: 'BULLETIN', group: 'Telecom methods', label: 'Bulletin board', tag: 'here only',
+    blurb: 'Pin a notice at the board you are standing at. Free, no length limit, and it stays there — but only people who walk to that board will ever read it.',
+    reach: (from) => [from],
+  },
+  {
+    id: 'LANDLINE', group: 'Telecom methods', label: 'Landline', tag: '4 phones',
+    blurb: 'Ring another phone node and whoever is standing there picks up. Free, but one dial per day, and the lines go dead from Day 3.',
+    reach: (from) => NODE_IDS.filter((node) => node !== from && MAP_NODES[node].landline),
+  },
+  {
+    id: 'SMS', group: 'Telecom methods', label: 'SMS', tag: 'anywhere',
+    blurb: 'Reaches anyone anywhere while the network holds — 20 characters only, and everything past that is silently cut. Dies after Day 2.',
+    reach: (from) => NODE_IDS.filter((node) => node !== from),
+  },
+  {
+    id: 'MOBILE_VOICE', group: 'Telecom methods', label: 'Mobile voice', tag: 'Day 1 only',
+    blurb: 'A real conversation with anyone, anywhere — on Day 1 only, and half of all calls drop. After that the towers are gone.',
+    reach: (from) => NODE_IDS.filter((node) => node !== from),
+  },
+  {
+    id: 'MOBILE_DATA', group: 'Telecom methods', label: 'Mobile data', tag: 'Day 6 only',
+    blurb: 'Dead until Day 6, when a cell-on-wheels lights up everything within two roads of the School and of the rendezvous. Both ends have to stand inside it.',
     reach: (from) => within(from, 2),
   },
   {
-    id: 'VO_BROADCAST', label: 'Village Office broadcaster', tag: 'the Village Leader',
+    id: 'FACE_TO_FACE', group: 'Telecom methods', label: 'Face to face', tag: 'same node',
+    blurb: 'Free, unlimited, and the only method that tells you it landed. Everything else you send into the dark.',
+    reach: (from) => [from],
+  },
+  {
+    id: 'MESH_STUDENT', group: 'Role abilities', label: 'Mesh · the Student', tag: '2 hops unaided',
+    blurb: 'The Student\u2019s mesh carries two roads with nobody in between, so the amber relay ring on Mesh becomes solid reach. It is the one seat that can hold the two halves of the village together on its own — which is also why the Student claims five methods instead of four.',
+    reach: (from) => within(from, 2),
+  },
+  {
+    id: 'VO_BROADCAST', group: 'Role abilities', label: 'Village Office broadcaster', tag: 'the Village Leader',
     blurb: 'Not a claimed method — a fixture the Village Leader operates by standing at the Village Office. One push reaches every seat still joined to the Office by road, however far, once a day, 60 characters, one way. After Day 4 it is one of only two places the changed rendezvous is ever spoken; the other is the nightly radio.',
     origin: 'VO',
     reach: (from) => NODE_IDS.filter((node) => node !== from && Number.isFinite(distancesFrom(from)[node])),
   },
   {
-    id: 'HIGH_GROUND', label: 'High ground', tag: 'sight, not reach',
+    id: 'HIGH_GROUND', group: 'Environment', label: 'High ground', tag: 'sight, not reach',
     sight: true,
     blurb: 'Not a message at all. Standing on the Mountain Shrine 山神廟 — the one high-ground node — you simply see every living player who is out in the open, anywhere on the map, however far away. Anyone inside an enclosed building stays hidden: the Village Office, the Store, the Clinic, the Co-op and the Forest Station. It is passive, so it costs no action and no battery, and the people you spot are never told they were seen.',
     origin: 'SHRINE',
     reach: () => NODE_IDS.filter((node) => node !== 'SHRINE' && MAP_NODES[node].open),
-  },
-  {
-    id: 'BULLETIN', label: 'Bulletin board', tag: 'here only',
-    blurb: 'Pin a notice at the board you are standing at. Free, no length limit, and it stays there — but only people who walk to that board will ever read it.',
-    reach: (from) => [from],
-  },
-  {
-    id: 'LANDLINE', label: 'Landline', tag: '4 phones',
-    blurb: 'Ring another phone node and whoever is standing there picks up. Free, but one dial per day, and the lines go dead from Day 3.',
-    reach: (from) => NODE_IDS.filter((node) => node !== from && MAP_NODES[node].landline),
-  },
-  {
-    id: 'SMS', label: 'SMS', tag: 'anywhere',
-    blurb: 'Reaches anyone anywhere while the network holds — 20 characters only, and everything past that is silently cut. Dies after Day 2.',
-    reach: (from) => NODE_IDS.filter((node) => node !== from),
-  },
-  {
-    id: 'MOBILE_VOICE', label: 'Mobile voice', tag: 'Day 1 only',
-    blurb: 'A real conversation with anyone, anywhere — on Day 1 only, and half of all calls drop. After that the towers are gone.',
-    reach: (from) => NODE_IDS.filter((node) => node !== from),
-  },
-  {
-    id: 'MOBILE_DATA', label: 'Mobile data', tag: 'Day 6 only',
-    blurb: 'Dead until Day 6, when a cell-on-wheels lights up everything within two roads of the School and of the rendezvous. Both ends have to stand inside it.',
-    reach: (from) => within(from, 2),
-  },
-  {
-    id: 'FACE_TO_FACE', label: 'Face to face', tag: 'same node',
-    blurb: 'Free, unlimited, and the only method that tells you it landed. Everything else you send into the dark.',
-    reach: (from) => [from],
   },
 ];
 
@@ -175,16 +178,20 @@ export function RulesPage() {
         <div className="reach-explorer">
           <div>
             <div className="reach-picker" role="group" aria-label="Communication methods">
-              {REACH_SPECS.map((spec) => (
-                <button
-                  aria-pressed={spec.id === method}
-                  key={spec.id}
-                  onClick={() => setMethod(spec.id)}
-                  type="button"
-                >
-                  <span>{spec.label}</span>
-                  <span className="tag">{spec.tag}</span>
-                </button>
+              {REACH_SPECS.map((spec, index) => (
+                <Fragment key={spec.id}>
+                  {spec.group !== REACH_SPECS[index - 1]?.group && (
+                    <p className="reach-group">{spec.group}</p>
+                  )}
+                  <button
+                    aria-pressed={spec.id === method}
+                    onClick={() => setMethod(spec.id)}
+                    type="button"
+                  >
+                    <span>{spec.label}</span>
+                    <span className="tag">{spec.tag}</span>
+                  </button>
+                </Fragment>
               ))}
             </div>
             <div className="reach-blurb">

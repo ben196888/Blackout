@@ -6,7 +6,7 @@ import type { Inventory, NodeId, PlayerID, PlayerViewState } from '../types';
 import { CharacterAbility } from './CharacterAbility';
 import { CommsPanel } from './CommsPanel';
 import { DayStamp, dayAge } from './DayStamp';
-import { FacilitiesPanel } from './FacilitiesPanel';
+import { FacilitiesPanel, RadioCard } from './FacilitiesPanel';
 import { METHOD_COLUMN, METHOD_LETTER, METHOD_ORDER, isDeadOnDay } from './methodDisplay';
 import { useToast } from './Toaster';
 import { VillageMap, type CacheNote, type GhostMarker } from './VillageMap';
@@ -543,7 +543,8 @@ export function GameBoard({ G, ctx, moves, playerID, isConnected }: GameBoardPro
             </div>
             {contacting && <CommsPanel G={G} moves={moves} playerID={playerID} />}
             {contacting && (
-              <div className="composer" style={{ borderTop: 0, paddingTop: 0 }}>
+              <div className="composer night-close" style={{ borderTop: 0, paddingTop: 0 }}>
+                <RadioCard G={G} moves={moves} playerID={playerID} />
                 <button
                   className="ghost"
                   onClick={() => { moves.ready!(); toast('Ready for night. Waiting for the others.', 'info'); }}

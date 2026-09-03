@@ -465,3 +465,6 @@ summary { cursor: pointer; }
 .toast.info { border-color: var(--signal); color: var(--signal); background: #241f12; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+.night-close { display: grid; gap: .8rem; }
+.night-close .radio-card { margin: 0; }

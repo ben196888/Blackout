@@ -9,7 +9,43 @@ type Props = Pick<BoardProps<PlayerViewState>, 'G' | 'moves' | 'playerID'>;
 
 const BOARD_IDS: BulletinBoardId[] = ['VO', 'SCHOOL', 'COOP', 'FOREST'];
 
-export function FacilitiesPanel({ G, moves, playerID }: Props) {
+/** Sits beside Ready for night: the radio is the last call of the evening, not a facility. */
+export function RadioCard({ G, moves, playerID }: Props) {
+  const you = G.you!;
+  const toast = useToast();
+  const ready = G.publicPlayers[playerID as keyof typeof G.publicPlayers]!.ready;
+  const radioCost = BALANCE.communicationPrice.RADIO_NIGHTLY * (G.day >= 5 ? BALANCE.communicationPrice.DAY_5_MULTIPLIER : 1);
+
+  return (
+    <section className="card radio-card">
+      <div className="card-head">
+        <p className="card-title">Tonight&rsquo;s radio</p>
+        <span className="hint">private</span>
+      </div>
+      <label className="check private-control">
+        <input
+          aria-label={`Listen to the nightly radio · costs ${radioCost} battery`}
+          checked={you.radioListen}
+          disabled={ready}
+          onChange={(event) => {
+            moves.setRadioListen!(event.target.checked);
+            toast(event.target.checked ? `Listening tonight · −${radioCost} battery` : 'Not listening tonight', 'info');
+          }}
+          type="checkbox"
+        />
+        <span>
+          Listen tonight
+          <span className="hint" style={{ display: 'block', color: 'var(--signal)' }}>−{radioCost} battery</span>
+        </span>
+      </label>
+      <p className="hint" style={{ marginTop: '.5rem' }}>
+        After Day 4 the radio is one of only two places the changed rendezvous is ever spoken.
+      </p>
+    </section>
+  );
+}
+
+export function FacilitiesPanel({ G, moves, playerID: _playerID }: Props) {
   const you = G.you!;
   const toast = useToast();
   const [post, setPost] = useState('');
@@ -18,37 +54,9 @@ export function FacilitiesPanel({ G, moves, playerID }: Props) {
   const canPost = atBoard && you.methods.includes('BULLETIN');
   const canBroadcast = you.character === 'VILLAGE_LEADER' && you.location === 'VO';
   const broadcastUsed = you.villageBroadcastDay === G.day;
-  const ready = G.publicPlayers[playerID as keyof typeof G.publicPlayers]!.ready;
-  const radioCost = BALANCE.communicationPrice.RADIO_NIGHTLY * (G.day >= 5 ? BALANCE.communicationPrice.DAY_5_MULTIPLIER : 1);
 
   return (
     <>
-      <section className="card">
-        <div className="card-head">
-          <p className="card-title">Tonight&rsquo;s radio</p>
-          <span className="hint">private</span>
-        </div>
-        <label className="check private-control">
-          <input
-            aria-label={`Listen to the nightly radio · costs ${radioCost} battery`}
-            checked={you.radioListen}
-            disabled={ready}
-            onChange={(event) => {
-              moves.setRadioListen!(event.target.checked);
-              toast(event.target.checked ? `Listening tonight · −${radioCost} battery` : 'Not listening tonight', 'info');
-            }}
-            type="checkbox"
-          />
-          <span>
-            Listen tonight
-            <span className="hint" style={{ display: 'block', color: 'var(--signal)' }}>−{radioCost} battery</span>
-          </span>
-        </label>
-        <p className="hint" style={{ marginTop: '.5rem' }}>
-          After Day 4 the radio is one of only two places the changed rendezvous is ever spoken.
-        </p>
-      </section>
-
       {(atBoard || canBroadcast) && (
         <section className="card" data-testid="local-facilities">
           <p className="card-title">Local facilities</p>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Board Game Online MVP"
+  short_description: "Turn board-game rules into a deployable MVP"
+  default_prompt: "Use $board-game-online-mvp to convert this board game and its rulebook into an online multiplayer MVP."

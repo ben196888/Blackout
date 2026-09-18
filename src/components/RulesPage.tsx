@@ -134,6 +134,7 @@ const PHASES = [
 ];
 
 const Rulebook = lazy(() => import('./Rulebook'));
+const DraftReachExplorer = lazy(() => import('./DraftReachExplorer'));
 
 export function RulesPage() {
   const requested = new URLSearchParams(window.location.search).get('version');
@@ -171,7 +172,7 @@ export function RulesPage() {
             {' '}Selecting a rulebook does not change gameplay.</p>
         )}
       </section>
-      {selected.version === '0.0.1' ? <CurrentRules /> : (
+      {['0.0.1', '0.0.2'].includes(selected.version) ? <VersionedRules version={selected.version} /> : (
         <main className="rules">
           <header className="rules-hero">
             <div>
@@ -189,7 +190,9 @@ export function RulesPage() {
   );
 }
 
-function CurrentRules() {
+function VersionedRules({ version }: { version: string }) {
+  const draft = version === '0.0.2';
+  const [showRulebook, setShowRulebook] = useState(false);
   const [method, setMethod] = useState<string>('WALKIE');
   const [vantage, setVantage] = useState<NodeId>(VANTAGE);
   const selected = REACH_SPECS.find((spec) => spec.id === method) ?? REACH_SPECS[0]!;
@@ -201,10 +204,11 @@ function CurrentRules() {
     <main className="rules">
       <header className="rules-hero">
         <div>
-          <p className="kicker">RULES v0.0.1 · FOUR SEATS · SEVEN NIGHTS</p>
+          <p className="kicker">RULES v{version} · {draft ? '4–20 PLAYERS' : 'FOUR SEATS'} · SEVEN NIGHTS</p>
           <h1>BLACKOUT</h1>
           <p>
-            Four survivors are scattered across a village after a blackout. Each has private
+            {draft ? 'Four to twenty survivors are scattered across a Village, Town or Valley after a blackout.'
+              : 'Four survivors are scattered across a village after a blackout.'} Each has private
             information, a private inventory, and a limited set of ways to reach the others. You
             spend Day 0 negotiating who covers which method, then live with those choices for seven
             nights.
@@ -220,7 +224,7 @@ function CurrentRules() {
             <article className={`day-card ${phase.tone}`} key={phase.n}>
               <div className="num">{phase.n}</div>
               <h3>{phase.title}</h3>
-              <p>{phase.body}</p>
+              <p>{draft && phase.n === '01' ? 'Choose attendance and its matching map. Everyone picks four methods (the Student gets five), then agrees on one shared comms plan. Choices lock before Day 1.' : phase.body}</p>
             </article>
           ))}
         </div>
@@ -234,6 +238,11 @@ function CurrentRules() {
 
       <section className="rules-section">
         <h2>02 · Who can you actually reach</h2>
+        {draft ? (
+          <Suspense fallback={<p className="sub">Loading map explorer…</p>}>
+            <DraftReachExplorer methods={REACH_SPECS} />
+          </Suspense>
+        ) : <>
         <p className="sub">
           You are standing at the {MAP_NODES[origin].label}. Pick a method to see how far it carries.
           {selected.movable
@@ -309,6 +318,8 @@ function CurrentRules() {
             </div>
           </div>
         </div>
+        </>}
+
       </section>
 
       <section className="rules-section">
@@ -328,7 +339,7 @@ function CurrentRules() {
             <tbody>
               {METHOD_TABLE.map((row) => (
                 <tr key={row.name}>
-                  <td>{row.name}</td><td>{row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
+                  <td>{row.name}</td><td>{draft && row.name === 'Landline' ? '4–6 phone nodes, by map' : row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
                 </tr>
               ))}
             </tbody>
@@ -344,7 +355,9 @@ function CurrentRules() {
               <div key={entry.day}>
                 <span className="day" style={{ color: entry.tone }}>DAY {entry.day}</span>
                 <span className="event">{entry.event}</span>
-                <span className="detail">{entry.detail}</span>
+                <span className="detail">{draft && entry.day === 2 ? 'Forest Station–Co-op closes · exposure night · voice gone'
+                  : draft && entry.day === 3 ? 'Office–School closes · alternative routes stay open · SMS and landline die · exposure night'
+                    : entry.detail}</span>
               </div>
             ))}
           </div>
@@ -352,13 +365,13 @@ function CurrentRules() {
         <div>
           <h2>05 · How it ends</h2>
           <div className="scoring">
-            <div><span className="stars">★★★</span><p>All four alive and standing on the true rendezvous after night 7.</p></div>
-            <div><span className="stars">★★</span><p>All four alive, but not everyone made the rendezvous.</p></div>
+            <div><span className="stars">★★★</span><p>All {draft ? 'players' : 'four'} alive and standing on the true rendezvous after night 7.</p></div>
+            <div><span className="stars">★★</span><p>All {draft ? 'players' : 'four'} alive, but not everyone made the rendezvous.</p></div>
             <div><span className="stars">★</span><p>At least one survivor, but somebody died.</p></div>
             <div><span className="stars none">—</span><p style={{ color: 'var(--danger)' }}>Nobody left. The match ends at the night resolution when the last survivor dies.</p></div>
             <span className="footnote">
               The rendezvous starts at the {MAP_NODES[DEFAULT_RENDEZVOUS].label} and changes on
-              Night 4 after food and deaths resolve. That night, successful radio listeners learn
+              Night 4 after food and deaths resolve.{draft && ' The new destination is Temple or Barn; everyone shares one destination with no occupancy limit.'} That night, successful radio listeners learn
               it privately and an official notice appears on the Village Office board. Survivors
               can relay the news. Choose radio listening during Contact: each successful listen
               costs one battery, including Night 5. Other nights carry no new announcement but
@@ -367,6 +380,25 @@ function CurrentRules() {
           </div>
         </div>
       </section>
+
+      {draft && <section className="rules-section">
+        <h2>06 · Bigger groups, broader maps</h2>
+        <div className="day-cards draft-scale-cards">
+          <article className="day-card"><div className="num">4–8</div><h3>Village</h3><p>18 locations · 26 roads · 4 neighborhoods. A compact settlement with several crossings and local loops.</p></article>
+          <article className="day-card move"><div className="num">9–13</div><h3>Town</h3><p>28 locations · 46 roads · 6 neighborhoods. Riverside and Works create additional supply routes and meeting places.</p></article>
+          <article className="day-card night"><div className="num">14–20</div><h3>Valley</h3><p>40 locations · 72 roads · 8 neighborhoods. Upland and South Settlement spread the group across connected communities.</p></article>
+        </div>
+        <p className="sub">Cache six food and three batteries per player across the map. Starting inventories,
+          carrying limits and daily actions stay the same. Deal one Village Leader, then repeated shuffled
+          decks of the other professions. Start at distinct locations distributed across neighborhoods.</p>
+        <p className="sub">School and Barn are enclosed in this version. Observation is local to the designated
+          Lookout, Quarry and Observatory areas; the Shrine loses global sight. Office broadcasts reach
+          Core, School and Ridge. Ordinary sightlines and an absent-player policy are still under review.</p>
+        <details className="draft-rulebook-details" onToggle={(event) => setShowRulebook(event.currentTarget.open)}>
+          <summary>Complete v0.0.2 proposal and map data</summary>
+          {showRulebook && <Suspense fallback={<p>Loading rulebook…</p>}><Rulebook version={version} /></Suspense>}
+        </details>
+      </section>}
 
       <section className="rules-section">
         <a className="hud-link" href="/">← Back to the lobby</a>

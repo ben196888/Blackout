@@ -493,3 +493,33 @@ summary { cursor: pointer; }
 
 .night-close { display: grid; gap: .8rem; }
 .night-close .radio-card { margin: 0; }
+
+/* Draft maps share the rules explorer palette and use the reviewed diagram geometry. */
+.draft-map-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; padding: .75rem; }
+.rules-section > .draft-map-controls { padding: 0 0 1rem; }
+.draft-map-controls label { display: grid; gap: .35rem; font-size: .7rem; flex: 1 1 150px; min-width: 0; }
+.draft-map-controls select { width: 100%; padding: .5rem; font-size: .72rem; }
+.draft-map-hint { margin: 0; padding: 0 .75rem .75rem; font-size: .65rem; color: var(--ink-dim); }
+.draft-map-scroll { overflow: auto; max-height: 700px; }
+.draft-map { display: block; height: auto; font-family: Arial, sans-serif; }
+.draft-map[data-fit='true'] { max-height: 650px; }
+.draft-region path { fill: #18231d; stroke: #344b3d; stroke-width: 2; }
+.draft-region.region-1 path, .draft-region.region-4 path { fill: #172a2c; }
+.draft-region.region-2 path, .draft-region.region-6 path { fill: #252a18; }
+.draft-region.region-3 path, .draft-region.region-7 path { fill: #28212d; }
+.draft-region.region-5 path { fill: #2b251e; }
+.draft-region-label text { font-size: 17px; fill: #a6b5aa; text-anchor: middle; paint-order: stroke; stroke: #141b16; stroke-width: 5; }
+.draft-road path { fill: none; stroke: #61756a; stroke-width: 2; }
+.draft-road[data-closed='true'] path { stroke: var(--danger); stroke-dasharray: 8 5; stroke-width: 3; }
+.draft-map-node path { fill: var(--panel); stroke: #8ea297; stroke-width: 1.5; }
+.draft-map-node path ~ path { fill: none; }
+.draft-map-node text { fill: var(--ink); text-anchor: middle; font-size: 14px; pointer-events: none; }
+.draft-map-node[data-reach='direct'] path { stroke: var(--fresh); stroke-width: 3; }
+.draft-map-node[data-reach='relay'] path { stroke: var(--signal); stroke-width: 3; stroke-dasharray: 4 3; }
+.draft-map-node[data-selected='true'] path:first-of-type { fill: #305a3c; stroke: var(--fresh); stroke-width: 4; }
+.draft-map-node[role='button'] { cursor: pointer; }
+.draft-map-node[role='button']:hover path, .draft-map-node:focus-visible path { stroke: white; stroke-width: 4; }
+.draft-node-detail { flex: 2 1 180px; font-size: .7rem; color: var(--ink-muted); line-height: 1.6; margin: 0; }
+.draft-scale-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.draft-rulebook-details { border: 1px solid var(--rule); background: var(--panel); border-radius: 6px; margin-top: 1rem; padding: 1rem; font-size: .8rem; }
+@media (max-width: 700px) { .draft-scale-cards { grid-template-columns: 1fr; } }

@@ -12,8 +12,9 @@ test('readers can select draft rules, reload and return to the released default'
   await expect(page.locator('.rules-status')).toHaveText('Draft');
   await expect(page.getByLabel('Rule version lifecycle').locator('[aria-current="step"]')).toHaveText('Draft');
   await expect(page.getByText('Games currently use', { exact: false })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Three authored scales' })).toBeVisible();
-  await expect(page.getByRole('group', { name: 'Ways to reach and see' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: '01 · How a day runs' })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Ways to reach and see' })).toBeVisible();
+  await page.getByText('Complete v0.0.2 proposal and map data', { exact: true }).click();
   for (const name of ['Village', 'Town', 'Valley']) {
     const diagram = page.getByRole('img', { name: `${name} map: every node and connection grouped by neighborhood` });
     await expect(diagram).toBeVisible();
@@ -41,6 +42,52 @@ test('unknown versions fall back, and draft rules fit a narrow screen', async ({
   await expect(page.getByLabel('Rules version', { exact: true })).toHaveValue('0.0.1');
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/rules?version=v0.0.2');
-  await expect(page.getByRole('heading', { name: 'Three authored scales' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '01 · How a day runs' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+});
+
+test('draft maps support scale, pointer and keyboard movement, closures and local observation', async ({ page }) => {
+  await page.goto('/rules?version=v0.0.2');
+  const scale = page.getByLabel('Map scale', { exact: true });
+  const picker = page.getByRole('group', { name: 'Ways to reach and see' });
+  for (const [id, count, roads, regions] of [['village', 18, 26, 4], ['town', 28, 46, 6], ['valley', 40, 72, 8]] as const) {
+    await scale.selectOption(id);
+    await expect(page.locator('.draft-map-node')).toHaveCount(count);
+    await expect(page.locator('.draft-road')).toHaveCount(roads);
+    await expect(page.locator('.draft-region')).toHaveCount(regions);
+    expect(await page.getByLabel('Scrollable map').evaluate((element) => element.scrollHeight)).toBeLessThanOrEqual(650);
+    await page.getByRole('button', { name: 'Stand at Village Office', exact: true }).click();
+    await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('VO');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
+    await page.getByLabel('Road conditions').selectOption('2');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await expect(page.locator('.draft-road[data-closed="true"]')).toHaveCount(2);
+    await picker.getByRole('button', { name: /^Mesh 1 hop/ }).click();
+    await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-reach', 'relay');
+    const temple = page.getByRole('button', { name: 'Stand at Temple', exact: true });
+    await temple.focus();
+    await temple.press('Enter');
+    await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('TEMPLE');
+    await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+    await page.getByLabel('Road conditions').selectOption('0');
+  }
+  await picker.getByRole('button', { name: /^Village Office broadcaster/ }).click();
+  await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
+  await expect(page.locator('[data-node="HALL"]')).toHaveAttribute('data-reach', 'none');
+  await picker.getByRole('button', { name: /^High ground/ }).click();
+  await page.getByLabel('Observation site').selectOption('OBSERVATORY');
+  await expect(page.locator('[data-node="TEMPLE"]')).toHaveAttribute('data-reach', 'direct');
+  await expect(page.locator('[data-node="STORE"]')).toHaveAttribute('data-reach', 'none');
+  await expect(page.locator('[data-node="TEA"]')).toHaveAttribute('data-reach', 'none');
+  await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+  await page.getByLabel('Neighborhood focus').selectOption('UPLAND');
+  await page.getByLabel('Stand at', { exact: true }).selectOption('RADIO');
+  await expect(page.getByRole('button', { name: 'Stand at Radio Hut', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByLabel('Map zoom').selectOption('2');
+  await expect(page.locator('.draft-map')).toHaveAttribute('style', 'width: 200%;');
+  await page.setViewportSize({ width: 375, height: 812 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+  await scale.selectOption('village');
+  await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('SCHOOL');
+  await expect(page.getByLabel('Neighborhood focus')).toHaveValue('all');
 });

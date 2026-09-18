@@ -1,0 +1,297 @@
+{
+  "rulesVersion": "0.0.1",
+  "sourceRevision": "cf087fd8e9dedd3c223e1f85d31ea41fef41cc36",
+  "maps": [
+    {
+      "id": "village",
+      "players": [
+        4,
+        4
+      ],
+      "nodes": [
+        {
+          "id": "VO",
+          "label": "Village Office 村辦公處",
+          "region": "CORE",
+          "open": false,
+          "landline": true,
+          "bulletin": true,
+          "cache": {
+            "food": 0,
+            "battery": 2
+          }
+        },
+        {
+          "id": "TEMPLE",
+          "label": "Temple Square 廟口",
+          "region": "CORE",
+          "open": true,
+          "cache": {
+            "food": 3,
+            "battery": 0
+          }
+        },
+        {
+          "id": "STORE",
+          "label": "Store 柑仔店",
+          "region": "CORE",
+          "open": false,
+          "cache": {
+            "food": 9,
+            "battery": 0
+          }
+        },
+        {
+          "id": "SCHOOL",
+          "label": "School 國小",
+          "region": "SCHOOL",
+          "open": true,
+          "landline": true,
+          "bulletin": true,
+          "cache": {
+            "food": 4,
+            "battery": 0
+          }
+        },
+        {
+          "id": "CLINIC",
+          "label": "Clinic 衛生所",
+          "region": "SCHOOL",
+          "open": false,
+          "landline": true,
+          "cache": {
+            "food": 2,
+            "battery": 2
+          }
+        },
+        {
+          "id": "FIELD",
+          "label": "Playing Field 操場",
+          "region": "SCHOOL",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "COOP",
+          "label": "Co-op Warehouse 農會倉庫",
+          "region": "FARM",
+          "open": false,
+          "bulletin": true,
+          "cache": {
+            "food": 0,
+            "battery": 8
+          }
+        },
+        {
+          "id": "TEA",
+          "label": "Tea Terrace 茶園",
+          "region": "FARM",
+          "open": true,
+          "cache": {
+            "food": 3,
+            "battery": 0
+          }
+        },
+        {
+          "id": "POND",
+          "label": "Irrigation Pond 灌溉池",
+          "region": "FARM",
+          "open": true,
+          "cache": {
+            "food": 1,
+            "battery": 0
+          }
+        },
+        {
+          "id": "SHRINE",
+          "label": "Mountain Shrine 山神廟",
+          "region": "MOUNTAIN",
+          "open": true,
+          "highGround": true,
+          "cache": {
+            "food": 2,
+            "battery": 0
+          }
+        },
+        {
+          "id": "QUARRY",
+          "label": "Quarry 採石場",
+          "region": "MOUNTAIN",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "FOREST",
+          "label": "Forest Station 林務站",
+          "region": "MOUNTAIN",
+          "open": false,
+          "landline": true,
+          "bulletin": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "BRIDGE_N",
+          "label": "Suspension Bridge North 吊橋北端",
+          "region": "LINK",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "BRIDGE_S",
+          "label": "Suspension Bridge South 吊橋南端",
+          "region": "LINK",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "MTNRD",
+          "label": "Mountain Road 山路",
+          "region": "LINK",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        },
+        {
+          "id": "FORD",
+          "label": "River Ford 溪流淺灘",
+          "region": "LINK",
+          "open": true,
+          "cache": {
+            "food": 0,
+            "battery": 0
+          }
+        }
+      ],
+      "edges": [
+        {
+          "a": "STORE",
+          "b": "TEMPLE",
+          "cost": 1
+        },
+        {
+          "a": "TEMPLE",
+          "b": "VO",
+          "cost": 1
+        },
+        {
+          "a": "VO",
+          "b": "BRIDGE_N",
+          "cost": 1
+        },
+        {
+          "a": "BRIDGE_N",
+          "b": "BRIDGE_S",
+          "cost": 0
+        },
+        {
+          "a": "BRIDGE_S",
+          "b": "SCHOOL",
+          "cost": 1
+        },
+        {
+          "a": "SCHOOL",
+          "b": "CLINIC",
+          "cost": 1
+        },
+        {
+          "a": "SCHOOL",
+          "b": "FIELD",
+          "cost": 1
+        },
+        {
+          "a": "FIELD",
+          "b": "FORD",
+          "cost": 1
+        },
+        {
+          "a": "FORD",
+          "b": "TEA",
+          "cost": 1
+        },
+        {
+          "a": "TEA",
+          "b": "COOP",
+          "cost": 1
+        },
+        {
+          "a": "TEA",
+          "b": "POND",
+          "cost": 1
+        },
+        {
+          "a": "COOP",
+          "b": "MTNRD",
+          "cost": 1
+        },
+        {
+          "a": "MTNRD",
+          "b": "FOREST",
+          "cost": 1
+        },
+        {
+          "a": "FOREST",
+          "b": "QUARRY",
+          "cost": 1
+        },
+        {
+          "a": "QUARRY",
+          "b": "SHRINE",
+          "cost": 1
+        },
+        {
+          "a": "SHRINE",
+          "b": "STORE",
+          "cost": 1
+        }
+      ],
+      "startingNodes": [
+        "VO",
+        "SCHOOL",
+        "COOP",
+        "FOREST"
+      ],
+      "defaultRendezvous": "SCHOOL",
+      "rendezvousChange": {
+        "night": 4,
+        "candidates": [
+          "BRIDGE_N",
+          "BRIDGE_S",
+          "COOP",
+          "FIELD",
+          "FORD",
+          "MTNRD",
+          "SHRINE",
+          "TEA",
+          "VO"
+        ]
+      },
+      "closures": [
+        {
+          "day": 2,
+          "edgeKey": "COOP–MTNRD"
+        },
+        {
+          "day": 3,
+          "edgeKey": "BRIDGE_N–BRIDGE_S"
+        }
+      ]
+    }
+  ]
+}

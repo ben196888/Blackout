@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import documentedMap from '../docs/rules/maps-v0.0.1.json';
 import {
   BRIDGE_SPAN,
   DAY_2_EDGE,
@@ -10,9 +11,26 @@ import {
   distancesFrom,
   eccentricity,
 } from '../src/game/map';
-import { BALANCE } from '../src/constants';
+import { BALANCE, DEFAULT_RENDEZVOUS, PLAYER_COUNT, STARTING_NODES } from '../src/constants';
 
 describe('resolved 16-node map', () => {
+  it('matches the versioned v0.0.1 map documentation', () => {
+    expect(documentedMap.rulesVersion).toBe('0.0.1');
+    expect(documentedMap.maps).toEqual([{
+      id: 'village',
+      players: [PLAYER_COUNT, PLAYER_COUNT],
+      nodes: NODE_IDS.map((id) => MAP_NODES[id]),
+      edges: MAP_EDGES,
+      startingNodes: [...STARTING_NODES],
+      defaultRendezvous: DEFAULT_RENDEZVOUS,
+      rendezvousChange: {
+        night: 4,
+        candidates: RENDEZVOUS_CENTRE_NODES.filter((id) => id !== DEFAULT_RENDEZVOUS),
+      },
+      closures: [{ day: 2, edgeKey: DAY_2_EDGE }, { day: 3, edgeKey: BRIDGE_SPAN }],
+    }]);
+  });
+
   it('pins graph size, connectivity, diameter and centre set', () => {
     expect(NODE_IDS).toHaveLength(16);
     expect(MAP_EDGES).toHaveLength(16);

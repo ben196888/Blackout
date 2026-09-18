@@ -58,6 +58,10 @@ It drives four isolated browser contexts through the thin Lobby REST flow, socke
 | `tests/` | Unit tests plus the four-player Playwright smoke in `tests/e2e/` |
 | `docs/trial-runbook.md` | Procedure for running a four-human trial |
 
+## Versioned rules
+
+The current game rules are **v0.0.1** (exactly four players). Read the [rules version index](docs/rules/README.md), [current rulebook](docs/rules/v0.0.1.md), and [current map data](docs/rules/maps-v0.0.1.json). The proposed v0.0.2 rules are tracked separately in [issue #19](https://github.com/ben196888/Blackout/issues/19).
+
 ## Running a trial
 
 Four-human sessions must follow the private-log capture and verification checklist in [the trial runbook](docs/trial-runbook.md). Trial log dumps contain player-authored message text and private authoritative delivery outcomes; they stay local and are never committed or attached to a public issue.

@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { ACTIONS_PER_DAY, DEFAULT_RENDEZVOUS } from '../constants';
 import { MAP_NODES, NODE_IDS, distancesFrom } from '../game/map';
-import type { DeliveryMethodId, NodeId } from '../types';
+import type { NodeId } from '../types';
 import { TrialNotice } from './TrialNotice';
 import { NODE_SHORT_NAMES, VillageMap } from './VillageMap';
 
@@ -37,45 +37,48 @@ const ringAt = (from: NodeId, radius: number) =>
 export const REACH_SPECS: ReachSpec[] = [
   {
     id: 'WALKIE', group: 'Telecom methods', label: 'Walkie-talkie', tag: '1 hop',
-    blurb: 'Everyone within one road hears it, whether you meant them to or not. 40 characters. One battery buys three sends. The Reservist reaches two roads.',
+    blurb: 'Every living Walkie-talkie holder within one road hears it, whether you meant them to or not. 40 characters. One battery buys three sends. The Reservist reaches two roads.',
     movable: true,
     reach: (from) => within(from, 1),
   },
   {
     id: 'MESH', group: 'Telecom methods', label: 'Mesh', tag: '1 hop + relay',
-    blurb: 'On its own it goes one road, like the walkie. But a third living player standing one road from you and one road from your target passes it on for free — so anyone two roads out is reachable whenever somebody is standing in the gap. That relay costs the relay nothing and they are never told they did it. 40 characters, one battery per two sends.',
+    blurb: 'On its own it goes one road, like the walkie. But a third living player standing one road from you and one road from your target passes it on for free — so anyone two roads out is reachable whenever somebody is standing in the gap. The intermediary need not hold Mesh, pays nothing, and is never told they relayed it. 40 characters, one battery per two sends.',
     movable: true,
     reach: (from) => within(from, 1),
     relay: (from) => ringAt(from, 2),
   },
   {
     id: 'BULLETIN', group: 'Telecom methods', label: 'Bulletin board', tag: 'here only',
-    blurb: 'Pin a notice at the board you are standing at. Free, no length limit, and it stays there — but only people who walk to that board will ever read it.',
+    blurb: 'Pin a notice at the board you are standing at. Free, no length limit, and it stays there — and living visitors at that board can read it now or later. Posting requires Bulletin; reading does not.',
+    origin: 'SCHOOL',
     reach: (from) => [from],
   },
   {
     id: 'LANDLINE', group: 'Telecom methods', label: 'Landline', tag: '4 phones',
-    blurb: 'Ring another phone node and whoever is standing there picks up. Free, but one dial per day, and the lines go dead from Day 3.',
+    blurb: 'Ring another phone node and living Landline holders standing there receive it. Free, but one dial per day, and the lines go dead from Day 3.',
+    origin: 'SCHOOL',
     reach: (from) => NODE_IDS.filter((node) => node !== from && MAP_NODES[node].landline),
   },
   {
     id: 'SMS', group: 'Telecom methods', label: 'SMS', tag: 'anywhere',
-    blurb: 'Reaches anyone anywhere while the network holds — 20 characters only, and everything past that is silently cut. Dies after Day 2.',
+    blurb: 'Reaches a living SMS holder anywhere while the network holds. Text beyond 20 characters is cut; your sent record flags truncation, but never confirms remote delivery. Dies after Day 2.',
     reach: (from) => NODE_IDS.filter((node) => node !== from),
   },
   {
     id: 'MOBILE_VOICE', group: 'Telecom methods', label: 'Mobile voice', tag: 'Day 1 only',
-    blurb: 'A real conversation with anyone, anywhere — on Day 1 only, and half of all calls drop. After that the towers are gone.',
+    blurb: 'Reaches a living Mobile voice holder anywhere — on Day 1 only, and half of all calls drop. After that the towers are gone.',
     reach: (from) => NODE_IDS.filter((node) => node !== from),
   },
   {
     id: 'MOBILE_DATA', group: 'Telecom methods', label: 'Mobile data', tag: 'Day 6 only',
-    blurb: 'Dead until Day 6, when a cell-on-wheels lights up everything within two roads of the School and of the rendezvous. Both ends have to stand inside it.',
+    blurb: 'Day 6 only. Both holders must stand within two roads of School or the true rendezvous; they can be in different zones. This preview shows only the School zone. The second zone depends on the Night 4 rendezvous.',
+    origin: 'SCHOOL',
     reach: (from) => within(from, 2),
   },
   {
     id: 'FACE_TO_FACE', group: 'Telecom methods', label: 'Face to face', tag: 'same node',
-    blurb: 'Free, unlimited, and the only method that tells you it landed. Everything else you send into the dark.',
+    blurb: 'Free, unlimited, needs no selected method, and the only method that confirms delivery and a recipient count. Everything else you send into the dark.',
     reach: (from) => [from],
   },
   {
@@ -85,7 +88,7 @@ export const REACH_SPECS: ReachSpec[] = [
   },
   {
     id: 'VO_BROADCAST', group: 'Role abilities', label: 'Village Office broadcaster', tag: 'the Village Leader',
-    blurb: 'Not a claimed method — a fixture the Village Leader operates by standing at the Village Office. One push reaches every seat still joined to the Office by road, however far, once a day, 60 characters, one way. After Day 4 it is one of only two places the changed rendezvous is ever spoken; the other is the nightly radio.',
+    blurb: 'Not a claimed method — a fixture the Village Leader operates by standing at the Village Office. One free push reaches every other living survivor still joined to the Office by road, regardless of selected methods, once a day, 60 characters, one way. The Leader writes the message; it does not automatically announce the rendezvous. The official Night 4 announcement goes to radio listeners and the Office bulletin board.',
     origin: 'VO',
     reach: (from) => NODE_IDS.filter((node) => node !== from && Number.isFinite(distancesFrom(from)[node])),
   },
@@ -112,18 +115,18 @@ const METHOD_TABLE = [
 const SCHEDULE = [
   { day: 1, event: 'Grid down', detail: 'Mobile voice still works — half the calls drop', tone: 'var(--fresh)' },
   { day: 2, event: 'Backups exhausted', detail: 'Co-op road cut · exposure night · voice gone', tone: 'var(--signal)' },
-  { day: 3, event: 'Bridge span severed', detail: 'The village splits in two · SMS and landline die', tone: 'var(--danger)' },
-  { day: 4, event: 'Official rendezvous changes', detail: 'Only the radio and the Village Office board carry it', tone: 'var(--signal)' },
-  { day: 5, event: 'Power scarcity', detail: 'Every battery cost doubles · exposure night', tone: 'var(--danger)' },
+  { day: 3, event: 'Bridge span severed', detail: 'Without repairs, the village splits · SMS and landline die · exposure night', tone: 'var(--danger)' },
+  { day: 4, event: 'Official rendezvous changes', detail: 'After Night 4 food/deaths: radio listeners and Office board receive it', tone: 'var(--signal)' },
+  { day: 5, event: 'Power scarcity', detail: 'Mesh/Walkie charges double · radio stays 1 battery · exposure night', tone: 'var(--danger)' },
   { day: 6, event: 'Cell-on-wheels online', detail: 'Mobile data, two roads out, for one day', tone: 'var(--fresh)' },
-  { day: 7, event: 'Final convergence', detail: 'Where you stand at dawn is where you are scored', tone: 'var(--signal)' },
+  { day: 7, event: 'Final convergence', detail: 'Survivors’ locations are scored after Night 7', tone: 'var(--signal)' },
 ];
 
 const PHASES = [
   { n: '01', tone: '', title: 'Day 0 — Plan', body: 'Everyone picks exactly four methods (the Student gets five) and writes one shared comms plan. Choices are public. After this, no renegotiation.' },
   { n: '02', tone: 'move', title: 'Move', body: `${ACTIONS_PER_DAY} actions a day. Walk one road, scavenge a cache, or pair up with someone at your node to clear a severed road.` },
-  { n: '03', tone: 'move', title: 'Contact', body: 'Send on the methods you hold. Both sides must hold the same method. Only face-to-face tells you whether it landed.' },
-  { n: '04', tone: 'night', title: 'Night', body: 'Everyone eats one food, two on an exposure night in the open. Two hungry nights in a row and that seat dies.' },
+  { n: '03', tone: 'move', title: 'Contact', body: 'Direct electronic messages require both sides to hold the method. Face-to-face needs no selection; Bulletin readers and Mesh intermediaries need not hold those methods. Only face-to-face confirms delivery.' },
+  { n: '04', tone: 'night', title: 'Night', body: 'Consume one food, or two in the open on Nights 2, 3 and 5. Zero food remaining afterward counts as starvation, even if you could afford the meal. Two consecutive such nights cause death.' },
 ];
 
 export function RulesPage() {
@@ -138,7 +141,7 @@ export function RulesPage() {
     <main className="rules">
       <header className="rules-hero">
         <div>
-          <p className="kicker">PACE POC · FOUR SEATS · SEVEN NIGHTS</p>
+          <p className="kicker">RULES v0.0.1 · FOUR SEATS · SEVEN NIGHTS</p>
           <h1>BLACKOUT</h1>
           <p>
             Four survivors are scattered across a village after a blackout. Each has private
@@ -161,6 +164,12 @@ export function RulesPage() {
             </article>
           ))}
         </div>
+        <p className="sub">
+          Food never falls below zero. Finishing a night with food remaining resets the starvation
+          streak. For example, starting a normal night with exactly one food leaves zero and counts
+          as a starvation night. A Nurse sharing a node with another survivor alive at the start of
+          the night consumes one less food, to a minimum of zero; only the Nurse benefits.
+        </p>
       </section>
 
       <section className="rules-section">
@@ -172,8 +181,13 @@ export function RulesPage() {
             : selected.origin === 'SHRINE'
               ? ' This one only works from the high ground, so the map moves you there.'
               : selected.origin
-                ? ` This one only works from the ${MAP_NODES[selected.origin].label}, so the map moves you there.`
+                ? ` This example starts at the ${MAP_NODES[selected.origin].label}, so the map moves you there.`
                 : ''}
+        </p>
+        <p className="sub">
+          This preview shows potential reach on the intact map. In play, road closures, the day’s
+          network availability, selected methods and living recipients determine delivery. Road
+          distance counts the intact bridge as zero; high-ground sight ignores road closures.
         </p>
         <div className="reach-explorer">
           <div>
@@ -238,8 +252,14 @@ export function RulesPage() {
       </section>
 
       <section className="rules-section">
-        <h2>03 · Quick reference — the seven methods</h2>
-        <p className="sub">Both sender and recipient must hold the method. Print this card.</p>
+        <h2>03 · Quick reference — seven methods + face-to-face</h2>
+        <p className="sub">
+          Both ends must hold a direct electronic method. Face-to-face is always available at the
+          same node. Bulletin requires a selection to post, but not to read; a Mesh intermediary
+          needs no Mesh selection. Costs below are normal daily rates: on Day 5, Mesh and Walkie
+          send charges double; free methods stay free and nightly radio still costs one battery.
+          Capped messages flag truncation in your sent record, without revealing remote delivery.
+        </p>
         <div className="ref-table ref-scroll">
           <table>
             <thead>
@@ -274,12 +294,15 @@ export function RulesPage() {
           <div className="scoring">
             <div><span className="stars">★★★</span><p>All four alive and standing on the true rendezvous after night 7.</p></div>
             <div><span className="stars">★★</span><p>All four alive, but not everyone made the rendezvous.</p></div>
-            <div><span className="stars">★</span><p>At least one survivor.</p></div>
-            <div><span className="stars none">—</span><p style={{ color: 'var(--danger)' }}>Nobody left. The match ends the moment the last seat dies.</p></div>
+            <div><span className="stars">★</span><p>At least one survivor, but somebody died.</p></div>
+            <div><span className="stars none">—</span><p style={{ color: 'var(--danger)' }}>Nobody left. The match ends at the night resolution when the last survivor dies.</p></div>
             <span className="footnote">
-              The rendezvous is the {MAP_NODES[DEFAULT_RENDEZVOUS].label} until Day 4, when it
-              changes. Only the nightly radio and the Village Office board carry the new one — and
-              the radio costs a battery every time you listen.
+              The rendezvous starts at the {MAP_NODES[DEFAULT_RENDEZVOUS].label} and changes on
+              Night 4 after food and deaths resolve. That night, successful radio listeners learn
+              it privately and an official notice appears on the Village Office board. Survivors
+              can relay the news. Choose radio listening during Contact: each successful listen
+              costs one battery, including Night 5. Other nights carry no new announcement but
+              still charge; dead survivors and listeners without a battery are not charged.
             </span>
           </div>
         </div>

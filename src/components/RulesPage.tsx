@@ -1,4 +1,8 @@
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, lazy, Suspense, useMemo, useState } from 'react';
+import {
+  compareVersions, defaultRuleVersion, GAME_RULE_VERSION, RULE_STATUSES,
+  RULE_VERSIONS, rulesUrl, STATUS_LABELS,
+} from '../rules/versions';
 import { ACTIONS_PER_DAY, DEFAULT_RENDEZVOUS } from '../constants';
 import { MAP_NODES, NODE_IDS, distancesFrom } from '../game/map';
 import type { NodeId } from '../types';
@@ -129,7 +133,63 @@ const PHASES = [
   { n: '04', tone: 'night', title: 'Night', body: 'Consume one food, or two in the open on Nights 2, 3 and 5. Zero food remaining afterward counts as starvation, even if you could afford the meal. Two consecutive such nights cause death.' },
 ];
 
+const Rulebook = lazy(() => import('./Rulebook'));
+
 export function RulesPage() {
+  const requested = new URLSearchParams(window.location.search).get('version');
+  const defaultVersion = defaultRuleVersion();
+  const selected = RULE_VERSIONS.find(({ version }) => `v${version}` === requested) ?? defaultVersion;
+  return (
+    <>
+      <section className="rules-version" aria-label="Rule version">
+        <div className="rules-version-controls">
+          <label htmlFor="rules-version">Rules version</label>
+          <select id="rules-version" value={selected.version}
+            onChange={(event) => window.location.assign(rulesUrl(event.target.value))}>
+            {[...RULE_VERSIONS].sort(compareVersions).reverse().map(({ version, status }) => (
+              <option key={version} value={version}>
+                v{version} · {STATUS_LABELS[status]}{version === defaultVersion.version ? ' · Default' : ''}
+              </option>
+            ))}
+          </select>
+          <span className="rules-status" data-status={selected.status}>{STATUS_LABELS[selected.status]}</span>
+        </div>
+        <p>The newest release candidate or release is shown by default. Currently v{defaultVersion.version}.</p>
+        <ol className="rules-lifecycle" aria-label="Rule version lifecycle">
+          {RULE_STATUSES.map((status) => (
+            <li key={status} aria-current={status === selected.status ? 'step' : undefined}>
+              {STATUS_LABELS[status]}
+            </li>
+          ))}
+        </ol>
+        {requested && !RULE_VERSIONS.some(({ version }) => `v${version}` === requested) && (
+          <p role="status">That rule version is unavailable. Showing the default version.</p>
+        )}
+        {selected.version !== GAME_RULE_VERSION && (
+          <p className="rules-version-notice">You are viewing {STATUS_LABELS[selected.status].toLowerCase()} rules.
+            {' '}Games currently use <a href={rulesUrl(GAME_RULE_VERSION)}>v{GAME_RULE_VERSION}</a>.
+            {' '}Selecting a rulebook does not change gameplay.</p>
+        )}
+      </section>
+      {selected.version === '0.0.1' ? <CurrentRules /> : (
+        <main className="rules">
+          <header className="rules-hero">
+            <div>
+              <p className="kicker">RULES v{selected.version} · {STATUS_LABELS[selected.status].toUpperCase()}</p>
+              <h1>BLACKOUT</h1>
+            </div>
+          </header>
+          <Suspense fallback={<p className="rules-section">Loading rulebook…</p>}>
+            <Rulebook version={selected.version} />
+          </Suspense>
+          <section className="rules-section"><a href="/">← Back to the lobby</a></section>
+        </main>
+      )}
+    </>
+  );
+}
+
+function CurrentRules() {
   const [method, setMethod] = useState<string>('WALKIE');
   const [vantage, setVantage] = useState<NodeId>(VANTAGE);
   const selected = REACH_SPECS.find((spec) => spec.id === method) ?? REACH_SPECS[0]!;
@@ -153,7 +213,7 @@ export function RulesPage() {
         <TrialNotice />
       </header>
 
-      <section className="rules-section">
+      <section className="rules-section" id="food-exposure-and-death">
         <h2>01 · How a day runs</h2>
         <div className="day-cards">
           {PHASES.map((phase) => (

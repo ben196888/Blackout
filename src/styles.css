@@ -329,6 +329,25 @@ details.exchange > * + * { margin-top: .5rem; }
 
 /* ---------- rules page ---------- */
 
+/* Version selection applies to rulebooks only, independently of the active game. */
+.rules-version { max-width: 1120px; margin: 0 auto; padding: 1.4rem; border-bottom: 1px solid var(--rule); }
+.rules-version-controls { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
+.rules-version label { font-size: .75rem; font-weight: 700; }
+.rules-version select { width: auto; max-width: 100%; padding: .65rem; }
+.rules-version p { font-size: .72rem; line-height: 1.6; color: var(--ink-muted); }
+.rules-status { border: 1px solid var(--signal); border-radius: 4px; padding: .3rem .55rem; color: var(--signal); font-size: .7rem; }
+.rules-status[data-status='release'] { border-color: var(--fresh); color: var(--fresh); }
+.rules-lifecycle { display: flex; flex-wrap: wrap; gap: .45rem 1.2rem; list-style-position: inside; padding: 0; margin: .9rem 0; font-size: .65rem; color: var(--ink-dim); }
+.rules-lifecycle [aria-current='step'] { color: var(--signal); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.rules-version .rules-version-notice { padding: .75rem; border-left: 3px solid var(--signal); background: var(--panel); margin-bottom: 0; }
+.rulebook { padding: .5rem 1.4rem; font-size: .82rem; line-height: 1.8; color: var(--ink-2); overflow-wrap: anywhere; }
+.rulebook h2 { font-size: 1.1rem; color: var(--signal); margin: 2.2rem 0 .8rem; }
+.rulebook h3 { font-size: .9rem; color: var(--ink); }
+.rulebook img { display: block; width: 100%; height: auto; background: white; border-radius: 6px; }
+.rulebook li + li { margin-top: .5rem; }
+.rulebook .ref-table { margin: 1.2rem 0; }
+.rulebook th, .rulebook td { min-width: 110px; }
+
 .rules { max-width: 1120px; margin: 0 auto; padding-bottom: 3rem; }
 .rules-hero {
   display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap;

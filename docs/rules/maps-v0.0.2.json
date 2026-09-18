@@ -1,0 +1,1168 @@
+[
+  {
+    "id": "village",
+    "players": [
+      4,
+      8
+    ],
+    "regions": [
+      {
+        "id": "CORE",
+        "nodes": [
+          "VO",
+          "TEMPLE",
+          "STORE",
+          "HOMES",
+          "FIRE"
+        ],
+        "spawns": [
+          "VO",
+          "FIRE",
+          "STORE"
+        ],
+        "foodNodes": [
+          "STORE",
+          "TEMPLE"
+        ],
+        "batteryNodes": [
+          "VO",
+          "FIRE"
+        ],
+        "foodPercent": 40,
+        "batteryPercent": 15
+      },
+      {
+        "id": "SCHOOL",
+        "nodes": [
+          "SCHOOL",
+          "CLINIC",
+          "FIELD",
+          "LIBRARY",
+          "WATER"
+        ],
+        "spawns": [
+          "SCHOOL",
+          "LIBRARY",
+          "CLINIC"
+        ],
+        "foodNodes": [
+          "SCHOOL",
+          "CLINIC"
+        ],
+        "batteryNodes": [
+          "CLINIC",
+          "LIBRARY"
+        ],
+        "foodPercent": 25,
+        "batteryPercent": 20
+      },
+      {
+        "id": "FARM",
+        "nodes": [
+          "COOP",
+          "TEA",
+          "POND",
+          "BARN"
+        ],
+        "spawns": [
+          "COOP",
+          "BARN",
+          "TEA"
+        ],
+        "foodNodes": [
+          "BARN",
+          "TEA"
+        ],
+        "batteryNodes": [
+          "COOP"
+        ],
+        "foodPercent": 25,
+        "batteryPercent": 55
+      },
+      {
+        "id": "RIDGE",
+        "nodes": [
+          "FOREST",
+          "SHRINE",
+          "QUARRY",
+          "LOOKOUT"
+        ],
+        "spawns": [
+          "FOREST",
+          "QUARRY",
+          "SHRINE"
+        ],
+        "foodNodes": [
+          "FOREST",
+          "SHRINE"
+        ],
+        "batteryNodes": [
+          "QUARRY"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      }
+    ],
+    "edges": [
+      [
+        "VO",
+        "TEMPLE"
+      ],
+      [
+        "TEMPLE",
+        "STORE"
+      ],
+      [
+        "STORE",
+        "VO"
+      ],
+      [
+        "VO",
+        "HOMES"
+      ],
+      [
+        "HOMES",
+        "FIRE"
+      ],
+      [
+        "FIRE",
+        "TEMPLE"
+      ],
+      [
+        "SCHOOL",
+        "CLINIC"
+      ],
+      [
+        "CLINIC",
+        "LIBRARY"
+      ],
+      [
+        "LIBRARY",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "FIELD"
+      ],
+      [
+        "FIELD",
+        "WATER"
+      ],
+      [
+        "COOP",
+        "TEA"
+      ],
+      [
+        "TEA",
+        "POND"
+      ],
+      [
+        "POND",
+        "BARN"
+      ],
+      [
+        "BARN",
+        "COOP"
+      ],
+      [
+        "FOREST",
+        "SHRINE"
+      ],
+      [
+        "SHRINE",
+        "LOOKOUT"
+      ],
+      [
+        "FOREST",
+        "QUARRY"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "COOP"
+      ],
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "FOREST",
+        "VO"
+      ],
+      [
+        "TEMPLE",
+        "CLINIC"
+      ],
+      [
+        "BARN",
+        "FIELD"
+      ],
+      [
+        "STORE",
+        "QUARRY"
+      ],
+      [
+        "QUARRY",
+        "BARN"
+      ]
+    ],
+    "closures": [
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ]
+    ],
+    "rendezvousCandidates": [
+      "TEMPLE",
+      "BARN"
+    ],
+    "enclosed": [
+      "VO",
+      "STORE",
+      "SCHOOL",
+      "CLINIC",
+      "COOP",
+      "FOREST",
+      "BARN"
+    ],
+    "bulletins": [
+      "VO",
+      "SCHOOL",
+      "COOP",
+      "FOREST"
+    ],
+    "landlines": [
+      "VO",
+      "SCHOOL",
+      "CLINIC",
+      "FOREST"
+    ]
+  },
+  {
+    "id": "town",
+    "players": [
+      9,
+      13
+    ],
+    "regions": [
+      {
+        "id": "CORE",
+        "nodes": [
+          "VO",
+          "TEMPLE",
+          "STORE",
+          "HOMES",
+          "FIRE"
+        ],
+        "spawns": [
+          "VO",
+          "FIRE",
+          "STORE"
+        ],
+        "foodNodes": [
+          "STORE",
+          "TEMPLE"
+        ],
+        "batteryNodes": [
+          "VO",
+          "FIRE"
+        ],
+        "foodPercent": 25,
+        "batteryPercent": 10
+      },
+      {
+        "id": "SCHOOL",
+        "nodes": [
+          "SCHOOL",
+          "CLINIC",
+          "FIELD",
+          "LIBRARY",
+          "WATER"
+        ],
+        "spawns": [
+          "SCHOOL",
+          "LIBRARY",
+          "CLINIC"
+        ],
+        "foodNodes": [
+          "SCHOOL",
+          "CLINIC"
+        ],
+        "batteryNodes": [
+          "CLINIC",
+          "LIBRARY"
+        ],
+        "foodPercent": 20,
+        "batteryPercent": 15
+      },
+      {
+        "id": "FARM",
+        "nodes": [
+          "COOP",
+          "TEA",
+          "POND",
+          "BARN",
+          "MILL"
+        ],
+        "spawns": [
+          "COOP",
+          "BARN",
+          "TEA"
+        ],
+        "foodNodes": [
+          "BARN",
+          "TEA",
+          "MILL"
+        ],
+        "batteryNodes": [
+          "COOP"
+        ],
+        "foodPercent": 25,
+        "batteryPercent": 25
+      },
+      {
+        "id": "RIDGE",
+        "nodes": [
+          "FOREST",
+          "SHRINE",
+          "QUARRY",
+          "LOOKOUT",
+          "CABIN"
+        ],
+        "spawns": [
+          "FOREST",
+          "QUARRY",
+          "SHRINE"
+        ],
+        "foodNodes": [
+          "FOREST",
+          "SHRINE"
+        ],
+        "batteryNodes": [
+          "QUARRY"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      },
+      {
+        "id": "RIVERSIDE",
+        "nodes": [
+          "DOCK",
+          "FISHERY",
+          "PUMP",
+          "FERRY"
+        ],
+        "spawns": [
+          "DOCK",
+          "FISHERY",
+          "FERRY"
+        ],
+        "foodNodes": [
+          "FISHERY"
+        ],
+        "batteryNodes": [
+          "PUMP"
+        ],
+        "foodPercent": 15,
+        "batteryPercent": 10
+      },
+      {
+        "id": "WORKS",
+        "nodes": [
+          "DEPOT",
+          "GARAGE",
+          "SUBSTATION",
+          "YARD"
+        ],
+        "spawns": [
+          "DEPOT",
+          "GARAGE",
+          "YARD"
+        ],
+        "foodNodes": [
+          "GARAGE"
+        ],
+        "batteryNodes": [
+          "DEPOT",
+          "SUBSTATION"
+        ],
+        "foodPercent": 5,
+        "batteryPercent": 30
+      }
+    ],
+    "edges": [
+      [
+        "VO",
+        "TEMPLE"
+      ],
+      [
+        "TEMPLE",
+        "STORE"
+      ],
+      [
+        "STORE",
+        "VO"
+      ],
+      [
+        "VO",
+        "HOMES"
+      ],
+      [
+        "HOMES",
+        "FIRE"
+      ],
+      [
+        "FIRE",
+        "TEMPLE"
+      ],
+      [
+        "SCHOOL",
+        "CLINIC"
+      ],
+      [
+        "CLINIC",
+        "LIBRARY"
+      ],
+      [
+        "LIBRARY",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "FIELD"
+      ],
+      [
+        "FIELD",
+        "WATER"
+      ],
+      [
+        "COOP",
+        "TEA"
+      ],
+      [
+        "TEA",
+        "POND"
+      ],
+      [
+        "POND",
+        "BARN"
+      ],
+      [
+        "BARN",
+        "COOP"
+      ],
+      [
+        "FOREST",
+        "SHRINE"
+      ],
+      [
+        "SHRINE",
+        "LOOKOUT"
+      ],
+      [
+        "FOREST",
+        "QUARRY"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "COOP"
+      ],
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "FOREST",
+        "VO"
+      ],
+      [
+        "TEMPLE",
+        "CLINIC"
+      ],
+      [
+        "BARN",
+        "FIELD"
+      ],
+      [
+        "STORE",
+        "QUARRY"
+      ],
+      [
+        "COOP",
+        "MILL"
+      ],
+      [
+        "MILL",
+        "BARN"
+      ],
+      [
+        "SHRINE",
+        "CABIN"
+      ],
+      [
+        "CABIN",
+        "QUARRY"
+      ],
+      [
+        "DOCK",
+        "FISHERY"
+      ],
+      [
+        "FISHERY",
+        "PUMP"
+      ],
+      [
+        "PUMP",
+        "DOCK"
+      ],
+      [
+        "DOCK",
+        "FERRY"
+      ],
+      [
+        "DEPOT",
+        "GARAGE"
+      ],
+      [
+        "GARAGE",
+        "SUBSTATION"
+      ],
+      [
+        "SUBSTATION",
+        "DEPOT"
+      ],
+      [
+        "DEPOT",
+        "YARD"
+      ],
+      [
+        "DOCK",
+        "SCHOOL"
+      ],
+      [
+        "DOCK",
+        "COOP"
+      ],
+      [
+        "FERRY",
+        "WATER"
+      ],
+      [
+        "PUMP",
+        "POND"
+      ],
+      [
+        "DEPOT",
+        "VO"
+      ],
+      [
+        "DEPOT",
+        "FOREST"
+      ],
+      [
+        "GARAGE",
+        "STORE"
+      ],
+      [
+        "YARD",
+        "QUARRY"
+      ],
+      [
+        "QUARRY",
+        "BARN"
+      ]
+    ],
+    "closures": [
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ]
+    ],
+    "rendezvousCandidates": [
+      "TEMPLE",
+      "BARN"
+    ],
+    "enclosed": [
+      "VO",
+      "STORE",
+      "SCHOOL",
+      "CLINIC",
+      "COOP",
+      "FOREST",
+      "BARN",
+      "LIBRARY",
+      "DEPOT",
+      "MILL"
+    ],
+    "bulletins": [
+      "VO",
+      "SCHOOL",
+      "COOP",
+      "FOREST",
+      "DOCK",
+      "DEPOT"
+    ],
+    "landlines": [
+      "VO",
+      "SCHOOL",
+      "CLINIC",
+      "FOREST",
+      "DEPOT"
+    ]
+  },
+  {
+    "id": "valley",
+    "players": [
+      14,
+      20
+    ],
+    "regions": [
+      {
+        "id": "CORE",
+        "nodes": [
+          "VO",
+          "TEMPLE",
+          "STORE",
+          "HOMES",
+          "FIRE"
+        ],
+        "spawns": [
+          "VO",
+          "FIRE",
+          "STORE"
+        ],
+        "foodNodes": [
+          "STORE",
+          "TEMPLE"
+        ],
+        "batteryNodes": [
+          "VO",
+          "FIRE"
+        ],
+        "foodPercent": 20,
+        "batteryPercent": 10
+      },
+      {
+        "id": "SCHOOL",
+        "nodes": [
+          "SCHOOL",
+          "CLINIC",
+          "FIELD",
+          "LIBRARY",
+          "WATER"
+        ],
+        "spawns": [
+          "SCHOOL",
+          "LIBRARY",
+          "CLINIC"
+        ],
+        "foodNodes": [
+          "SCHOOL",
+          "CLINIC"
+        ],
+        "batteryNodes": [
+          "CLINIC",
+          "LIBRARY"
+        ],
+        "foodPercent": 15,
+        "batteryPercent": 10
+      },
+      {
+        "id": "FARM",
+        "nodes": [
+          "COOP",
+          "TEA",
+          "POND",
+          "BARN",
+          "MILL"
+        ],
+        "spawns": [
+          "COOP",
+          "BARN",
+          "TEA"
+        ],
+        "foodNodes": [
+          "BARN",
+          "TEA",
+          "MILL"
+        ],
+        "batteryNodes": [
+          "COOP"
+        ],
+        "foodPercent": 20,
+        "batteryPercent": 20
+      },
+      {
+        "id": "RIDGE",
+        "nodes": [
+          "FOREST",
+          "SHRINE",
+          "QUARRY",
+          "LOOKOUT",
+          "CABIN"
+        ],
+        "spawns": [
+          "FOREST",
+          "QUARRY",
+          "SHRINE"
+        ],
+        "foodNodes": [
+          "FOREST",
+          "SHRINE"
+        ],
+        "batteryNodes": [
+          "QUARRY"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      },
+      {
+        "id": "RIVERSIDE",
+        "nodes": [
+          "DOCK",
+          "FISHERY",
+          "PUMP",
+          "FERRY",
+          "LEVEE"
+        ],
+        "spawns": [
+          "DOCK",
+          "FISHERY",
+          "FERRY"
+        ],
+        "foodNodes": [
+          "FISHERY"
+        ],
+        "batteryNodes": [
+          "PUMP"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      },
+      {
+        "id": "WORKS",
+        "nodes": [
+          "DEPOT",
+          "GARAGE",
+          "SUBSTATION",
+          "YARD",
+          "WORKSHOP"
+        ],
+        "spawns": [
+          "DEPOT",
+          "GARAGE",
+          "YARD"
+        ],
+        "foodNodes": [
+          "GARAGE"
+        ],
+        "batteryNodes": [
+          "DEPOT",
+          "SUBSTATION"
+        ],
+        "foodPercent": 5,
+        "batteryPercent": 20
+      },
+      {
+        "id": "UPLAND",
+        "nodes": [
+          "HALL",
+          "RESERVOIR",
+          "ORCHARD",
+          "RADIO",
+          "OBSERVATORY"
+        ],
+        "spawns": [
+          "HALL",
+          "ORCHARD",
+          "RADIO"
+        ],
+        "foodNodes": [
+          "ORCHARD",
+          "HALL"
+        ],
+        "batteryNodes": [
+          "RADIO"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      },
+      {
+        "id": "SOUTH",
+        "nodes": [
+          "TERMINAL",
+          "WAREHOUSE",
+          "MARKET",
+          "GARDEN",
+          "SHELTER"
+        ],
+        "spawns": [
+          "TERMINAL",
+          "WAREHOUSE",
+          "MARKET"
+        ],
+        "foodNodes": [
+          "MARKET",
+          "WAREHOUSE"
+        ],
+        "batteryNodes": [
+          "TERMINAL"
+        ],
+        "foodPercent": 10,
+        "batteryPercent": 10
+      }
+    ],
+    "edges": [
+      [
+        "VO",
+        "TEMPLE"
+      ],
+      [
+        "TEMPLE",
+        "STORE"
+      ],
+      [
+        "STORE",
+        "VO"
+      ],
+      [
+        "VO",
+        "HOMES"
+      ],
+      [
+        "HOMES",
+        "FIRE"
+      ],
+      [
+        "FIRE",
+        "TEMPLE"
+      ],
+      [
+        "SCHOOL",
+        "CLINIC"
+      ],
+      [
+        "CLINIC",
+        "LIBRARY"
+      ],
+      [
+        "LIBRARY",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "FIELD"
+      ],
+      [
+        "FIELD",
+        "WATER"
+      ],
+      [
+        "COOP",
+        "TEA"
+      ],
+      [
+        "TEA",
+        "POND"
+      ],
+      [
+        "POND",
+        "BARN"
+      ],
+      [
+        "BARN",
+        "COOP"
+      ],
+      [
+        "FOREST",
+        "SHRINE"
+      ],
+      [
+        "SHRINE",
+        "LOOKOUT"
+      ],
+      [
+        "FOREST",
+        "QUARRY"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ],
+      [
+        "SCHOOL",
+        "COOP"
+      ],
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "FOREST",
+        "VO"
+      ],
+      [
+        "TEMPLE",
+        "CLINIC"
+      ],
+      [
+        "BARN",
+        "FIELD"
+      ],
+      [
+        "STORE",
+        "QUARRY"
+      ],
+      [
+        "COOP",
+        "MILL"
+      ],
+      [
+        "MILL",
+        "BARN"
+      ],
+      [
+        "SHRINE",
+        "CABIN"
+      ],
+      [
+        "CABIN",
+        "QUARRY"
+      ],
+      [
+        "DOCK",
+        "FISHERY"
+      ],
+      [
+        "FISHERY",
+        "PUMP"
+      ],
+      [
+        "PUMP",
+        "DOCK"
+      ],
+      [
+        "DOCK",
+        "FERRY"
+      ],
+      [
+        "DEPOT",
+        "GARAGE"
+      ],
+      [
+        "GARAGE",
+        "SUBSTATION"
+      ],
+      [
+        "SUBSTATION",
+        "DEPOT"
+      ],
+      [
+        "DEPOT",
+        "YARD"
+      ],
+      [
+        "DOCK",
+        "SCHOOL"
+      ],
+      [
+        "DOCK",
+        "COOP"
+      ],
+      [
+        "FERRY",
+        "WATER"
+      ],
+      [
+        "PUMP",
+        "POND"
+      ],
+      [
+        "DEPOT",
+        "VO"
+      ],
+      [
+        "DEPOT",
+        "FOREST"
+      ],
+      [
+        "GARAGE",
+        "STORE"
+      ],
+      [
+        "YARD",
+        "QUARRY"
+      ],
+      [
+        "PUMP",
+        "LEVEE"
+      ],
+      [
+        "LEVEE",
+        "FERRY"
+      ],
+      [
+        "GARAGE",
+        "WORKSHOP"
+      ],
+      [
+        "WORKSHOP",
+        "YARD"
+      ],
+      [
+        "HALL",
+        "RESERVOIR"
+      ],
+      [
+        "RESERVOIR",
+        "ORCHARD"
+      ],
+      [
+        "ORCHARD",
+        "HALL"
+      ],
+      [
+        "HALL",
+        "RADIO"
+      ],
+      [
+        "RADIO",
+        "OBSERVATORY"
+      ],
+      [
+        "TERMINAL",
+        "WAREHOUSE"
+      ],
+      [
+        "WAREHOUSE",
+        "MARKET"
+      ],
+      [
+        "MARKET",
+        "TERMINAL"
+      ],
+      [
+        "TERMINAL",
+        "GARDEN"
+      ],
+      [
+        "GARDEN",
+        "SHELTER"
+      ],
+      [
+        "SHELTER",
+        "MARKET"
+      ],
+      [
+        "HALL",
+        "VO"
+      ],
+      [
+        "HALL",
+        "FOREST"
+      ],
+      [
+        "ORCHARD",
+        "TEA"
+      ],
+      [
+        "RADIO",
+        "CABIN"
+      ],
+      [
+        "TERMINAL",
+        "SCHOOL"
+      ],
+      [
+        "TERMINAL",
+        "DOCK"
+      ],
+      [
+        "MARKET",
+        "FIELD"
+      ],
+      [
+        "WAREHOUSE",
+        "MILL"
+      ],
+      [
+        "QUARRY",
+        "BARN"
+      ],
+      [
+        "RADIO",
+        "TEA"
+      ],
+      [
+        "SHELTER",
+        "LIBRARY"
+      ],
+      [
+        "LEVEE",
+        "FIELD"
+      ]
+    ],
+    "closures": [
+      [
+        "COOP",
+        "FOREST"
+      ],
+      [
+        "VO",
+        "SCHOOL"
+      ]
+    ],
+    "rendezvousCandidates": [
+      "TEMPLE",
+      "BARN"
+    ],
+    "enclosed": [
+      "VO",
+      "STORE",
+      "SCHOOL",
+      "CLINIC",
+      "COOP",
+      "FOREST",
+      "BARN",
+      "LIBRARY",
+      "DEPOT",
+      "MILL",
+      "HALL",
+      "TERMINAL",
+      "SHELTER"
+    ],
+    "bulletins": [
+      "VO",
+      "SCHOOL",
+      "COOP",
+      "FOREST",
+      "DOCK",
+      "DEPOT",
+      "HALL",
+      "TERMINAL"
+    ],
+    "landlines": [
+      "VO",
+      "SCHOOL",
+      "CLINIC",
+      "FOREST",
+      "DEPOT",
+      "HALL"
+    ]
+  }
+]

@@ -5,6 +5,7 @@ These are game-rule versions. They do not create a deployment, package release o
 | Version | Status | Players | Rulebook |
 | --- | --- | --- | --- |
 | **v0.0.1** | **Current implemented rules** | Exactly 4 | [Current rulebook](v0.0.1.md), [map data](maps-v0.0.1.json) |
+| **v0.0.2** | **Draft — not active** | 4–20: Village 4–8, Town 9–13, Valley 14–20 | [Proposed rulebook](v0.0.2.md), [map data](maps-v0.0.2.json) |
 
 v0.0.1 records the current source baseline at `cf087fd8e9dedd3c223e1f85d31ea41fef41cc36`. It extracts the rules page and resolves its shorthand against the engine. The proposed v0.0.2 rules are reviewed separately from the current-version documentation. Documentation versioning does not activate proposed mechanics.
 

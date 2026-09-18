@@ -60,6 +60,10 @@ pnpm shots:update
 
 Balance is a single tuning surface: the `BALANCE` object in [`src/constants.ts`](src/constants.ts). Balance-only pull requests must edit that object and nothing else, and must cite the trial evidence that motivates the change. Numbers changed on intuition alone will be sent back.
 
+## Rule versions and proposals
+
+Game rules are versioned in [`docs/rules/`](docs/rules/README.md). v0.0.1 describes the current four-player behavior and includes its map data. Proposed versions belong in separate pull requests linked to their design issues. Preserve released rules as historical references, label drafts explicitly, and update the target rules and in-game explanation with gameplay changes. Keep design rationale, alternatives and implementation checklists in GitHub issues rather than `docs/rfc/`.
+
 ## Secrecy invariants
 
 Hidden information is the point of the game. Two rules are load-bearing:

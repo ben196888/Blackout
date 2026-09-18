@@ -201,6 +201,14 @@ test('the reach explorer matches its screenshot baselines', async ({ browser }) 
     await expect(page.getByLabel(/showing Mesh reach from the Co-op/)).toBeVisible();
     await shot(page, '08-rules-mesh-moved');
 
+    // These examples must not inherit the arbitrary Mesh vantage: a caller needs
+    // a phone, a poster needs a board, and the fixed data zone is around School.
+    for (const method of ['Bulletin board', 'Landline', 'Mobile data']) {
+      await picker.getByRole('button', { name: new RegExp(`^${method}`) }).click();
+      await expect(page.getByLabel(new RegExp(`showing ${method} reach from the School`))).toBeVisible();
+      await expect(stand).toHaveCount(0);
+    }
+
     // High ground is sight, not reach: every open node, none of the enclosed five.
     await picker.getByRole('button', { name: /^High ground/ }).click();
     await expect(page.getByLabel(/showing High ground reach from the Mountain Shrine/)).toBeVisible();

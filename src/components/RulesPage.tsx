@@ -1,6 +1,6 @@
 import { Fragment, lazy, Suspense, useMemo, useState } from 'react';
 import {
-  compareVersions, defaultRuleVersion, GAME_RULE_VERSION, RULE_STATUSES,
+  compareVersions, defaultRuleVersion, GAME_RULE_VERSION,
   RULE_VERSIONS, rulesUrl, STATUS_LABELS,
 } from '../rules/versions';
 import { ACTIONS_PER_DAY, DEFAULT_RENDEZVOUS } from '../constants';
@@ -142,35 +142,22 @@ export function RulesPage() {
   const selected = RULE_VERSIONS.find(({ version }) => `v${version}` === requested) ?? defaultVersion;
   return (
     <>
-      <section className="rules-version" aria-label="Rule version">
+      <section className="rules-version" aria-label="Rulebook selection">
         <div className="rules-version-controls">
-          <label htmlFor="rules-version">Rules version</label>
+          <label htmlFor="rules-version">Rule version</label>
           <select id="rules-version" value={selected.version}
             onChange={(event) => window.location.assign(rulesUrl(event.target.value))}>
             {[...RULE_VERSIONS].sort(compareVersions).reverse().map(({ version, status }) => (
               <option key={version} value={version}>
-                v{version} · {STATUS_LABELS[status]}{version === defaultVersion.version ? ' · Default' : ''}
+                v{version} · {STATUS_LABELS[status]}{version === GAME_RULE_VERSION ? ' · In play' : ''}
               </option>
             ))}
           </select>
-          <span className="rules-status" data-status={selected.status}>{STATUS_LABELS[selected.status]}</span>
         </div>
-        <p>The newest release candidate or release is shown by default. Currently v{defaultVersion.version}.</p>
-        <ol className="rules-lifecycle" aria-label="Rule version lifecycle">
-          {RULE_STATUSES.map((status) => (
-            <li key={status} aria-current={status === selected.status ? 'step' : undefined}>
-              {STATUS_LABELS[status]}
-            </li>
-          ))}
-        </ol>
         {requested && !RULE_VERSIONS.some(({ version }) => `v${version}` === requested) && (
           <p role="status">That rule version is unavailable. Showing the default version.</p>
         )}
-        {selected.version !== GAME_RULE_VERSION && (
-          <p className="rules-version-notice">You are viewing {STATUS_LABELS[selected.status].toLowerCase()} rules.
-            {' '}Games currently use <a href={rulesUrl(GAME_RULE_VERSION)}>v{GAME_RULE_VERSION}</a>.
-            {' '}Selecting a rulebook does not change gameplay.</p>
-        )}
+
       </section>
       {['0.0.1', '0.0.2'].includes(selected.version) ? <VersionedRules version={selected.version} /> : (
         <main className="rules">

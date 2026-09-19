@@ -504,8 +504,11 @@ summary { cursor: pointer; }
 .draft-region.region-3 path, .draft-region.region-7 path { fill: #28212d; }
 .draft-region.region-5 path { fill: #2b251e; }
 .draft-region-label text { font-size: 17px; fill: #a6b5aa; text-anchor: middle; paint-order: stroke; stroke: #141b16; stroke-width: 5; }
-.draft-road path { fill: none; stroke: #61756a; stroke-width: 2; }
-.draft-road[data-closed='true'] path { stroke: var(--danger); stroke-dasharray: 8 5; stroke-width: 3; }
+.draft-road path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.draft-road .road-casing { stroke: var(--panel); stroke-width: 8; }
+.draft-road .road-line { stroke: #8ea297; stroke-width: 2; }
+.draft-road[data-adjacent='true'] .road-line { stroke: var(--fresh); stroke-width: 3; }
+.draft-road[data-closed='true'] .road-line { stroke: var(--danger); stroke-dasharray: 8 5; stroke-width: 3; }
 .draft-map-node path { fill: var(--panel); stroke: #8ea297; stroke-width: 1.5; }
 .draft-map-node path ~ path { fill: none; }
 .draft-map-node text { fill: var(--ink); text-anchor: middle; font-size: 14px; pointer-events: none; }

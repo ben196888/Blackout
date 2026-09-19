@@ -13,7 +13,7 @@ function diagramGeometry(id: string) {
   const [, , width, height] = svg.documentElement.getAttribute('viewBox')!.split(' ').map(Number);
   const groups = (kind: string) => [...graph.querySelectorAll(`g.${kind}`)].map((group) => ({
     id: group.querySelector('title')!.textContent!,
-    paths: [...group.querySelectorAll('path')].map((path) => path.getAttribute('d')!),
+    paths: [...group.querySelectorAll('path:not(.road-casing)')].map((path) => path.getAttribute('d')!),
     labels: [...group.querySelectorAll('text')].map((text) => ({
       x: Number(text.getAttribute('x')), y: Number(text.getAttribute('y')), text: text.textContent!,
     })),
@@ -108,9 +108,12 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
               {geometry.regions.map((region, index) => <g className={`draft-region region-${index}`} key={region.id}>
                 {region.paths.map((path, i) => <path key={i} d={path} />)}
               </g>)}
-              {geometry.edges.map((edge) => <g className="draft-road" data-closed={closed.includes(roadKey(...edge.id.split('--') as [string, string]))} key={edge.id}>
+              {geometry.edges.map((edge) => <g className="draft-road" data-adjacent={edge.id.split('--').includes(origin)} data-closed={closed.includes(roadKey(...edge.id.split('--') as [string, string]))} key={edge.id}>
                 <title>{edge.id.replace('--', ' to ')}{closed.includes(roadKey(...edge.id.split('--') as [string, string])) ? ' · closed' : ''}</title>
-                {edge.paths.map((path, i) => <path key={i} d={path} />)}
+                {edge.paths.map((path, i) => <Fragment key={i}>
+                  <path className="road-casing" d={path} />
+                  <path className="road-line" d={path} />
+                </Fragment>)}
               </g>)}
               {geometry.regions.map((region) => <g className="draft-region-label" key={region.id}>
                 {region.labels.map((label, i) => <text key={i} x={label.x} y={label.y}>{label.text}</text>)}
@@ -147,7 +150,8 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
             <span className="grn">Green fill: you</span>
             {relay.length > 0 && <span className="sig">Amber dashed border: needs an intermediary</span>}
             <span>Double border: evacuation candidate</span><span>Red dashed road: closed</span>
-            <span>Crossing lines are not junctions.</span>
+            <span className="grn">Bright roads: exits from your location</span>
+            <span>Gaps separate crossing roads. Only named locations are junctions.</span>
           </div>
         </div>
       </div>

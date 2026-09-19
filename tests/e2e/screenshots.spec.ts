@@ -218,3 +218,36 @@ test('the reach explorer matches its screenshot baselines', async ({ browser }) 
     await context.close();
   }
 });
+
+test('draft rulebook version selection fits desktop and mobile', async ({ page }) => {
+  test.skip(!process.env.BLACKOUT_SHOTS, 'run `pnpm shots`; baselines only match inside the pinned Playwright image');
+  await page.setViewportSize(VIEWPORT);
+  await page.goto('/rules?version=v0.0.2');
+  await expect(page.getByRole('heading', { name: '01 · How a day runs' })).toBeVisible();
+  await expect(page.getByLabel('Map scale', { exact: true })).toBeVisible();
+  await awaitFonts(page);
+  await expect(page).toHaveScreenshot('10-rules-draft.png', {
+    stylePath: 'tests/e2e/screenshot.css',
+  });
+  await page.setViewportSize({ width: 375, height: 812 });
+  await expect(page).toHaveScreenshot('11-rules-draft-mobile.png', {
+    stylePath: 'tests/e2e/screenshot.css',
+  });
+});
+
+
+test('draft map explorer shows all three scales and neighborhood focus', async ({ page }) => {
+  test.skip(!process.env.BLACKOUT_SHOTS, 'run `pnpm shots`; baselines only match inside the pinned Playwright image');
+  await page.setViewportSize(VIEWPORT);
+  await page.goto('/rules?version=v0.0.2');
+  await page.getByRole('group', { name: 'Ways to reach and see' }).getByRole('button', { name: /^Mesh 1 hop/ }).click();
+  await awaitFonts(page);
+  const explorer = page.locator('.reach-explorer');
+  for (const [index, scale] of ['village', 'town', 'valley'].entries()) {
+    await page.getByLabel('Map scale', { exact: true }).selectOption(scale);
+    await expect(explorer).toHaveScreenshot(`${12 + index}-rules-${scale}-interactive.png`, { stylePath: 'tests/e2e/screenshot.css' });
+  }
+  await page.getByLabel('Neighborhood focus').selectOption('UPLAND');
+  await page.getByLabel('Stand at', { exact: true }).selectOption('RADIO');
+  await expect(explorer).toHaveScreenshot('15-rules-valley-focus.png', { stylePath: 'tests/e2e/screenshot.css' });
+});

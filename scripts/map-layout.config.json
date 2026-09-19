@@ -1,0 +1,515 @@
+{
+  "seed": 7621,
+  "restarts": 24,
+  "iterations": 9000,
+  "nodeWidth": 144,
+  "nodeHeight": 40,
+  "labels": {
+    "VO": "Village Office",
+    "TEMPLE": "Temple",
+    "STORE": "Store",
+    "HOMES": "Homes",
+    "FIRE": "Fire Station",
+    "SCHOOL": "School",
+    "CLINIC": "Clinic",
+    "FIELD": "Field",
+    "LIBRARY": "Library",
+    "WATER": "Water Point",
+    "COOP": "Co-op",
+    "TEA": "Tea Terrace",
+    "POND": "Pond",
+    "BARN": "Barn",
+    "FOREST": "Forest Station",
+    "SHRINE": "Shrine",
+    "QUARRY": "Quarry",
+    "LOOKOUT": "Lookout",
+    "MILL": "Mill",
+    "CABIN": "Cabin",
+    "DOCK": "Dock",
+    "FISHERY": "Fishery",
+    "PUMP": "Pump Station",
+    "FERRY": "Ferry Landing",
+    "DEPOT": "Depot",
+    "GARAGE": "Garage",
+    "SUBSTATION": "Substation",
+    "YARD": "Yard",
+    "LEVEE": "Levee",
+    "WORKSHOP": "Workshop",
+    "HALL": "Community Hall",
+    "RESERVOIR": "Reservoir",
+    "ORCHARD": "Orchard",
+    "RADIO": "Radio Hut",
+    "OBSERVATORY": "Observatory",
+    "TERMINAL": "Bus Terminal",
+    "WAREHOUSE": "Warehouse",
+    "MARKET": "Market",
+    "GARDEN": "Garden",
+    "SHELTER": "Shelter"
+  },
+  "regions": {
+    "CORE": {
+      "label": "Core",
+      "color": "#fff3d6"
+    },
+    "SCHOOL": {
+      "label": "School neighborhood",
+      "color": "#eaf2ff"
+    },
+    "FARM": {
+      "label": "Farm",
+      "color": "#edf6df"
+    },
+    "RIDGE": {
+      "label": "Ridge",
+      "color": "#efeafa"
+    },
+    "RIVERSIDE": {
+      "label": "Riverside",
+      "color": "#e1f5f4"
+    },
+    "WORKS": {
+      "label": "Works",
+      "color": "#f2eae4"
+    },
+    "UPLAND": {
+      "label": "Upland",
+      "color": "#e6f0eb"
+    },
+    "SOUTH": {
+      "label": "South Settlement",
+      "color": "#fbe8ef"
+    }
+  },
+  "centers": {
+    "village": {
+      "CORE": [
+        664,
+        634
+      ],
+      "SCHOOL": [
+        163,
+        632
+      ],
+      "FARM": [
+        162,
+        200
+      ],
+      "RIDGE": [
+        651,
+        202
+      ]
+    },
+    "town": {
+      "CORE": [
+        193,
+        609
+      ],
+      "SCHOOL": [
+        187,
+        202
+      ],
+      "FARM": [
+        810,
+        603
+      ],
+      "RIDGE": [
+        802,
+        1012
+      ],
+      "RIVERSIDE": [
+        810,
+        200
+      ],
+      "WORKS": [
+        178,
+        1014
+      ]
+    },
+    "valley": {
+      "CORE": [
+        637,
+        294
+      ],
+      "SCHOOL": [
+        1140,
+        200
+      ],
+      "FARM": [
+        645,
+        916
+      ],
+      "RIDGE": [
+        170,
+        633
+      ],
+      "RIVERSIDE": [
+        1130,
+        1056
+      ],
+      "WORKS": [
+        155,
+        203
+      ],
+      "UPLAND": [
+        160,
+        1058
+      ],
+      "SOUTH": [
+        1119,
+        628
+      ]
+    }
+  },
+  "initialPositions": {
+    "village": {
+      "VO": [
+        613.32,
+        526
+      ],
+      "TEMPLE": [
+        637.48,
+        742
+      ],
+      "STORE": [
+        794.64,
+        713.46
+      ],
+      "HOMES": [
+        509,
+        627.99
+      ],
+      "FIRE": [
+        519.1,
+        711.52
+      ],
+      "SCHOOL": [
+        279.64,
+        643.12
+      ],
+      "CLINIC": [
+        282.03,
+        740
+      ],
+      "FIELD": [
+        215.49,
+        588.02
+      ],
+      "LIBRARY": [
+        193.57,
+        728.93
+      ],
+      "WATER": [
+        54.32,
+        674.39
+      ],
+      "COOP": [
+        217.91,
+        280.18
+      ],
+      "TEA": [
+        317,
+        236.61
+      ],
+      "POND": [
+        230.5,
+        167.59
+      ],
+      "BARN": [
+        7,
+        99.72
+      ],
+      "FOREST": [
+        638.9,
+        285.47
+      ],
+      "SHRINE": [
+        508.47,
+        253.04
+      ],
+      "QUARRY": [
+        680.16,
+        94
+      ],
+      "LOOKOUT": [
+        538.01,
+        143.35
+      ]
+    },
+    "town": {
+      "VO": [
+        303.47,
+        624.0
+      ],
+      "TEMPLE": [
+        77.34,
+        682.78
+      ],
+      "STORE": [
+        217.09,
+        719.11
+      ],
+      "HOMES": [
+        217.09,
+        528.89
+      ],
+      "FIRE": [
+        77.34,
+        565.22
+      ],
+      "SCHOOL": [
+        216.5,
+        312.13
+      ],
+      "CLINIC": [
+        76.75,
+        275.8
+      ],
+      "FIELD": [
+        302.88,
+        217.02
+      ],
+      "LIBRARY": [
+        76.75,
+        158.24
+      ],
+      "WATER": [
+        216.5,
+        121.91
+      ],
+      "COOP": [
+        698.17,
+        678.19
+      ],
+      "TEA": [
+        837.93,
+        714.52
+      ],
+      "POND": [
+        924.3,
+        619.41
+      ],
+      "BARN": [
+        837.93,
+        524.3
+      ],
+      "MILL": [
+        698.17,
+        560.63
+      ],
+      "FOREST": [
+        698.13,
+        967.64
+      ],
+      "SHRINE": [
+        837.89,
+        931.31
+      ],
+      "QUARRY": [
+        698.13,
+        1085.2
+      ],
+      "LOOKOUT": [
+        924.26,
+        1026.42
+      ],
+      "CABIN": [
+        837.89,
+        1121.53
+      ],
+      "DOCK": [
+        672.25,
+        214.61
+      ],
+      "FISHERY": [
+        797.25,
+        314.61
+      ],
+      "PUMP": [
+        922.25,
+        214.61
+      ],
+      "FERRY": [
+        797.25,
+        114.61
+      ],
+      "DEPOT": [
+        304.88,
+        1028.77
+      ],
+      "GARAGE": [
+        54.88,
+        1028.77
+      ],
+      "SUBSTATION": [
+        179.88,
+        928.77
+      ],
+      "YARD": [
+        179.88,
+        1128.77
+      ]
+    },
+    "valley": {
+      "VO": [
+        522.37,
+        319.81
+      ],
+      "TEMPLE": [
+        734.22,
+        233.46
+      ],
+      "STORE": [
+        589.09,
+        215.07
+      ],
+      "HOMES": [
+        626.28,
+        402.94
+      ],
+      "FIRE": [
+        757.21,
+        349.57
+      ],
+      "SCHOOL": [
+        1015.32,
+        225.99
+      ],
+      "CLINIC": [
+        1082.04,
+        121.25
+      ],
+      "FIELD": [
+        1119.23,
+        309.12
+      ],
+      "LIBRARY": [
+        1227.17,
+        139.63
+      ],
+      "WATER": [
+        1250.16,
+        255.75
+      ],
+      "COOP": [
+        760.71,
+        973.35
+      ],
+      "TEA": [
+        629.78,
+        1026.72
+      ],
+      "POND": [
+        525.87,
+        943.59
+      ],
+      "BARN": [
+        592.59,
+        838.85
+      ],
+      "MILL": [
+        737.72,
+        857.24
+      ],
+      "FOREST": [
+        275.27,
+        688.19
+      ],
+      "SHRINE": [
+        144.34,
+        741.56
+      ],
+      "QUARRY": [
+        252.28,
+        572.08
+      ],
+      "LOOKOUT": [
+        107.15,
+        553.69
+      ],
+      "CABIN": [
+        40.43,
+        658.43
+      ],
+      "DOCK": [
+        1068.94,
+        976.7
+      ],
+      "FISHERY": [
+        1002.22,
+        1081.44
+      ],
+      "PUMP": [
+        1106.13,
+        1164.57
+      ],
+      "FERRY": [
+        1237.06,
+        1111.2
+      ],
+      "LEVEE": [
+        1214.07,
+        995.09
+      ],
+      "DEPOT": [
+        30.82,
+        228.19
+      ],
+      "GARAGE": [
+        242.67,
+        141.84
+      ],
+      "SUBSTATION": [
+        97.54,
+        123.45
+      ],
+      "YARD": [
+        134.73,
+        311.32
+      ],
+      "WORKSHOP": [
+        265.66,
+        257.95
+      ],
+      "HALL": [
+        115.64,
+        978.85
+      ],
+      "RESERVOIR": [
+        260.77,
+        997.24
+      ],
+      "ORCHARD": [
+        283.76,
+        1113.35
+      ],
+      "RADIO": [
+        152.83,
+        1166.72
+      ],
+      "OBSERVATORY": [
+        48.92,
+        1083.59
+      ],
+      "TERMINAL": [
+        1112.03,
+        736.92
+      ],
+      "WAREHOUSE": [
+        1008.12,
+        653.79
+      ],
+      "MARKET": [
+        1074.84,
+        549.05
+      ],
+      "GARDEN": [
+        1242.96,
+        683.55
+      ],
+      "SHELTER": [
+        1219.97,
+        567.44
+      ]
+    }
+  }
+}

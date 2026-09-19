@@ -17,7 +17,9 @@
     "smoke": "playwright test",
     "smoke:production": "PLAYWRIGHT_BASE_URL=https://pace-poc.fly.dev playwright test",
     "shots": "bash scripts/screenshots.sh",
-    "shots:update": "bash scripts/screenshots.sh --update"
+    "shots:update": "bash scripts/screenshots.sh --update",
+    "maps:layout": "node scripts/map-layout.mts",
+    "maps:check": "node scripts/map-layout.mts --check"
   },
   "dependencies": {
     "boardgame.io": "0.50.2",

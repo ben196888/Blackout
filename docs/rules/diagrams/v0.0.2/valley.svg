@@ -1,622 +1,388 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1401.53pt" height="1305.47pt" viewBox="0 0 1401.53 1305.47">
-  <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(52.0 1253.47)">
-    <title>valley</title>
-    <polygon fill="white" stroke="none" points="-21.6,21.6 -21.6,-1168.67 1319.13,-1168.67 1319.13,21.6 -21.6,21.6" />
-    <text xml:space="preserve" text-anchor="middle" x="648.765" y="-1191.47" font-family="Arial" font-size="24.00">Valley · 14–20 players</text>
-    <text xml:space="preserve" text-anchor="middle" x="648.765" y="-1161.47" font-family="Arial" font-size="24.00">40 locations · 72 roads</text>
-    <g id="clust1" class="cluster">
-      <title>cluster_CORE</title>
-      <path fill="#fff3d6" stroke="#cbd5e1" d="M450.33,-1037.65 L823.8,-1037.65 L823.8,-743.78 L450.33,-743.78 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="637.0649999999999" y="-1013.6500000000001" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#fff3d6" stroke-width="5" stroke-linejoin="round">Core</text>
-    </g>
-    <g id="clust2" class="cluster">
-      <title>cluster_SCHOOL</title>
-      <path fill="#eaf2ff" stroke="#cbd5e1" d="M963.12,-1131.47 L1317.53,-1131.47 L1317.53,-837.6 L963.12,-837.6 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="1140.325" y="-1107.47" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#eaf2ff" stroke-width="5" stroke-linejoin="round">School neighborhood</text>
-    </g>
-    <g id="clust3" class="cluster">
-      <title>cluster_FARM</title>
-      <path fill="#edf6df" stroke="#cbd5e1" d="M478.73,-417.87 L810.58,-417.87 L810.58,-120.0 L478.73,-120.0 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="644.655" y="-393.87" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#edf6df" stroke-width="5" stroke-linejoin="round">Farm</text>
-    </g>
-    <g id="clust4" class="cluster">
-      <title>cluster_RIDGE</title>
-      <path fill="#efeafa" stroke="#cbd5e1" d="M-8.66,-699.03 L349.65,-699.03 L349.65,-405.16 L-8.66,-405.16 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="170.49499999999998" y="-675.03" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#efeafa" stroke-width="5" stroke-linejoin="round">Ridge</text>
-    </g>
-    <g id="clust5" class="cluster">
-      <title>cluster_RIVERSIDE</title>
-      <path fill="#e1f5f4" stroke="#cbd5e1" d="M948.48,-276.02 L1311.05,-276.02 L1311.05,17.85 L948.48,17.85 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="1129.7649999999999" y="-252.01999999999998" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#e1f5f4" stroke-width="5" stroke-linejoin="round">Riverside</text>
-    </g>
-    <g id="clust6" class="cluster">
-      <title>cluster_WORKS</title>
-      <path fill="#f2eae4" stroke="#cbd5e1" d="M-18.66,-1129.27 L327.97,-1129.27 L327.97,-835.4 L-18.66,-835.4 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="154.655" y="-1105.27" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#f2eae4" stroke-width="5" stroke-linejoin="round">Works</text>
-    </g>
-    <g id="clust7" class="cluster">
-      <title>cluster_UPLAND</title>
-      <path fill="#e6f0eb" stroke="#cbd5e1" d="M-20.0,-273.87 L339.85,-273.87 L339.85,20.0 L-20.0,20.0 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="159.925" y="-249.87" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#e6f0eb" stroke-width="5" stroke-linejoin="round">Upland</text>
-    </g>
-    <g id="clust8" class="cluster">
-      <title>cluster_SOUTH</title>
-      <path fill="#fbe8ef" stroke="#cbd5e1" d="M941.53,-703.67 L1297.11,-703.67 L1297.11,-409.8 L941.53,-409.8 Z" />
-      <text xml:space="preserve" text-anchor="middle" x="1119.32" y="-679.67" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#fbe8ef" stroke-width="5" stroke-linejoin="round">South Settlement</text>
-    </g>
-    <g id="edge1" class="edge">
-      <title>VO--TEMPLE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M567.82,-883.43C605.88,-898.94 659.59,-920.84 695.6,-935.51" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M567.82,-883.43C605.88,-898.94 659.59,-920.84 695.6,-935.51" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge4" class="edge">
-      <title>VO--HOMES</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M545.43,-846.46C562.65,-832.68 586.08,-813.94 603.28,-800.18" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M545.43,-846.46C562.65,-832.68 586.08,-813.94 603.28,-800.18" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge19" class="edge">
-      <title>VO--SCHOOL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M574.66,-874.86C676.63,-894.26 899.34,-936.65 982.84,-952.54" />
-      <path fill="none" stroke="#be123c" stroke-width="2" stroke-dasharray="5,2" d="M574.66,-874.86C676.63,-894.26 899.34,-936.65 982.84,-952.54" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-      <text xml:space="preserve" text-anchor="middle" x="752.05" y="-918.32" font-family="Arial" font-size="11.00" fill="#9f1239" paint-order="stroke" stroke="white" stroke-width="4">Day 3 closure</text>
-    </g>
-    <g id="edge2" class="edge">
-      <title>TEMPLE--STORE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M695.71,-956.14C670.85,-959.29 639.1,-963.31 616.73,-966.15" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M695.71,-956.14C670.85,-959.29 639.1,-963.31 616.73,-966.15" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge23" class="edge">
-      <title>TEMPLE--CLINIC</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M772.77,-963.7C843.35,-986.46 991.74,-1034.34 1053.81,-1054.36" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M772.77,-963.7C843.35,-986.46 991.74,-1034.34 1053.81,-1054.36" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge3" class="edge">
-      <title>STORE--VO</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M577.47,-951.4C565.3,-932.3 546.29,-902.45 534.09,-883.29" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M577.47,-951.4C565.3,-932.3 546.29,-902.45 534.09,-883.29" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge25" class="edge">
-      <title>STORE--QUARRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M561.02,-954.07C534.95,-938.84 495.87,-914.01 466.58,-886.66 376.1,-802.15 293.11,-677.27 263.64,-630.87" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M561.02,-954.07C534.95,-938.84 495.87,-914.01 466.58,-886.66 376.1,-802.15 293.11,-677.27 263.64,-630.87" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge5" class="edge">
-      <title>HOMES--FIRE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M659.66,-795.39C675.57,-801.87 694.84,-809.73 712.04,-816.74" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M659.66,-795.39C675.57,-801.87 694.84,-809.73 712.04,-816.74" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge6" class="edge">
-      <title>FIRE--TEMPLE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M753.57,-853.55C749.52,-874.01 742.97,-907.06 738.64,-928.98" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M753.57,-853.55C749.52,-874.01 742.97,-907.06 738.64,-928.98" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge7" class="edge">
-      <title>SCHOOL--CLINIC</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1026.94,-976.97C1039.11,-996.08 1058.12,-1025.92 1070.33,-1045.08" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1026.94,-976.97C1039.11,-996.08 1058.12,-1025.92 1070.33,-1045.08" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge10" class="edge">
-      <title>SCHOOL--FIELD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1038.38,-940.28C1055.6,-926.5 1079.03,-907.76 1096.23,-894" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1038.38,-940.28C1055.6,-926.5 1079.03,-907.76 1096.23,-894" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge20" class="edge">
-      <title>SCHOOL--COOP</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1009.03,-940.25C973.88,-837.08 802.18,-333.1 767.01,-229.87" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1009.03,-940.25C973.88,-837.08 802.18,-333.1 767.01,-229.87" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge8" class="edge">
-      <title>CLINIC--LIBRARY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1110.36,-1059.88C1134.54,-1056.82 1169.3,-1052.41 1194.61,-1049.21" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1110.36,-1059.88C1134.54,-1056.82 1169.3,-1052.41 1194.61,-1049.21" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge11" class="edge">
-      <title>FIELD--WATER</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1146.68,-886.79C1163.47,-893.63 1185.38,-902.56 1204.71,-910.44" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1146.68,-886.79C1163.47,-893.63 1185.38,-902.56 1204.71,-910.44" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge9" class="edge">
-      <title>LIBRARY--SCHOOL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1194.54,-1031.78C1154.73,-1015.55 1087.83,-988.28 1048,-972.04" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1194.54,-1031.78C1154.73,-1015.55 1087.83,-988.28 1048,-972.04" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge12" class="edge">
-      <title>COOP--TEA</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M730.34,-198.99C713.95,-192.31 693.39,-183.93 675.14,-176.49" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M730.34,-198.99C713.95,-192.31 693.39,-183.93 675.14,-176.49" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge26" class="edge">
-      <title>COOP--MILL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M757.07,-229.77C752.76,-251.51 745.65,-287.46 741.35,-309.17" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M757.07,-229.77C752.76,-251.51 745.65,-287.46 741.35,-309.17" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge21" class="edge">
-      <title>COOP--FOREST</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M730.46,-226.79C690.52,-247.33 618.18,-285.16 557.84,-320.12 463.01,-375.06 353.74,-445.32 303.37,-478.12" />
-      <path fill="none" stroke="#be123c" stroke-width="2" stroke-dasharray="5,2" d="M730.46,-226.79C690.52,-247.33 618.18,-285.16 557.84,-320.12 463.01,-375.06 353.74,-445.32 303.37,-478.12" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-      <text xml:space="preserve" text-anchor="middle" x="479.55" y="-349.75" font-family="Arial" font-size="11.00" fill="#9f1239" paint-order="stroke" stroke="white" stroke-width="4">Day 2 closure</text>
-    </g>
-    <g id="edge13" class="edge">
-      <title>TEA--POND</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M606.72,-176.45C589.5,-190.22 566.07,-208.97 548.87,-222.73" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M606.72,-176.45C589.5,-190.22 566.07,-208.97 548.87,-222.73" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge14" class="edge">
-      <title>POND--BARN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M537.49,-259.37C548.84,-277.19 566.14,-304.34 578.32,-323.46" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M537.49,-259.37C548.84,-277.19 566.14,-304.34 578.32,-323.46" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge24" class="edge">
-      <title>BARN--FIELD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M614.88,-368.29C702.29,-456.22 1020.81,-776.6 1100.87,-857.13" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M614.88,-368.29C702.29,-456.22 1020.81,-776.6 1100.87,-857.13" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge15" class="edge">
-      <title>BARN--COOP</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M620.73,-323.36C653.54,-297.11 707.15,-254.22 737.62,-229.84" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M620.73,-323.36C653.54,-297.11 707.15,-254.22 737.62,-229.84" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge27" class="edge">
-      <title>MILL--BARN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M710.42,-330.94C685.87,-334.05 649.81,-338.62 624.05,-341.88" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M710.42,-330.94C685.87,-334.05 649.81,-338.62 624.05,-341.88" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge22" class="edge">
-      <title>FOREST--VO</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M287.69,-515.05C329.97,-578.08 467.98,-783.81 510.07,-846.57" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M287.69,-515.05C329.97,-578.08 467.98,-783.81 510.07,-846.57" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge16" class="edge">
-      <title>FOREST--SHRINE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M229.85,-478.01C211.97,-470.73 191.89,-462.54 175.68,-455.94" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M229.85,-478.01C211.97,-470.73 191.89,-462.54 175.68,-455.94" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge18" class="edge">
-      <title>FOREST--QUARRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M271.63,-514.93C267.32,-536.67 260.21,-572.62 255.91,-594.33" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M271.63,-514.93C267.32,-536.67 260.21,-572.62 255.91,-594.33" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge17" class="edge">
-      <title>SHRINE--LOOKOUT</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M140.71,-461.52C133.6,-497.43 117.92,-576.62 110.8,-612.6" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M140.71,-461.52C133.6,-497.43 117.92,-576.62 110.8,-612.6" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge28" class="edge">
-      <title>SHRINE--CABIN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M121.28,-461.61C104.06,-475.38 80.63,-494.13 63.43,-507.89" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M121.28,-461.61C104.06,-475.38 80.63,-494.13 63.43,-507.89" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge69" class="edge">
-      <title>QUARRY--BARN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M275.94,-594.09C336.69,-546.47 497.98,-420.03 563.9,-368.36" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M275.94,-594.09C336.69,-546.47 497.98,-420.03 563.9,-368.36" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge29" class="edge">
-      <title>CABIN--QUARRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M69.89,-538.29C109.23,-554.33 178.69,-582.64 219.6,-599.32" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M69.89,-538.29C109.23,-554.33 178.69,-582.64 219.6,-599.32" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge38" class="edge">
-      <title>DOCK--SCHOOL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1067.51,-226.38C1064.67,-263.87 1058.4,-351.95 1056.25,-426.05 1055.68,-445.38 1055.7,-450.22 1056.25,-469.55 1056.74,-487.18 1057.98,-491.54 1058.47,-509.18 1059.01,-528.5 1061.45,-533.57 1058.47,-552.68 1054.07,-580.91 1044.26,-585.85 1038.89,-613.92 1015.41,-736.8 1014.54,-888.24 1015.03,-940.21" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1067.51,-226.38C1064.67,-263.87 1058.4,-351.95 1056.25,-426.05 1055.68,-445.38 1055.7,-450.22 1056.25,-469.55 1056.74,-487.18 1057.98,-491.54 1058.47,-509.18 1059.01,-528.5 1061.45,-533.57 1058.47,-552.68 1054.07,-580.91 1044.26,-585.85 1038.89,-613.92 1015.41,-736.8 1014.54,-888.24 1015.03,-940.21" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge39" class="edge">
-      <title>DOCK--COOP</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1041.58,-208.32C983.98,-208.94 850.55,-210.39 790.71,-211.04" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1041.58,-208.32C983.98,-208.94 850.55,-210.39 790.71,-211.04" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge30" class="edge">
-      <title>DOCK--FISHERY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1057.32,-189.77C1045.15,-170.67 1026.14,-140.82 1013.94,-121.66" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1057.32,-189.77C1045.15,-170.67 1026.14,-140.82 1013.94,-121.66" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge33" class="edge">
-      <title>DOCK--FERRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1091.96,-189.6C1124.07,-163.92 1181.94,-117.61 1214.05,-91.93" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1091.96,-189.6C1124.07,-163.92 1181.94,-117.61 1214.05,-91.93" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge31" class="edge">
-      <title>FISHERY--PUMP</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1025.28,-84.83C1042.5,-71.05 1065.93,-52.31 1083.13,-38.55" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1025.28,-84.83C1042.5,-71.05 1065.93,-52.31 1083.13,-38.55" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge41" class="edge">
-      <title>PUMP--POND</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1057.66,-38.61C940.53,-83.21 645.05,-195.74 553.41,-230.64" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1057.66,-38.61C940.53,-83.21 645.05,-195.74 553.41,-230.64" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge32" class="edge">
-      <title>PUMP--DOCK</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1102.5,-38.51C1095.39,-74.42 1079.71,-153.61 1072.59,-189.59" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1102.5,-38.51C1095.39,-74.42 1079.71,-153.61 1072.59,-189.59" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge46" class="edge">
-      <title>PUMP--LEVEE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1117.89,-38.61C1138.65,-71.21 1181.58,-138.61 1202.33,-171.19" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1117.89,-38.61C1138.65,-71.21 1181.58,-138.61 1202.33,-171.19" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge40" class="edge">
-      <title>FERRY--WATER</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1239.17,-91.96C1241.34,-110.98 1244.8,-141.5 1247.7,-167.88 1264.96,-325.42 1286.84,-364.55 1280.86,-522.92 1275.19,-673.04 1257.78,-853.72 1252.03,-910.79" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1239.17,-91.96C1241.34,-110.98 1244.8,-141.5 1247.7,-167.88 1264.96,-325.42 1286.84,-364.55 1280.86,-522.92 1275.19,-673.04 1257.78,-853.72 1252.03,-910.79" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge72" class="edge">
-      <title>LEVEE--FIELD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1211.54,-207.98C1198.09,-305.24 1135.24,-759.79 1121.78,-857.2" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1211.54,-207.98C1198.09,-305.24 1135.24,-759.79 1121.78,-857.2" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge47" class="edge">
-      <title>LEVEE--FERRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1217.72,-171.23C1222.02,-149.49 1229.14,-113.54 1233.44,-91.83" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1217.72,-171.23C1222.02,-149.49 1229.14,-113.54 1233.44,-91.83" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge42" class="edge">
-      <title>DEPOT--VO</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M60.61,-947.06C97.56,-935.63 162.66,-916.51 219.6,-905.02 306.66,-887.46 409.41,-875.7 470.05,-869.68" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M60.61,-947.06C97.56,-935.63 162.66,-916.51 219.6,-905.02 306.66,-887.46 409.41,-875.7 470.05,-869.68" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge43" class="edge">
-      <title>DEPOT--FOREST</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M39.34,-938.35C64.73,-884.49 142.68,-721.37 216.34,-590.89 231.53,-563.98 250.75,-533.85 263.03,-515.03" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M39.34,-938.35C64.73,-884.49 142.68,-721.37 216.34,-590.89 231.53,-563.98 250.75,-533.85 263.03,-515.03" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge34" class="edge">
-      <title>DEPOT--GARAGE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M60.73,-968.71C99.51,-984.52 167.02,-1012.04 208,-1028.75" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M60.73,-968.71C99.51,-984.52 167.02,-1012.04 208,-1028.75" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge37" class="edge">
-      <title>DEPOT--YARD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M53.88,-938.08C71.1,-924.3 94.53,-905.56 111.73,-891.8" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M53.88,-938.08C71.1,-924.3 94.53,-905.56 111.73,-891.8" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge44" class="edge">
-      <title>GARAGE--STORE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M277.16,-1035.59C345.78,-1021.08 498.25,-988.85 561.14,-975.56" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M277.16,-1035.59C345.78,-1021.08 498.25,-988.85 561.14,-975.56" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge35" class="edge">
-      <title>GARAGE--SUBSTATION</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M208.28,-1047.24C188.41,-1049.75 163.21,-1052.95 141.87,-1055.65" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M208.28,-1047.24C188.41,-1049.75 163.21,-1052.95 141.87,-1055.65" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge48" class="edge">
-      <title>GARAGE--WORKSHOP</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M246.32,-1024.48C250.62,-1002.74 257.74,-966.79 262.04,-945.08" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M246.32,-1024.48C250.62,-1002.74 257.74,-966.79 262.04,-945.08" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge36" class="edge">
-      <title>SUBSTATION--DEPOT</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M85.92,-1043.02C73.75,-1023.92 54.74,-994.07 42.54,-974.91" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M85.92,-1043.02C73.75,-1023.92 54.74,-994.07 42.54,-974.91" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge45" class="edge">
-      <title>YARD--QUARRY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M143,-855.06C164.58,-807.19 222.45,-678.81 244.03,-630.96" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M143,-855.06C164.58,-807.19 222.45,-678.81 244.03,-630.96" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge49" class="edge">
-      <title>WORKSHOP--YARD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M223.15,-909.44C203.14,-901.29 179.85,-891.79 162.2,-884.6" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M223.15,-909.44C203.14,-901.29 179.85,-891.79 162.2,-884.6" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge61" class="edge">
-      <title>HALL--VO</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M133.09,-224.28C172.3,-266.28 268.98,-373.36 333.4,-474.78 419.14,-609.77 492.75,-789.46 515.29,-846.63" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M133.09,-224.28C172.3,-266.28 268.98,-373.36 333.4,-474.78 419.14,-609.77 492.75,-789.46 515.29,-846.63" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge62" class="edge">
-      <title>HALL--FOREST</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M125.62,-224.05C154.22,-276.13 236.23,-425.45 265.08,-477.98" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M125.62,-224.05C154.22,-276.13 236.23,-425.45 265.08,-477.98" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge50" class="edge">
-      <title>HALL--RESERVOIR</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M176.35,-198.18C190.95,-196.33 206.21,-194.39 219.68,-192.69" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M176.35,-198.18C190.95,-196.33 206.21,-194.39 219.68,-192.69" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge53" class="edge">
-      <title>HALL--RADIO</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M119.27,-187.51C126.38,-151.6 142.06,-72.41 149.18,-36.43" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M119.27,-187.51C126.38,-151.6 142.06,-72.41 149.18,-36.43" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge51" class="edge">
-      <title>RESERVOIR--ORCHARD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M264.42,-169.08C268.72,-147.34 275.84,-111.39 280.14,-89.68" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M264.42,-169.08C268.72,-147.34 275.84,-111.39 280.14,-89.68" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge63" class="edge">
-      <title>ORCHARD--TEA</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M320.14,-80.48C382.52,-96.09 509.95,-128 580.34,-145.62" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M320.14,-80.48C382.52,-96.09 509.95,-128 580.34,-145.62" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge52" class="edge">
-      <title>ORCHARD--HALL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M260.74,-89.79C228.63,-115.47 170.75,-161.78 138.65,-187.46" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M260.74,-89.79C228.63,-115.47 170.75,-161.78 138.65,-187.46" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge70" class="edge">
-      <title>RADIO--TEA</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M195,-23.92C229.81,-29.25 280.35,-38.04 323.6,-49.62 418.24,-74.96 525.45,-115.83 584.58,-139.47" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M195,-23.92C229.81,-29.25 280.35,-38.04 323.6,-49.62 418.24,-74.96 525.45,-115.83 584.58,-139.47" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge64" class="edge">
-      <title>RADIO--CABIN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M145.33,-36.49C136.27,-57.99 119.94,-94.2 101.6,-122.88 82.68,-152.45 64,-151.24 51.69,-184.12 8.02,-300.73 28.29,-455.63 37.09,-508.06" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M145.33,-36.49C136.27,-57.99 119.94,-94.2 101.6,-122.88 82.68,-152.45 64,-151.24 51.69,-184.12 8.02,-300.73 28.29,-455.63 37.09,-508.06" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge54" class="edge">
-      <title>RADIO--OBSERVATORY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M129.77,-36.45C112.55,-50.22 89.12,-68.97 71.92,-82.73" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M129.77,-36.45C112.55,-50.22 89.12,-68.97 71.92,-82.73" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge65" class="edge">
-      <title>TERMINAL--SCHOOL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1113.76,-466.17C1116.8,-502.82 1121.8,-587.5 1110.78,-657.42 1093.3,-768.26 1042.83,-894.29 1023.24,-940.51" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1113.76,-466.17C1116.8,-502.82 1121.8,-587.5 1110.78,-657.42 1093.3,-768.26 1042.83,-894.29 1023.24,-940.51" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge66" class="edge">
-      <title>TERMINAL--DOCK</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1108.72,-429.38C1100.7,-384.75 1080.29,-271.2 1072.26,-226.5" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1108.72,-429.38C1100.7,-384.75 1080.29,-271.2 1072.26,-226.5" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge55" class="edge">
-      <title>TERMINAL--WAREHOUSE</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1088.97,-466.25C1071.75,-480.02 1048.32,-498.77 1031.12,-512.53" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1088.97,-466.25C1071.75,-480.02 1048.32,-498.77 1031.12,-512.53" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge58" class="edge">
-      <title>TERMINAL--GARDEN</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1157.46,-466.32C1174.15,-473.12 1192.76,-480.71 1208.35,-487.06" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1157.46,-466.32C1174.15,-473.12 1192.76,-480.71 1208.35,-487.06" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge68" class="edge">
-      <title>WAREHOUSE--MILL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M983.65,-512.51C932.3,-473.88 813.81,-384.73 762.34,-346" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M983.65,-512.51C932.3,-473.88 813.81,-384.73 762.34,-346" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge56" class="edge">
-      <title>WAREHOUSE--MARKET</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1019.74,-549.17C1031.91,-568.28 1050.92,-598.12 1063.13,-617.28" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1019.74,-549.17C1031.91,-568.28 1050.92,-598.12 1063.13,-617.28" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge67" class="edge">
-      <title>MARKET--FIELD</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1078.25,-654.1C1086.51,-698.76 1107.53,-812.38 1115.81,-857.11" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1078.25,-654.1C1086.51,-698.76 1107.53,-812.38 1115.81,-857.11" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge57" class="edge">
-      <title>MARKET--TERMINAL</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1078.47,-617.31C1085.58,-581.4 1101.26,-502.21 1108.38,-466.23" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1078.47,-617.31C1085.58,-581.4 1101.26,-502.21 1108.38,-466.23" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge59" class="edge">
-      <title>GARDEN--SHELTER</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1239.32,-519.57C1235.01,-541.31 1227.9,-577.26 1223.6,-598.97" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1239.32,-519.57C1235.01,-541.31 1227.9,-577.26 1223.6,-598.97" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge71" class="edge">
-      <title>SHELTER--LIBRARY</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1216.13,-635.82C1206.21,-686.53 1181.67,-831.62 1199.04,-950.72 1202.99,-977.78 1212.99,-1007.88 1219.94,-1026.64" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1216.13,-635.82C1206.21,-686.53 1181.67,-831.62 1199.04,-950.72 1202.99,-977.78 1212.99,-1007.88 1219.94,-1026.64" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g id="edge60" class="edge">
-      <title>SHELTER--MARKET</title>
-      <path class="road-casing" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M1186.68,-621.5C1162.91,-624.51 1131.1,-628.54 1107.48,-631.53" />
-      <path fill="none" stroke="#64748b" stroke-width="2" d="M1186.68,-621.5C1162.91,-624.51 1131.1,-628.54 1107.48,-631.53" class="road-line" stroke-linecap="round" stroke-linejoin="round" />
-    </g>
-    <g class="region-labels">
-      <text xml:space="preserve" text-anchor="middle" x="637.0649999999999" y="-1013.6500000000001" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#fff3d6" stroke-width="5" stroke-linejoin="round">Core</text>
-      <text xml:space="preserve" text-anchor="middle" x="1140.325" y="-1107.47" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#eaf2ff" stroke-width="5" stroke-linejoin="round">School neighborhood</text>
-      <text xml:space="preserve" text-anchor="middle" x="644.655" y="-393.87" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#edf6df" stroke-width="5" stroke-linejoin="round">Farm</text>
-      <text xml:space="preserve" text-anchor="middle" x="170.49499999999998" y="-675.03" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#efeafa" stroke-width="5" stroke-linejoin="round">Ridge</text>
-      <text xml:space="preserve" text-anchor="middle" x="1129.7649999999999" y="-252.01999999999998" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#e1f5f4" stroke-width="5" stroke-linejoin="round">Riverside</text>
-      <text xml:space="preserve" text-anchor="middle" x="154.655" y="-1105.27" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#f2eae4" stroke-width="5" stroke-linejoin="round">Works</text>
-      <text xml:space="preserve" text-anchor="middle" x="159.925" y="-249.87" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#e6f0eb" stroke-width="5" stroke-linejoin="round">Upland</text>
-      <text xml:space="preserve" text-anchor="middle" x="1119.32" y="-679.67" font-family="Arial" font-size="17.00" paint-order="stroke" stroke="#fbe8ef" stroke-width="5" stroke-linejoin="round">South Settlement</text>
-    </g>
-    <g id="node1" class="node">
-      <title>VO</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M562.42,-882.91C562.42,-882.91 482.33,-882.91 482.33,-882.91 476.33,-882.91 470.33,-876.91 470.33,-870.91 470.33,-870.91 470.33,-858.91 470.33,-858.91 470.33,-852.91 476.33,-846.91 482.33,-846.91 482.33,-846.91 562.42,-846.91 562.42,-846.91 568.42,-846.91 574.42,-852.91 574.42,-858.91 574.42,-858.91 574.42,-870.91 574.42,-870.91 574.42,-876.91 568.42,-882.91 562.42,-882.91" />
-      <text xml:space="preserve" text-anchor="middle" x="522.37" y="-860.71" font-family="Arial" font-size="14.00">Village Office</text>
-    </g>
-    <g id="node2" class="node">
-      <title>TEMPLE</title>
-      <path fill="white" stroke="#166534" stroke-width="1.1" d="M756.36,-969.26C756.36,-969.26 712.08,-969.26 712.08,-969.26 706.08,-969.26 700.08,-963.26 700.08,-957.26 700.08,-957.26 700.08,-945.26 700.08,-945.26 700.08,-939.26 706.08,-933.26 712.08,-933.26 712.08,-933.26 756.36,-933.26 756.36,-933.26 762.36,-933.26 768.36,-939.26 768.36,-945.26 768.36,-945.26 768.36,-957.26 768.36,-957.26 768.36,-963.26 762.36,-969.26 756.36,-969.26" />
-      <path fill="none" stroke="#166534" stroke-width="1.1" d="M760.36,-973.26C760.36,-973.26 708.08,-973.26 708.08,-973.26 702.08,-973.26 696.08,-967.26 696.08,-961.26 696.08,-961.26 696.08,-941.26 696.08,-941.26 696.08,-935.26 702.08,-929.26 708.08,-929.26 708.08,-929.26 760.36,-929.26 760.36,-929.26 766.36,-929.26 772.36,-935.26 772.36,-941.26 772.36,-941.26 772.36,-961.26 772.36,-961.26 772.36,-967.26 766.36,-973.26 760.36,-973.26" />
-      <text xml:space="preserve" text-anchor="middle" x="734.22" y="-947.06" font-family="Arial" font-size="14.00">Temple</text>
-    </g>
-    <g id="node3" class="node">
-      <title>STORE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M604.62,-987.65C604.62,-987.65 573.56,-987.65 573.56,-987.65 567.56,-987.65 561.56,-981.65 561.56,-975.65 561.56,-975.65 561.56,-963.65 561.56,-963.65 561.56,-957.65 567.56,-951.65 573.56,-951.65 573.56,-951.65 604.62,-951.65 604.62,-951.65 610.62,-951.65 616.62,-957.65 616.62,-963.65 616.62,-963.65 616.62,-975.65 616.62,-975.65 616.62,-981.65 610.62,-987.65 604.62,-987.65" />
-      <text xml:space="preserve" text-anchor="middle" x="589.09" y="-965.45" font-family="Arial" font-size="14.00">Store</text>
-    </g>
-    <g id="node4" class="node">
-      <title>HOMES</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M647.25,-799.78C647.25,-799.78 605.31,-799.78 605.31,-799.78 599.31,-799.78 593.31,-793.78 593.31,-787.78 593.31,-787.78 593.31,-775.78 593.31,-775.78 593.31,-769.78 599.31,-763.78 605.31,-763.78 605.31,-763.78 647.25,-763.78 647.25,-763.78 653.25,-763.78 659.25,-769.78 659.25,-775.78 659.25,-775.78 659.25,-787.78 659.25,-787.78 659.25,-793.78 653.25,-799.78 647.25,-799.78" />
-      <text xml:space="preserve" text-anchor="middle" x="626.28" y="-777.58" font-family="Arial" font-size="14.00">Homes</text>
-    </g>
-    <g id="node5" class="node">
-      <title>FIRE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M791.8,-853.15C791.8,-853.15 722.62,-853.15 722.62,-853.15 716.62,-853.15 710.62,-847.15 710.62,-841.15 710.62,-841.15 710.62,-829.15 710.62,-829.15 710.62,-823.15 716.62,-817.15 722.62,-817.15 722.62,-817.15 791.8,-817.15 791.8,-817.15 797.8,-817.15 803.8,-823.15 803.8,-829.15 803.8,-829.15 803.8,-841.15 803.8,-841.15 803.8,-847.15 797.8,-853.15 791.8,-853.15" />
-      <text xml:space="preserve" text-anchor="middle" x="757.21" y="-830.95" font-family="Arial" font-size="14.00">Fire Station</text>
-    </g>
-    <g id="node6" class="node">
-      <title>SCHOOL</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1035.53,-976.73C1035.53,-976.73 995.12,-976.73 995.12,-976.73 989.12,-976.73 983.12,-970.73 983.12,-964.73 983.12,-964.73 983.12,-952.73 983.12,-952.73 983.12,-946.73 989.12,-940.73 995.12,-940.73 995.12,-940.73 1035.53,-940.73 1035.53,-940.73 1041.53,-940.73 1047.53,-946.73 1047.53,-952.73 1047.53,-952.73 1047.53,-964.73 1047.53,-964.73 1047.53,-970.73 1041.53,-976.73 1035.53,-976.73" />
-      <text xml:space="preserve" text-anchor="middle" x="1015.32" y="-954.53" font-family="Arial" font-size="14.00">School</text>
-    </g>
-    <g id="node7" class="node">
-      <title>CLINIC</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1097.95,-1081.47C1097.95,-1081.47 1066.12,-1081.47 1066.12,-1081.47 1060.12,-1081.47 1054.12,-1075.47 1054.12,-1069.47 1054.12,-1069.47 1054.12,-1057.47 1054.12,-1057.47 1054.12,-1051.47 1060.12,-1045.47 1066.12,-1045.47 1066.12,-1045.47 1097.95,-1045.47 1097.95,-1045.47 1103.95,-1045.47 1109.95,-1051.47 1109.95,-1057.47 1109.95,-1057.47 1109.95,-1069.47 1109.95,-1069.47 1109.95,-1075.47 1103.95,-1081.47 1097.95,-1081.47" />
-      <text xml:space="preserve" text-anchor="middle" x="1082.04" y="-1059.27" font-family="Arial" font-size="14.00">Clinic</text>
-    </g>
-    <g id="node8" class="node">
-      <title>FIELD</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1134.23,-893.6C1134.23,-893.6 1104.23,-893.6 1104.23,-893.6 1098.23,-893.6 1092.23,-887.6 1092.23,-881.6 1092.23,-881.6 1092.23,-869.6 1092.23,-869.6 1092.23,-863.6 1098.23,-857.6 1104.23,-857.6 1104.23,-857.6 1134.23,-857.6 1134.23,-857.6 1140.23,-857.6 1146.23,-863.6 1146.23,-869.6 1146.23,-869.6 1146.23,-881.6 1146.23,-881.6 1146.23,-887.6 1140.23,-893.6 1134.23,-893.6" />
-      <text xml:space="preserve" text-anchor="middle" x="1119.23" y="-871.4" font-family="Arial" font-size="14.00">Field</text>
-    </g>
-    <g id="node9" class="node">
-      <title>LIBRARY</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1247.37,-1063.08C1247.37,-1063.08 1206.98,-1063.08 1206.98,-1063.08 1200.98,-1063.08 1194.98,-1057.08 1194.98,-1051.08 1194.98,-1051.08 1194.98,-1039.08 1194.98,-1039.08 1194.98,-1033.08 1200.98,-1027.08 1206.98,-1027.08 1206.98,-1027.08 1247.37,-1027.08 1247.37,-1027.08 1253.37,-1027.08 1259.37,-1033.08 1259.37,-1039.08 1259.37,-1039.08 1259.37,-1051.08 1259.37,-1051.08 1259.37,-1057.08 1253.37,-1063.08 1247.37,-1063.08" />
-      <text xml:space="preserve" text-anchor="middle" x="1227.17" y="-1040.88" font-family="Arial" font-size="14.00">Library</text>
-    </g>
-    <g id="node10" class="node">
-      <title>WATER</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1285.53,-946.97C1285.53,-946.97 1214.79,-946.97 1214.79,-946.97 1208.79,-946.97 1202.79,-940.97 1202.79,-934.97 1202.79,-934.97 1202.79,-922.97 1202.79,-922.97 1202.79,-916.97 1208.79,-910.97 1214.79,-910.97 1214.79,-910.97 1285.53,-910.97 1285.53,-910.97 1291.53,-910.97 1297.53,-916.97 1297.53,-922.97 1297.53,-922.97 1297.53,-934.97 1297.53,-934.97 1297.53,-940.97 1291.53,-946.97 1285.53,-946.97" />
-      <text xml:space="preserve" text-anchor="middle" x="1250.16" y="-924.77" font-family="Arial" font-size="14.00">Water Point</text>
-    </g>
-    <g id="node11" class="node">
-      <title>COOP</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M778.58,-229.37C778.58,-229.37 742.85,-229.37 742.85,-229.37 736.85,-229.37 730.85,-223.37 730.85,-217.37 730.85,-217.37 730.85,-205.37 730.85,-205.37 730.85,-199.37 736.85,-193.37 742.85,-193.37 742.85,-193.37 778.58,-193.37 778.58,-193.37 784.58,-193.37 790.58,-199.37 790.58,-205.37 790.58,-205.37 790.58,-217.37 790.58,-217.37 790.58,-223.37 784.58,-229.37 778.58,-229.37" />
-      <text xml:space="preserve" text-anchor="middle" x="760.71" y="-207.17" font-family="Arial" font-size="14.00">Co-op</text>
-    </g>
-    <g id="node12" class="node">
-      <title>TEA</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M666.7,-176C666.7,-176 592.86,-176 592.86,-176 586.86,-176 580.86,-170 580.86,-164 580.86,-164 580.86,-152 580.86,-152 580.86,-146 586.86,-140 592.86,-140 592.86,-140 666.7,-140 666.7,-140 672.7,-140 678.7,-146 678.7,-152 678.7,-152 678.7,-164 678.7,-164 678.7,-170 672.7,-176 666.7,-176" />
-      <text xml:space="preserve" text-anchor="middle" x="629.78" y="-153.8" font-family="Arial" font-size="14.00">Tea Terrace</text>
-    </g>
-    <g id="node13" class="node">
-      <title>POND</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M541.02,-259.13C541.02,-259.13 510.73,-259.13 510.73,-259.13 504.73,-259.13 498.73,-253.13 498.73,-247.13 498.73,-247.13 498.73,-235.13 498.73,-235.13 498.73,-229.13 504.73,-223.13 510.73,-223.13 510.73,-223.13 541.02,-223.13 541.02,-223.13 547.02,-223.13 553.02,-229.13 553.02,-235.13 553.02,-235.13 553.02,-247.13 553.02,-247.13 553.02,-253.13 547.02,-259.13 541.02,-259.13" />
-      <text xml:space="preserve" text-anchor="middle" x="525.87" y="-236.93" font-family="Arial" font-size="14.00">Pond</text>
-    </g>
-    <g id="node14" class="node">
-      <title>BARN</title>
-      <path fill="white" stroke="#166534" stroke-width="1.1" d="M607.59,-363.87C607.59,-363.87 577.59,-363.87 577.59,-363.87 571.59,-363.87 565.59,-357.87 565.59,-351.87 565.59,-351.87 565.59,-339.87 565.59,-339.87 565.59,-333.87 571.59,-327.87 577.59,-327.87 577.59,-327.87 607.59,-327.87 607.59,-327.87 613.59,-327.87 619.59,-333.87 619.59,-339.87 619.59,-339.87 619.59,-351.87 619.59,-351.87 619.59,-357.87 613.59,-363.87 607.59,-363.87" />
-      <path fill="none" stroke="#166534" stroke-width="1.1" d="M611.59,-367.87C611.59,-367.87 573.59,-367.87 573.59,-367.87 567.59,-367.87 561.59,-361.87 561.59,-355.87 561.59,-355.87 561.59,-335.87 561.59,-335.87 561.59,-329.87 567.59,-323.87 573.59,-323.87 573.59,-323.87 611.59,-323.87 611.59,-323.87 617.59,-323.87 623.59,-329.87 623.59,-335.87 623.59,-335.87 623.59,-355.87 623.59,-355.87 623.59,-361.87 617.59,-367.87 611.59,-367.87" />
-      <text xml:space="preserve" text-anchor="middle" x="592.59" y="-341.67" font-family="Arial" font-size="14.00">Barn</text>
-    </g>
-    <g id="node15" class="node">
-      <title>MILL</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M752.72,-345.48C752.72,-345.48 722.72,-345.48 722.72,-345.48 716.72,-345.48 710.72,-339.48 710.72,-333.48 710.72,-333.48 710.72,-321.48 710.72,-321.48 710.72,-315.48 716.72,-309.48 722.72,-309.48 722.72,-309.48 752.72,-309.48 752.72,-309.48 758.72,-309.48 764.72,-315.48 764.72,-321.48 764.72,-321.48 764.72,-333.48 764.72,-333.48 764.72,-339.48 758.72,-345.48 752.72,-345.48" />
-      <text xml:space="preserve" text-anchor="middle" x="737.72" y="-323.28" font-family="Arial" font-size="14.00">Mill</text>
-    </g>
-    <g id="node16" class="node">
-      <title>FOREST</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M317.65,-514.53C317.65,-514.53 232.9,-514.53 232.9,-514.53 226.9,-514.53 220.9,-508.53 220.9,-502.53 220.9,-502.53 220.9,-490.53 220.9,-490.53 220.9,-484.53 226.9,-478.53 232.9,-478.53 232.9,-478.53 317.65,-478.53 317.65,-478.53 323.65,-478.53 329.65,-484.53 329.65,-490.53 329.65,-490.53 329.65,-502.53 329.65,-502.53 329.65,-508.53 323.65,-514.53 317.65,-514.53" />
-      <text xml:space="preserve" text-anchor="middle" x="275.27" y="-492.33" font-family="Arial" font-size="14.00">Forest Station</text>
-    </g>
-    <g id="node17" class="node">
-      <title>SHRINE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M163.38,-461.16C163.38,-461.16 125.31,-461.16 125.31,-461.16 119.31,-461.16 113.31,-455.16 113.31,-449.16 113.31,-449.16 113.31,-437.16 113.31,-437.16 113.31,-431.16 119.31,-425.16 125.31,-425.16 125.31,-425.16 163.38,-425.16 163.38,-425.16 169.38,-425.16 175.38,-431.16 175.38,-437.16 175.38,-437.16 175.38,-449.16 175.38,-449.16 175.38,-455.16 169.38,-461.16 163.38,-461.16" />
-      <text xml:space="preserve" text-anchor="middle" x="144.34" y="-438.96" font-family="Arial" font-size="14.00">Shrine</text>
-    </g>
-    <g id="node18" class="node">
-      <title>QUARRY</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M272.48,-630.64C272.48,-630.64 232.09,-630.64 232.09,-630.64 226.09,-630.64 220.09,-624.64 220.09,-618.64 220.09,-618.64 220.09,-606.64 220.09,-606.64 220.09,-600.64 226.09,-594.64 232.09,-594.64 232.09,-594.64 272.48,-594.64 272.48,-594.64 278.48,-594.64 284.48,-600.64 284.48,-606.64 284.48,-606.64 284.48,-618.64 284.48,-618.64 284.48,-624.64 278.48,-630.64 272.48,-630.64" />
-      <text xml:space="preserve" text-anchor="middle" x="252.28" y="-608.44" font-family="Arial" font-size="14.00">Quarry</text>
-    </g>
-    <g id="node19" class="node">
-      <title>LOOKOUT</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M130.86,-649.03C130.86,-649.03 83.44,-649.03 83.44,-649.03 77.44,-649.03 71.44,-643.03 71.44,-637.03 71.44,-637.03 71.44,-625.03 71.44,-625.03 71.44,-619.03 77.44,-613.03 83.44,-613.03 83.44,-613.03 130.86,-613.03 130.86,-613.03 136.86,-613.03 142.86,-619.03 142.86,-625.03 142.86,-625.03 142.86,-637.03 142.86,-637.03 142.86,-643.03 136.86,-649.03 130.86,-649.03" />
-      <text xml:space="preserve" text-anchor="middle" x="107.15" y="-626.83" font-family="Arial" font-size="14.00">Lookout</text>
-    </g>
-    <g id="node20" class="node">
-      <title>CABIN</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M57.52,-544.29C57.52,-544.29 23.34,-544.29 23.34,-544.29 17.34,-544.29 11.34,-538.29 11.34,-532.29 11.34,-532.29 11.34,-520.29 11.34,-520.29 11.34,-514.29 17.34,-508.29 23.34,-508.29 23.34,-508.29 57.52,-508.29 57.52,-508.29 63.52,-508.29 69.52,-514.29 69.52,-520.29 69.52,-520.29 69.52,-532.29 69.52,-532.29 69.52,-538.29 63.52,-544.29 57.52,-544.29" />
-      <text xml:space="preserve" text-anchor="middle" x="40.43" y="-522.09" font-family="Arial" font-size="14.00">Cabin</text>
-    </g>
-    <g id="node21" class="node">
-      <title>DOCK</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1083.94,-226.02C1083.94,-226.02 1053.94,-226.02 1053.94,-226.02 1047.94,-226.02 1041.94,-220.02 1041.94,-214.02 1041.94,-214.02 1041.94,-202.02 1041.94,-202.02 1041.94,-196.02 1047.94,-190.02 1053.94,-190.02 1053.94,-190.02 1083.94,-190.02 1083.94,-190.02 1089.94,-190.02 1095.94,-196.02 1095.94,-202.02 1095.94,-202.02 1095.94,-214.02 1095.94,-214.02 1095.94,-220.02 1089.94,-226.02 1083.94,-226.02" />
-      <text xml:space="preserve" text-anchor="middle" x="1068.94" y="-203.82" font-family="Arial" font-size="14.00">Dock</text>
-    </g>
-    <g id="node22" class="node">
-      <title>FISHERY</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1023.97,-121.28C1023.97,-121.28 980.48,-121.28 980.48,-121.28 974.48,-121.28 968.48,-115.28 968.48,-109.28 968.48,-109.28 968.48,-97.28 968.48,-97.28 968.48,-91.28 974.48,-85.28 980.48,-85.28 980.48,-85.28 1023.97,-85.28 1023.97,-85.28 1029.97,-85.28 1035.97,-91.28 1035.97,-97.28 1035.97,-97.28 1035.97,-109.28 1035.97,-109.28 1035.97,-115.28 1029.97,-121.28 1023.97,-121.28" />
-      <text xml:space="preserve" text-anchor="middle" x="1002.22" y="-99.08" font-family="Arial" font-size="14.00">Fishery</text>
-    </g>
-    <g id="node23" class="node">
-      <title>PUMP</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1146.95,-38.15C1146.95,-38.15 1065.31,-38.15 1065.31,-38.15 1059.31,-38.15 1053.31,-32.15 1053.31,-26.15 1053.31,-26.15 1053.31,-14.15 1053.31,-14.15 1053.31,-8.15 1059.31,-2.15 1065.31,-2.15 1065.31,-2.15 1146.95,-2.15 1146.95,-2.15 1152.95,-2.15 1158.95,-8.15 1158.95,-14.15 1158.95,-14.15 1158.95,-26.15 1158.95,-26.15 1158.95,-32.15 1152.95,-38.15 1146.95,-38.15" />
-      <text xml:space="preserve" text-anchor="middle" x="1106.13" y="-15.95" font-family="Arial" font-size="14.00">Pump Station</text>
-    </g>
-    <g id="node24" class="node">
-      <title>FERRY</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1279.05,-91.52C1279.05,-91.52 1195.07,-91.52 1195.07,-91.52 1189.07,-91.52 1183.07,-85.52 1183.07,-79.52 1183.07,-79.52 1183.07,-67.52 1183.07,-67.52 1183.07,-61.52 1189.07,-55.52 1195.07,-55.52 1195.07,-55.52 1279.05,-55.52 1279.05,-55.52 1285.05,-55.52 1291.05,-61.52 1291.05,-67.52 1291.05,-67.52 1291.05,-79.52 1291.05,-79.52 1291.05,-85.52 1285.05,-91.52 1279.05,-91.52" />
-      <text xml:space="preserve" text-anchor="middle" x="1237.06" y="-69.32" font-family="Arial" font-size="14.00">Ferry Landing</text>
-    </g>
-    <g id="node25" class="node">
-      <title>LEVEE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1231.95,-207.63C1231.95,-207.63 1196.2,-207.63 1196.2,-207.63 1190.2,-207.63 1184.2,-201.63 1184.2,-195.63 1184.2,-195.63 1184.2,-183.63 1184.2,-183.63 1184.2,-177.63 1190.2,-171.63 1196.2,-171.63 1196.2,-171.63 1231.95,-171.63 1231.95,-171.63 1237.95,-171.63 1243.95,-177.63 1243.95,-183.63 1243.95,-183.63 1243.95,-195.63 1243.95,-195.63 1243.95,-201.63 1237.95,-207.63 1231.95,-207.63" />
-      <text xml:space="preserve" text-anchor="middle" x="1214.07" y="-185.43" font-family="Arial" font-size="14.00">Levee</text>
-    </g>
-    <g id="node26" class="node">
-      <title>DEPOT</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M48.3,-974.53C48.3,-974.53 13.34,-974.53 13.34,-974.53 7.34,-974.53 1.34,-968.53 1.34,-962.53 1.34,-962.53 1.34,-950.53 1.34,-950.53 1.34,-944.53 7.34,-938.53 13.34,-938.53 13.34,-938.53 48.3,-938.53 48.3,-938.53 54.3,-938.53 60.3,-944.53 60.3,-950.53 60.3,-950.53 60.3,-962.53 60.3,-962.53 60.3,-968.53 54.3,-974.53 48.3,-974.53" />
-      <text xml:space="preserve" text-anchor="middle" x="30.82" y="-952.33" font-family="Arial" font-size="14.00">Depot</text>
-    </g>
-    <g id="node27" class="node">
-      <title>GARAGE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M264.82,-1060.88C264.82,-1060.88 220.53,-1060.88 220.53,-1060.88 214.53,-1060.88 208.53,-1054.88 208.53,-1048.88 208.53,-1048.88 208.53,-1036.88 208.53,-1036.88 208.53,-1030.88 214.53,-1024.88 220.53,-1024.88 220.53,-1024.88 264.82,-1024.88 264.82,-1024.88 270.82,-1024.88 276.82,-1030.88 276.82,-1036.88 276.82,-1036.88 276.82,-1048.88 276.82,-1048.88 276.82,-1054.88 270.82,-1060.88 264.82,-1060.88" />
-      <text xml:space="preserve" text-anchor="middle" x="242.67" y="-1038.68" font-family="Arial" font-size="14.00">Garage</text>
-    </g>
-    <g id="node28" class="node">
-      <title>SUBSTATION</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M129.42,-1079.27C129.42,-1079.27 65.66,-1079.27 65.66,-1079.27 59.66,-1079.27 53.66,-1073.27 53.66,-1067.27 53.66,-1067.27 53.66,-1055.27 53.66,-1055.27 53.66,-1049.27 59.66,-1043.27 65.66,-1043.27 65.66,-1043.27 129.42,-1043.27 129.42,-1043.27 135.42,-1043.27 141.42,-1049.27 141.42,-1055.27 141.42,-1055.27 141.42,-1067.27 141.42,-1067.27 141.42,-1073.27 135.42,-1079.27 129.42,-1079.27" />
-      <text xml:space="preserve" text-anchor="middle" x="97.54" y="-1057.07" font-family="Arial" font-size="14.00">Substation</text>
-    </g>
-    <g id="node29" class="node">
-      <title>YARD</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M149.73,-891.4C149.73,-891.4 119.73,-891.4 119.73,-891.4 113.73,-891.4 107.73,-885.4 107.73,-879.4 107.73,-879.4 107.73,-867.4 107.73,-867.4 107.73,-861.4 113.73,-855.4 119.73,-855.4 119.73,-855.4 149.73,-855.4 149.73,-855.4 155.73,-855.4 161.73,-861.4 161.73,-867.4 161.73,-867.4 161.73,-879.4 161.73,-879.4 161.73,-885.4 155.73,-891.4 149.73,-891.4" />
-      <text xml:space="preserve" text-anchor="middle" x="134.73" y="-869.2" font-family="Arial" font-size="14.00">Yard</text>
-    </g>
-    <g id="node30" class="node">
-      <title>WORKSHOP</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M295.97,-944.77C295.97,-944.77 235.35,-944.77 235.35,-944.77 229.35,-944.77 223.35,-938.77 223.35,-932.77 223.35,-932.77 223.35,-920.77 223.35,-920.77 223.35,-914.77 229.35,-908.77 235.35,-908.77 235.35,-908.77 295.97,-908.77 295.97,-908.77 301.97,-908.77 307.97,-914.77 307.97,-920.77 307.97,-920.77 307.97,-932.77 307.97,-932.77 307.97,-938.77 301.97,-944.77 295.97,-944.77" />
-      <text xml:space="preserve" text-anchor="middle" x="265.66" y="-922.57" font-family="Arial" font-size="14.00">Workshop</text>
-    </g>
-    <g id="node31" class="node">
-      <title>HALL</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M163.84,-223.87C163.84,-223.87 67.44,-223.87 67.44,-223.87 61.44,-223.87 55.44,-217.87 55.44,-211.87 55.44,-211.87 55.44,-199.87 55.44,-199.87 55.44,-193.87 61.44,-187.87 67.44,-187.87 67.44,-187.87 163.84,-187.87 163.84,-187.87 169.84,-187.87 175.84,-193.87 175.84,-199.87 175.84,-199.87 175.84,-211.87 175.84,-211.87 175.84,-217.87 169.84,-223.87 163.84,-223.87" />
-      <text xml:space="preserve" text-anchor="middle" x="115.64" y="-201.67" font-family="Arial" font-size="14.00">Community Hall</text>
-    </g>
-    <g id="node32" class="node">
-      <title>RESERVOIR</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M289.53,-205.48C289.53,-205.48 232.02,-205.48 232.02,-205.48 226.02,-205.48 220.02,-199.48 220.02,-193.48 220.02,-193.48 220.02,-181.48 220.02,-181.48 220.02,-175.48 226.02,-169.48 232.02,-169.48 232.02,-169.48 289.53,-169.48 289.53,-169.48 295.53,-169.48 301.53,-175.48 301.53,-181.48 301.53,-181.48 301.53,-193.48 301.53,-193.48 301.53,-199.48 295.53,-205.48 289.53,-205.48" />
-      <text xml:space="preserve" text-anchor="middle" x="260.77" y="-183.28" font-family="Arial" font-size="14.00">Reservoir</text>
-    </g>
-    <g id="node33" class="node">
-      <title>ORCHARD</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M307.85,-89.37C307.85,-89.37 259.67,-89.37 259.67,-89.37 253.67,-89.37 247.67,-83.37 247.67,-77.37 247.67,-77.37 247.67,-65.37 247.67,-65.37 247.67,-59.37 253.67,-53.37 259.67,-53.37 259.67,-53.37 307.85,-53.37 307.85,-53.37 313.85,-53.37 319.85,-59.37 319.85,-65.37 319.85,-65.37 319.85,-77.37 319.85,-77.37 319.85,-83.37 313.85,-89.37 307.85,-89.37" />
-      <text xml:space="preserve" text-anchor="middle" x="283.76" y="-67.17" font-family="Arial" font-size="14.00">Orchard</text>
-    </g>
-    <g id="node34" class="node">
-      <title>RADIO</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M182.76,-36C182.76,-36 122.9,-36 122.9,-36 116.9,-36 110.9,-30 110.9,-24 110.9,-24 110.9,-12 110.9,-12 110.9,-6 116.9,0 122.9,0 122.9,0 182.76,0 182.76,0 188.76,0 194.76,-6 194.76,-12 194.76,-12 194.76,-24 194.76,-24 194.76,-30 188.76,-36 182.76,-36" />
-      <text xml:space="preserve" text-anchor="middle" x="152.83" y="-13.8" font-family="Arial" font-size="14.00">Radio Hut</text>
-    </g>
-    <g id="node35" class="node">
-      <title>OBSERVATORY</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M85.85,-119.13C85.85,-119.13 12,-119.13 12,-119.13 6,-119.13 0,-113.13 0,-107.13 0,-107.13 0,-95.13 0,-95.13 0,-89.13 6,-83.13 12,-83.13 12,-83.13 85.85,-83.13 85.85,-83.13 91.85,-83.13 97.85,-89.13 97.85,-95.13 97.85,-95.13 97.85,-107.13 97.85,-107.13 97.85,-113.13 91.85,-119.13 85.85,-119.13" />
-      <text xml:space="preserve" text-anchor="middle" x="48.92" y="-96.93" font-family="Arial" font-size="14.00">Observatory</text>
-    </g>
-    <g id="node36" class="node">
-      <title>TERMINAL</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1152.07,-465.8C1152.07,-465.8 1072,-465.8 1072,-465.8 1066,-465.8 1060,-459.8 1060,-453.8 1060,-453.8 1060,-441.8 1060,-441.8 1060,-435.8 1066,-429.8 1072,-429.8 1072,-429.8 1152.07,-429.8 1152.07,-429.8 1158.07,-429.8 1164.07,-435.8 1164.07,-441.8 1164.07,-441.8 1164.07,-453.8 1164.07,-453.8 1164.07,-459.8 1158.07,-465.8 1152.07,-465.8" />
-      <text xml:space="preserve" text-anchor="middle" x="1112.03" y="-443.6" font-family="Arial" font-size="14.00">Bus Terminal</text>
-    </g>
-    <g id="node37" class="node">
-      <title>WAREHOUSE</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1042.72,-548.93C1042.72,-548.93 973.53,-548.93 973.53,-548.93 967.53,-548.93 961.53,-542.93 961.53,-536.93 961.53,-536.93 961.53,-524.93 961.53,-524.93 961.53,-518.93 967.53,-512.93 973.53,-512.93 973.53,-512.93 1042.72,-512.93 1042.72,-512.93 1048.72,-512.93 1054.72,-518.93 1054.72,-524.93 1054.72,-524.93 1054.72,-536.93 1054.72,-536.93 1054.72,-542.93 1048.72,-548.93 1042.72,-548.93" />
-      <text xml:space="preserve" text-anchor="middle" x="1008.12" y="-526.73" font-family="Arial" font-size="14.00">Warehouse</text>
-    </g>
-    <g id="node38" class="node">
-      <title>MARKET</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1095.03,-653.67C1095.03,-653.67 1054.64,-653.67 1054.64,-653.67 1048.64,-653.67 1042.64,-647.67 1042.64,-641.67 1042.64,-641.67 1042.64,-629.67 1042.64,-629.67 1042.64,-623.67 1048.64,-617.67 1054.64,-617.67 1054.64,-617.67 1095.03,-617.67 1095.03,-617.67 1101.03,-617.67 1107.03,-623.67 1107.03,-629.67 1107.03,-629.67 1107.03,-641.67 1107.03,-641.67 1107.03,-647.67 1101.03,-653.67 1095.03,-653.67" />
-      <text xml:space="preserve" text-anchor="middle" x="1074.84" y="-631.47" font-family="Arial" font-size="14.00">Market</text>
-    </g>
-    <g id="node39" class="node">
-      <title>GARDEN</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1265.11,-519.17C1265.11,-519.17 1220.81,-519.17 1220.81,-519.17 1214.81,-519.17 1208.81,-513.17 1208.81,-507.17 1208.81,-507.17 1208.81,-495.17 1208.81,-495.17 1208.81,-489.17 1214.81,-483.17 1220.81,-483.17 1220.81,-483.17 1265.11,-483.17 1265.11,-483.17 1271.11,-483.17 1277.11,-489.17 1277.11,-495.17 1277.11,-495.17 1277.11,-507.17 1277.11,-507.17 1277.11,-513.17 1271.11,-519.17 1265.11,-519.17" />
-      <text xml:space="preserve" text-anchor="middle" x="1242.96" y="-496.97" font-family="Arial" font-size="14.00">Garden</text>
-    </g>
-    <g id="node40" class="node">
-      <title>SHELTER</title>
-      <path fill="white" stroke="#64748b" stroke-width="1.1" d="M1240.95,-635.28C1240.95,-635.28 1198.99,-635.28 1198.99,-635.28 1192.99,-635.28 1186.99,-629.28 1186.99,-623.28 1186.99,-623.28 1186.99,-611.28 1186.99,-611.28 1186.99,-605.28 1192.99,-599.28 1198.99,-599.28 1198.99,-599.28 1240.95,-599.28 1240.95,-599.28 1246.95,-599.28 1252.95,-605.28 1252.95,-611.28 1252.95,-611.28 1252.95,-623.28 1252.95,-623.28 1252.95,-629.28 1246.95,-635.28 1240.95,-635.28" />
-      <text xml:space="preserve" text-anchor="middle" x="1219.97" y="-613.08" font-family="Arial" font-size="14.00">Shelter</text>
-    </g>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1489 1308">
+<!-- Generated by pnpm maps:layout. Edit map-layout.config.json or the canonical map JSON. -->
+<g class="graph" transform="translate(97 60)">
+<text x="647.5" y="-24" text-anchor="middle" font-family="Arial" font-size="24">Valley · 14–20 players</text>
+<text x="647.5" y="6" text-anchor="middle" font-family="Arial" font-size="18">40 locations · 72 roads</text>
+<g class="cluster"><title>cluster_CORE</title><path d="M401,120 L873,120 L873,456 L401,456 Z" fill="#fff3d6" stroke="#cbd5e1"/><text x="637" y="146" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#fff3d6" stroke-width="5">Core</text></g>
+<g class="cluster"><title>cluster_SCHOOL</title><path d="M904,26 L1376,26 L1376,362 L904,362 Z" fill="#eaf2ff" stroke="#cbd5e1"/><text x="1140" y="52" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#eaf2ff" stroke-width="5">School neighborhood</text></g>
+<g class="cluster"><title>cluster_FARM</title><path d="M409,742 L881,742 L881,1078 L409,1078 Z" fill="#edf6df" stroke="#cbd5e1"/><text x="645" y="768" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#edf6df" stroke-width="5">Farm</text></g>
+<g class="cluster"><title>cluster_RIDGE</title><path d="M-66,459 L406,459 L406,795 L-66,795 Z" fill="#efeafa" stroke="#cbd5e1"/><text x="170" y="485" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#efeafa" stroke-width="5">Ridge</text></g>
+<g class="cluster"><title>cluster_RIVERSIDE</title><path d="M894,882 L1366,882 L1366,1218 L894,1218 Z" fill="#e1f5f4" stroke="#cbd5e1"/><text x="1130" y="908" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#e1f5f4" stroke-width="5">Riverside</text></g>
+<g class="cluster"><title>cluster_WORKS</title><path d="M-81,29 L391,29 L391,365 L-81,365 Z" fill="#f2eae4" stroke="#cbd5e1"/><text x="155" y="55" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#f2eae4" stroke-width="5">Works</text></g>
+<g class="cluster"><title>cluster_UPLAND</title><path d="M-76,884 L396,884 L396,1220 L-76,1220 Z" fill="#e6f0eb" stroke="#cbd5e1"/><text x="160" y="910" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#e6f0eb" stroke-width="5">Upland</text></g>
+<g class="cluster"><title>cluster_SOUTH</title><path d="M883,454 L1355,454 L1355,790 L883,790 Z" fill="#fbe8ef" stroke="#cbd5e1"/><text x="1119" y="480" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#fbe8ef" stroke-width="5">South Settlement</text></g>
+<g class="edge"><title>VO--TEMPLE</title>
+<path class="road-casing" d="M704.73,266.63 L734.13,241.09" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M704.73,266.63 L734.13,241.09" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TEMPLE--STORE</title>
+<path class="road-casing" d="M724.67,208.02 L680.93,197.32" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M724.67,208.02 L680.93,197.32" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>STORE--VO</title>
+<path class="road-casing" d="M654.64,213.19 L670.13,266.63" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M654.64,213.19 L670.13,266.63" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>VO--HOMES</title>
+<path class="road-casing" d="M684.12,314.63 L687.16,325.03" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M684.12,314.63 L687.16,325.03" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>HOMES--FIRE</title>
+<path class="road-casing" d="M727.44,362.96 L734.73,366.02" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M727.44,362.96 L734.73,366.02" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FIRE--TEMPLE</title>
+<path class="road-casing" d="M787.80,366.02 L765.97,241.09" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M787.80,366.02 L765.97,241.09" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SCHOOL--CLINIC</title>
+<path class="road-casing" d="M1010.28,191.88 L999.36,116.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1010.28,191.88 L999.36,116.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>CLINIC--LIBRARY</title>
+<path class="road-casing" d="M1033.00,92.00 L1108.10,92.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1033.00,92.00 L1108.10,92.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>LIBRARY--SCHOOL</title>
+<path class="road-casing" d="M1122.84,116.00 L1039.95,191.88" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1122.84,116.00 L1039.95,191.88" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SCHOOL--FIELD</title>
+<path class="road-casing" d="M1031.71,239.88 L1063.57,282.43" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1031.71,239.88 L1063.57,282.43" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FIELD--WATER</title>
+<path class="road-casing" d="M1114.79,289.05 L1239.90,223.67" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1114.79,289.05 L1239.90,223.67" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>COOP--TEA</title>
+<path class="road-casing" d="M499.24,927.06 L509.02,984.15" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M499.24,927.06 L509.02,984.15" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TEA--POND</title>
+<path class="road-casing" d="M569.49,1005.54 L621.39,1003.15" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M569.49,1005.54 L621.39,1003.15" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>POND--BARN</title>
+<path class="road-casing" d="M659.62,977.62 L690.79,834.41" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M659.62,977.62 L690.79,834.41" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>BARN--COOP</title>
+<path class="road-casing" d="M663.02,825.63 L528.37,887.73" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M663.02,825.63 L528.37,887.73" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FOREST--SHRINE</title>
+<path class="road-casing" d="M254.20,703.04 L201.19,707.72" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M254.20,703.04 L201.19,707.72" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SHRINE--LOOKOUT</title>
+<path class="road-casing" d="M158.71,686.99 L129.99,558.97" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M158.71,686.99 L129.99,558.97" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FOREST--QUARRY</title>
+<path class="road-casing" d="M310.11,673.05 L250.53,553.84" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M310.11,673.05 L250.53,553.84" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>VO--SCHOOL</title>
+<path class="road-casing" d="M744.99,275.55 L976.64,224.12" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M744.99,275.55 L976.64,224.12" fill="none" stroke="#be123c" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="860.815" y="241.835" font-family="Arial" font-size="12" text-anchor="middle" fill="#be123c" paint-order="stroke" stroke="white" stroke-width="4">Day 3 closure</text>
+</g>
+<g class="edge"><title>SCHOOL--COOP</title>
+<path class="road-casing" d="M995.63,239.88 L513.23,879.06" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M995.63,239.88 L513.23,879.06" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>COOP--FOREST</title>
+<path class="road-casing" d="M474.96,879.06 L342.26,721.05" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M474.96,879.06 L342.26,721.05" fill="none" stroke="#be123c" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="408.61" y="792.055" font-family="Arial" font-size="12" text-anchor="middle" fill="#be123c" paint-order="stroke" stroke="white" stroke-width="4">Day 2 closure</text>
+</g>
+<g class="edge"><title>FOREST--VO</title>
+<path class="road-casing" d="M343.06,673.05 L656.13,314.63" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M343.06,673.05 L656.13,314.63" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TEMPLE--CLINIC</title>
+<path class="road-casing" d="M798.87,197.27 L958.80,111.82" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M798.87,197.27 L958.80,111.82" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>BARN--FIELD</title>
+<path class="road-casing" d="M714.38,786.41 L1063.18,330.43" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M714.38,786.41 L1063.18,330.43" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>STORE--QUARRY</title>
+<path class="road-casing" d="M618.85,213.19 L267.37,505.84" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M618.85,213.19 L267.37,505.84" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>COOP--MILL</title>
+<path class="road-casing" d="M528.37,900.38 L700.45,886.48" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M528.37,900.38 L700.45,886.48" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>MILL--BARN</title>
+<path class="road-casing" d="M721.21,859.82 L708.26,834.41" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M721.21,859.82 L708.26,834.41" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SHRINE--CABIN</title>
+<path class="road-casing" d="M126.99,707.84 L85.37,704.30" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M126.99,707.84 L85.37,704.30" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>CABIN--QUARRY</title>
+<path class="road-casing" d="M78.19,677.47 L212.47,553.84" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M78.19,677.47 L212.47,553.84" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DOCK--FISHERY</title>
+<path class="road-casing" d="M1069.38,989.73 L1008.38,1033.58" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1069.38,989.73 L1008.38,1033.58" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FISHERY--PUMP</title>
+<path class="road-casing" d="M986.37,1081.58 L1004.21,1119.23" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M986.37,1081.58 L1004.21,1119.23" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>PUMP--DOCK</title>
+<path class="road-casing" d="M1027.33,1119.23 L1090.63,990.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1027.33,1119.23 L1090.63,990.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DOCK--FERRY</title>
+<path class="road-casing" d="M1135.38,962.75 L1220.95,954.31" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1135.38,962.75 L1220.95,954.31" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DEPOT--GARAGE</title>
+<path class="road-casing" d="M230.47,228.05 L221.06,138.14" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M230.47,228.05 L221.06,138.14" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>GARAGE--SUBSTATION</title>
+<path class="road-casing" d="M247.58,138.14 L280.97,165.75" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M247.58,138.14 L280.97,165.75" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SUBSTATION--DEPOT</title>
+<path class="road-casing" d="M280.33,213.75 L262.65,228.05" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M280.33,213.75 L262.65,228.05" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DEPOT--YARD</title>
+<path class="road-casing" d="M208.02,228.05 L203.80,224.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M208.02,228.05 L203.80,224.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DOCK--SCHOOL</title>
+<path class="road-casing" d="M1099.54,942.00 L1016.58,239.88" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1099.54,942.00 L1016.58,239.88" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DOCK--COOP</title>
+<path class="road-casing" d="M1069.38,962.58 L528.37,906.51" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1069.38,962.58 L528.37,906.51" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>FERRY--WATER</title>
+<path class="road-casing" d="M1285.03,924.00 L1285.80,223.67" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1285.03,924.00 L1285.80,223.67" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>PUMP--POND</title>
+<path class="road-casing" d="M955.38,1119.63 L687.39,1014.56" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M955.38,1119.63 L687.39,1014.56" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DEPOT--VO</title>
+<path class="road-casing" d="M266.23,254.94 L609.19,284.73" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M266.23,254.94 L609.19,284.73" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>DEPOT--FOREST</title>
+<path class="road-casing" d="M237.79,276.05 L317.29,673.05" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M237.79,276.05 L317.29,673.05" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>GARAGE--STORE</title>
+<path class="road-casing" d="M255.65,120.63 L614.43,183.37" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M255.65,120.63 L614.43,183.37" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>YARD--QUARRY</title>
+<path class="road-casing" d="M183.18,224.00 L234.20,505.84" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M183.18,224.00 L234.20,505.84" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>PUMP--LEVEE</title>
+<path class="road-casing" d="M1055.28,1119.23 L1175.52,1046.55" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1055.28,1119.23 L1175.52,1046.55" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>LEVEE--FERRY</title>
+<path class="road-casing" d="M1232.09,1002.45 L1261.68,972.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1232.09,1002.45 L1261.68,972.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>GARAGE--WORKSHOP</title>
+<path class="road-casing" d="M181.45,111.39 L65.43,102.81" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M181.45,111.39 L65.43,102.81" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>WORKSHOP--YARD</title>
+<path class="road-casing" d="M58.41,123.49 L145.84,179.04" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M58.41,123.49 L145.84,179.04" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>HALL--RESERVOIR</title>
+<path class="road-casing" d="M266.54,1028.21 L163.55,1111.58" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M266.54,1028.21 L163.55,1111.58" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>RESERVOIR--ORCHARD</title>
+<path class="road-casing" d="M182.55,1144.51 L197.33,1147.22" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M182.55,1144.51 L197.33,1147.22" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>ORCHARD--HALL</title>
+<path class="road-casing" d="M247.51,1130.74 L286.96,1028.21" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M247.51,1130.74 L286.96,1028.21" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>HALL--RADIO</title>
+<path class="road-casing" d="M233.84,1028.21 L187.50,1046.04" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M233.84,1028.21 L187.50,1046.04" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>RADIO--OBSERVATORY</title>
+<path class="road-casing" d="M90.20,1085.59 L62.45,1097.46" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M90.20,1085.59 L62.45,1097.46" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TERMINAL--WAREHOUSE</title>
+<path class="road-casing" d="M982.50,586.65 L967.18,702.35" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M982.50,586.65 L967.18,702.35" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>WAREHOUSE--MARKET</title>
+<path class="road-casing" d="M997.57,702.35 L1139.62,600.79" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M997.57,702.35 L1139.62,600.79" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>MARKET--TERMINAL</title>
+<path class="road-casing" d="M1136.09,573.99 L1045.88,567.19" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1136.09,573.99 L1045.88,567.19" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TERMINAL--GARDEN</title>
+<path class="road-casing" d="M1019.74,586.65 L1197.64,712.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1019.74,586.65 L1197.64,712.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>GARDEN--SHELTER</title>
+<path class="road-casing" d="M1233.63,712.00 L1234.68,698.99" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1233.63,712.00 L1234.68,698.99" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SHELTER--MARKET</title>
+<path class="road-casing" d="M1221.11,650.99 L1188.69,600.79" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1221.11,650.99 L1188.69,600.79" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>HALL--VO</title>
+<path class="road-casing" d="M309.00,980.21 L664.28,314.63" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M309.00,980.21 L664.28,314.63" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>HALL--FOREST</title>
+<path class="road-casing" d="M298.21,980.21 L320.08,721.05" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M298.21,980.21 L320.08,721.05" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>ORCHARD--TEA</title>
+<path class="road-casing" d="M279.23,1132.90 L468.14,1032.15" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M279.23,1132.90 L468.14,1032.15" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>RADIO--CABIN</title>
+<path class="road-casing" d="M133.12,1040.77 L57.85,725.47" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M133.12,1040.77 L57.85,725.47" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TERMINAL--SCHOOL</title>
+<path class="road-casing" d="M987.62,538.65 L1011.80,239.88" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M987.62,538.65 L1011.80,239.88" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>TERMINAL--DOCK</title>
+<path class="road-casing" d="M992.62,586.65 L1095.44,942.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M992.62,586.65 L1095.44,942.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>MARKET--FIELD</title>
+<path class="road-casing" d="M1165.05,552.79 L1089.68,330.43" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1165.05,552.79 L1089.68,330.43" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>WAREHOUSE--MILL</title>
+<path class="road-casing" d="M928.86,750.35 L766.45,861.28" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M928.86,750.35 L766.45,861.28" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>QUARRY--BARN</title>
+<path class="road-casing" d="M275.64,552.59 L663.02,790.17" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M275.64,552.59 L663.02,790.17" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>RADIO--TEA</title>
+<path class="road-casing" d="M187.50,1057.41 L456.79,1016.67" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M187.50,1057.41 L456.79,1016.67" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>SHELTER--LIBRARY</title>
+<path class="road-casing" d="M1233.01,650.99 L1152.65,116.00" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1233.01,650.99 L1152.65,116.00" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="edge"><title>LEVEE--FIELD</title>
+<path class="road-casing" d="M1204.53,1002.45 L1085.78,330.43" fill="none" stroke="white" stroke-width="7"/>
+<path class="road-line" d="M1204.53,1002.45 L1085.78,330.43" fill="none" stroke="#64748b" stroke-width="2"/>
+</g>
+<g class="region-labels"><text x="637" y="146" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#fff3d6" stroke-width="5">Core</text><text x="1140" y="52" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#eaf2ff" stroke-width="5">School neighborhood</text><text x="645" y="768" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#edf6df" stroke-width="5">Farm</text><text x="170" y="485" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#efeafa" stroke-width="5">Ridge</text><text x="1130" y="908" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#e1f5f4" stroke-width="5">Riverside</text><text x="155" y="55" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#f2eae4" stroke-width="5">Works</text><text x="160" y="910" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#e6f0eb" stroke-width="5">Upland</text><text x="1119" y="480" text-anchor="middle" font-family="Arial" font-size="17" fill="#334155" paint-order="stroke" stroke="#fbe8ef" stroke-width="5">South Settlement</text></g>
+<g class="node"><title>VO</title><path d="M613.19,270.63 L740.99,270.63 L740.99,310.63 L613.19,310.63 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="677.09" y="295.63" text-anchor="middle" font-family="Arial" font-size="14">Village Office</text></g>
+<g class="node"><title>TEMPLE</title><path d="M728.67,197.09 L794.87,197.09 L794.87,237.09 L728.67,237.09 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<path d="M724.67,193.09 L798.87,193.09 L798.87,241.09 L724.67,241.09 Z" fill="none" stroke="#166534" stroke-width="1.5"/>
+<text x="761.77" y="222.09" text-anchor="middle" font-family="Arial" font-size="14">Temple</text></g>
+<g class="node"><title>STORE</title><path d="M618.43,169.19 L676.93,169.19 L676.93,209.19 L618.43,209.19 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="647.68" y="194.19" text-anchor="middle" font-family="Arial" font-size="14">Store</text></g>
+<g class="node"><title>HOMES</title><path d="M664.94,329.03 L723.44,329.03 L723.44,369.03 L664.94,369.03 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="694.19" y="354.03" text-anchor="middle" font-family="Arial" font-size="14">Homes</text></g>
+<g class="node"><title>FIRE</title><path d="M735.8,370.02 L848.1999999999999,370.02 L848.1999999999999,410.02 L735.8,410.02 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="792" y="395.02" text-anchor="middle" font-family="Arial" font-size="14">Fire Station</text></g>
+<g class="node"><title>SCHOOL</title><path d="M980.64,195.88 L1046.84,195.88 L1046.84,235.88 L980.64,235.88 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1013.74" y="220.88" text-anchor="middle" font-family="Arial" font-size="14">School</text></g>
+<g class="node"><title>CLINIC</title><path d="M962.8,72 L1029,72 L1029,112 L962.8,112 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="995.9" y="97" text-anchor="middle" font-family="Arial" font-size="14">Clinic</text></g>
+<g class="node"><title>FIELD</title><path d="M1052.29,286.43 L1110.79,286.43 L1110.79,326.43 L1052.29,326.43 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1081.54" y="311.43" text-anchor="middle" font-family="Arial" font-size="14">Field</text></g>
+<g class="node"><title>LIBRARY</title><path d="M1112.1,72 L1186,72 L1186,112 L1112.1,112 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1149.05" y="97" text-anchor="middle" font-family="Arial" font-size="14">Library</text></g>
+<g class="node"><title>WATER</title><path d="M1233.48,179.67 L1338.18,179.67 L1338.18,219.67 L1233.48,219.67 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1285.83" y="204.67" text-anchor="middle" font-family="Arial" font-size="14">Water Point</text></g>
+<g class="node"><title>COOP</title><path d="M465.87,883.06 L524.37,883.06 L524.37,923.06 L465.87,923.06 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="495.12" y="908.06" text-anchor="middle" font-family="Arial" font-size="14">Co-op</text></g>
+<g class="node"><title>TEA</title><path d="M460.78999999999996,988.15 L565.49,988.15 L565.49,1028.15 L460.78999999999996,1028.15 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="513.14" y="1013.15" text-anchor="middle" font-family="Arial" font-size="14">Tea Terrace</text></g>
+<g class="node"><title>POND</title><path d="M625.39,981.62 L683.39,981.62 L683.39,1021.62 L625.39,1021.62 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="654.39" y="1006.62" text-anchor="middle" font-family="Arial" font-size="14">Pond</text></g>
+<g class="node"><title>BARN</title><path d="M667.02,790.41 L725.02,790.41 L725.02,830.41 L667.02,830.41 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<path d="M663.02,786.41 L729.02,786.41 L729.02,834.41 L663.02,834.41 Z" fill="none" stroke="#166534" stroke-width="1.5"/>
+<text x="696.02" y="815.41" text-anchor="middle" font-family="Arial" font-size="14">Barn</text></g>
+<g class="node"><title>MILL</title><path d="M704.45,863.82 L762.45,863.82 L762.45,903.82 L704.45,903.82 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="733.45" y="888.82" text-anchor="middle" font-family="Arial" font-size="14">Mill</text></g>
+<g class="node"><title>FOREST</title><path d="M258.20000000000005,677.05 L386.00000000000006,677.05 L386.00000000000006,717.05 L258.20000000000005,717.05 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="322.1" y="702.05" text-anchor="middle" font-family="Arial" font-size="14">Forest Station</text></g>
+<g class="node"><title>SHRINE</title><path d="M130.99,690.99 L197.19,690.99 L197.19,730.99 L130.99,730.99 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="164.09" y="715.99" text-anchor="middle" font-family="Arial" font-size="14">Shrine</text></g>
+<g class="node"><title>QUARRY</title><path d="M205.44,509.84000000000003 L271.64,509.84000000000003 L271.64,549.84 L205.44,549.84 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="238.54" y="534.84" text-anchor="middle" font-family="Arial" font-size="14">Quarry</text></g>
+<g class="node"><title>LOOKOUT</title><path d="M87.66,514.97 L161.56,514.97 L161.56,554.97 L87.66,554.97 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="124.61" y="539.97" text-anchor="middle" font-family="Arial" font-size="14">Lookout</text></g>
+<g class="node"><title>CABIN</title><path d="M22.869999999999997,681.47 L81.37,681.47 L81.37,721.47 L22.869999999999997,721.47 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="52.12" y="706.47" text-anchor="middle" font-family="Arial" font-size="14">Cabin</text></g>
+<g class="node"><title>DOCK</title><path d="M1073.38,946 L1131.38,946 L1131.38,986 L1073.38,986 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1102.38" y="971" text-anchor="middle" font-family="Arial" font-size="14">Dock</text></g>
+<g class="node"><title>FISHERY</title><path d="M938.05,1037.58 L1011.9499999999999,1037.58 L1011.9499999999999,1077.58 L938.05,1077.58 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="975" y="1062.58" text-anchor="middle" font-family="Arial" font-size="14">Fishery</text></g>
+<g class="node"><title>PUMP</title><path d="M959.38,1123.23 L1071.78,1123.23 L1071.78,1163.23 L959.38,1163.23 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1015.58" y="1148.23" text-anchor="middle" font-family="Arial" font-size="14">Pump Station</text></g>
+<g class="node"><title>FERRY</title><path d="M1224.95,928 L1345.05,928 L1345.05,968 L1224.95,968 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1285" y="953" text-anchor="middle" font-family="Arial" font-size="14">Ferry Landing</text></g>
+<g class="node"><title>LEVEE</title><path d="M1179.52,1006.45 L1238.02,1006.45 L1238.02,1046.45 L1179.52,1046.45 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1208.77" y="1031.45" text-anchor="middle" font-family="Arial" font-size="14">Levee</text></g>
+<g class="node"><title>DEPOT</title><path d="M203.73,232.05 L262.23,232.05 L262.23,272.05 L203.73,272.05 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="232.98" y="257.05" text-anchor="middle" font-family="Arial" font-size="14">Depot</text></g>
+<g class="node"><title>GARAGE</title><path d="M185.45000000000002,94.14 L251.65000000000003,94.14 L251.65000000000003,134.14 L185.45000000000002,134.14 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="218.55" y="119.14" text-anchor="middle" font-family="Arial" font-size="14">Garage</text></g>
+<g class="node"><title>SUBSTATION</title><path d="M261.5,169.75 L358.5,169.75 L358.5,209.75 L261.5,209.75 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="310" y="194.75" text-anchor="middle" font-family="Arial" font-size="14">Substation</text></g>
+<g class="node"><title>YARD</title><path d="M149.84,180 L207.84,180 L207.84,220 L149.84,220 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="178.84" y="205" text-anchor="middle" font-family="Arial" font-size="14">Yard</text></g>
+<g class="node"><title>WORKSHOP</title><path d="M-20.169999999999998,79.49 L61.42999999999999,79.49 L61.42999999999999,119.49 L-20.169999999999998,119.49 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="20.63" y="104.49" text-anchor="middle" font-family="Arial" font-size="14">Workshop</text></g>
+<g class="node"><title>HALL</title><path d="M232.29,984.21 L360.09,984.21 L360.09,1024.21 L232.29,1024.21 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="296.19" y="1009.21" text-anchor="middle" font-family="Arial" font-size="14">Community Hall</text></g>
+<g class="node"><title>RESERVOIR</title><path d="M89.25,1115.58 L178.55,1115.58 L178.55,1155.58 L89.25,1155.58 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="133.9" y="1140.58" text-anchor="middle" font-family="Arial" font-size="14">Reservoir</text></g>
+<g class="node"><title>ORCHARD</title><path d="M201.32999999999998,1134.74 L275.23,1134.74 L275.23,1174.74 L201.32999999999998,1174.74 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="238.28" y="1159.74" text-anchor="middle" font-family="Arial" font-size="14">Orchard</text></g>
+<g class="node"><title>RADIO</title><path d="M94.19999999999999,1044.77 L183.5,1044.77 L183.5,1084.77 L94.19999999999999,1084.77 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="138.85" y="1069.77" text-anchor="middle" font-family="Arial" font-size="14">Radio Hut</text></g>
+<g class="node"><title>OBSERVATORY</title><path d="M-45.99,1101.46 L58.71,1101.46 L58.71,1141.46 L-45.99,1141.46 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="6.36" y="1126.46" text-anchor="middle" font-family="Arial" font-size="14">Observatory</text></g>
+<g class="node"><title>TERMINAL</title><path d="M929.4799999999999,542.65 L1041.8799999999999,542.65 L1041.8799999999999,582.65 L929.4799999999999,582.65 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="985.68" y="567.65" text-anchor="middle" font-family="Arial" font-size="14">Bus Terminal</text></g>
+<g class="node"><title>WAREHOUSE</title><path d="M919.35,706.35 L1008.65,706.35 L1008.65,746.35 L919.35,746.35 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="964" y="731.35" text-anchor="middle" font-family="Arial" font-size="14">Warehouse</text></g>
+<g class="node"><title>MARKET</title><path d="M1140.0900000000001,556.79 L1206.2900000000002,556.79 L1206.2900000000002,596.79 L1140.0900000000001,596.79 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1173.19" y="581.79" text-anchor="middle" font-family="Arial" font-size="14">Market</text></g>
+<g class="node"><title>GARDEN</title><path d="M1198.6000000000001,716 L1264.8000000000002,716 L1264.8000000000002,756 L1198.6000000000001,756 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1231.7" y="741" text-anchor="middle" font-family="Arial" font-size="14">Garden</text></g>
+<g class="node"><title>SHELTER</title><path d="M1199.6599999999999,654.99 L1273.56,654.99 L1273.56,694.99 L1199.6599999999999,694.99 Z" fill="white" stroke="#64748b" stroke-width="1.2"/>
+<text x="1236.61" y="679.99" text-anchor="middle" font-family="Arial" font-size="14">Shelter</text></g>
+</g>
 </svg>

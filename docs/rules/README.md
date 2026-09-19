@@ -27,3 +27,11 @@ v0.0.1 records the current source baseline at `cf087fd8e9dedd3c223e1f85d31ea41fe
 `maps-v0.0.1.json` preserves all 16 engine nodes, their initial caches and facilities, weighted roads (including the zero-cost bridge), starting locations, road closures and the Night 4 draw. Its consistency with the current v0.0.1 engine is checked in `tests/map.test.ts`. When a later engine version replaces these rules, retain this snapshot and migrate that comparison to the new version.
 
 The archived v0.0.2 audit tooling in #19 is design evidence, not production code. To reproduce it, save the issue’s `audit.py` and `maps.json` blocks together and run the script.
+
+## Map layout tooling
+
+Run `pnpm maps:layout` to regenerate the three v0.0.2 diagrams and their `layout-report.json`. Run `pnpm maps:check` to verify reproducible output. The script reads connections from `maps-v0.0.2.json`; labels, neighborhood centers and deterministic search settings live in `scripts/map-layout.config.json`.
+
+The optimizer rearranges locations within their neighborhood boundaries. It first avoids location boxes overlapping or roads passing through unrelated locations, then prioritizes crossings between two roads that both connect different neighborhoods. Crossings involving a local road are the secondary priority. A local improvement cannot outweigh one crossing between neighborhood roads. The fixed-seed search is bounded, so remaining crossings are reported rather than claimed to be globally minimal.
+
+The SVG uses the same straight road segments that the audit measures. The report records every remaining crossing and all location coordinates; tests also protect the reported Village and Town road pairs from crossing again. No game connections are changed by layout generation.

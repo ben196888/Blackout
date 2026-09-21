@@ -25,7 +25,7 @@ export function Home() {
   return (
     <main className="home">
       <section className="hero card">
-        <p className="kicker">PACE POC · FOUR SEATS · SEVEN NIGHTS</p>
+        <p className="kicker">BLACKOUT · FOUR SEATS · SEVEN NIGHTS</p>
         <h1>BLACKOUT</h1>
         <p className="lede">
           Four survivors are scattered across a village after a blackout. Each has private

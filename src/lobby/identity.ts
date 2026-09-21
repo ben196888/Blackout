@@ -12,7 +12,7 @@ export interface Identity {
   clear(matchID: string): void;
 }
 
-const key = (matchID: string) => `pace.identity.${matchID}`;
+const key = (matchID: string) => `blackout.identity.${matchID}`;
 
 function isSeatIdentity(value: unknown): value is SeatIdentity {
   if (!value || typeof value !== 'object') return false;

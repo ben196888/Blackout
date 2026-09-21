@@ -1,13 +1,13 @@
 # Four-human trial runbook
 
-Use this checklist for every PACE POC trial. A trial counts only when four humans in four independent browser sessions reach a terminal outcome and its private Fly log dump is verified.
+Use this checklist for every BLACKOUT trial. A trial counts only when four humans in four independent browser sessions reach a terminal outcome and its private Fly log dump is verified.
 
 ## 1. Prepare the room
 
 - Use four independent browsers or browser profiles. Do not share a session.
 - Do not use an external voice call, spectator view, debug surface or developer tools.
 - Read the on-screen content note aloud: fictional disaster, food scarcity, starvation and death.
-- Tell every participant: “In-app message text and authoritative delivery outcomes are recorded for POC analysis. Do not include personal or sensitive information.”
+- Tell every participant: “In-app message text and authoritative delivery outcomes are recorded for playtest analysis. Do not include personal or sensitive information.”
 
 ## 2. Prove production before admitting players
 
@@ -22,14 +22,14 @@ After the run is green, freeze deployments and Fly Machine restarts until the te
 
 ## 3. Create the match and start the dump
 
-Player 1 creates the match at <https://pace-poc.fly.dev>. Before sharing the invite, copy the match ID from `/play/<matchID>` and open a dedicated terminal:
+Player 1 creates the match at <https://play-blackout.fly.dev>. Before sharing the invite, copy the match ID from `/play/<matchID>` and open a dedicated terminal:
 
 ```sh
 mkdir -p trial-logs
-PACE_MATCH_ID='replace-with-match-id'
-PACE_TRIAL_STARTED="$(date -u +%Y%m%dT%H%M%SZ)"
-PACE_DUMP="trial-logs/${PACE_TRIAL_STARTED}-${PACE_MATCH_ID}.fly.jsonl"
-fly logs --app pace-poc --json > "$PACE_DUMP"
+BLACKOUT_MATCH_ID='replace-with-match-id'
+BLACKOUT_TRIAL_STARTED="$(date -u +%Y%m%dT%H%M%SZ)"
+BLACKOUT_DUMP="trial-logs/${BLACKOUT_TRIAL_STARTED}-${BLACKOUT_MATCH_ID}.fly.jsonl"
+fly logs --app play-blackout --json > "$BLACKOUT_DUMP"
 ```
 
 Leave that command running for the complete trial. `trial-logs/` is ignored by Git because dumps contain player-authored text and private authoritative delivery outcomes.
@@ -57,20 +57,20 @@ Record qualitative evidence for these questions:
 After every player sees the terminal outcome, stop `fly logs` with Ctrl-C. In the same shell, verify at least one structured event for this match:
 
 ```sh
-jq -e --arg match "$PACE_MATCH_ID" '
+jq -e --arg match "$BLACKOUT_MATCH_ID" '
   .message | fromjson? |
-  select(.event == "pace.message.v1" and .match == $match)
-' "$PACE_DUMP" >/dev/null
+  select(.event == "blackout.message.v1" and .match == $match)
+' "$BLACKOUT_DUMP" >/dev/null
 ```
 
 Review the complete message evidence without treating Fly timestamps as phase metrics:
 
 ```sh
-jq -c --arg match "$PACE_MATCH_ID" '
+jq -c --arg match "$BLACKOUT_MATCH_ID" '
   .message | fromjson? |
-  select(.event == "pace.message.v1" and .match == $match) |
+  select(.event == "blackout.message.v1" and .match == $match) |
   {gameDay, sender, method, rawText, deliveredText, recipients, dropped, excluded, truncated}
-' "$PACE_DUMP"
+' "$BLACKOUT_DUMP"
 ```
 
 If verification returns non-zero, the dump is incomplete: do not mark the milestone finished. Keep the private local dump and use Fly's seven-day searchable retention only as a fallback. Never commit or attach the dump to a public issue.

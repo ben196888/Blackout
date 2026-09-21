@@ -62,7 +62,7 @@ describe('message logging storage', () => {
     expect(write).toHaveBeenCalledOnce();
     const event = JSON.parse(String(write.mock.calls[0]?.[0])) as Record<string, unknown>;
     expect(event).toMatchObject({
-      event: 'pace.message.v1', match: 'match-123', gameDay: 2,
+      event: 'blackout.message.v1', match: 'match-123', gameDay: 2,
       phase: 'contact', sender: '0', method: 'SMS', rawText: 'raw secret', recipients: ['1'],
     });
     expect(event.serverTime).toEqual(expect.any(String));
@@ -131,12 +131,12 @@ describe('message logging storage', () => {
     const events = write.mock.calls.map(([line]) => JSON.parse(String(line)) as Record<string, unknown>);
     expect(events).toEqual([
       expect.objectContaining({
-        event: 'pace.radio-choice.v1', match: 'match-radio', gameDay: 3,
+        event: 'blackout.radio-choice.v1', match: 'match-radio', gameDay: 3,
         player: '0', outcome: 'LISTEN_SUCCESS', reason: 'NO_NEW_BROADCAST',
         batteryBefore: 2, batteryCharged: 1,
       }),
-      expect.objectContaining({ event: 'pace.radio-choice.v1', player: '1', outcome: 'LISTEN_FAILURE' }),
-      expect.objectContaining({ event: 'pace.radio-choice.v1', player: '2', outcome: 'SKIP' }),
+      expect.objectContaining({ event: 'blackout.radio-choice.v1', player: '1', outcome: 'LISTEN_FAILURE' }),
+      expect.objectContaining({ event: 'blackout.radio-choice.v1', player: '2', outcome: 'SKIP' }),
     ]);
     expect(JSON.stringify(events)).not.toContain('rawText');
   });

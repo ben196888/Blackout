@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This is a proof of concept with a deliberately narrow scope. Spectators, timers, rematches, persistence, a development harness, and multi-machine deployment are intentional omissions. See [CONTRIBUTING.md](https://github.com/ben196888/Blackout/blob/main/CONTRIBUTING.md).
+        BLACKOUT has a deliberately focused scope. Spectators, timers, rematches, persistence, a development harness, and multi-machine deployment are intentional omissions. See [CONTRIBUTING.md](https://github.com/ben196888/Blackout/blob/main/CONTRIBUTING.md).
   - type: textarea
     id: problem
     attributes:
@@ -29,4 +29,4 @@ body:
     attributes:
       label: Scope
       options:
-        - label: This fits the POC scope described in CONTRIBUTING.md
+        - label: This fits the current scope described in CONTRIBUTING.md

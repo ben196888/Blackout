@@ -1,17 +1,17 @@
 # Contributing
 
-Thanks for your interest in PACE POC — BLACKOUT. This is a proof of concept, so the scope is deliberately narrow: it exists to test whether method-coverage planning and imperfect communication produce useful coordination decisions in a four-player hidden-information game.
+Thanks for your interest in BLACKOUT. The game is live, and its current scope remains deliberately focused on method-coverage planning and imperfect communication in a four-player hidden-information game.
 
 ## Scope
 
-Changes that fit the POC:
+Changes that fit the current scope:
 
 - Bug fixes in game rules, communication delivery, player-view secrecy, or identity validation.
 - Test coverage for existing behaviour.
 - Documentation and developer-experience fixes.
 - Balance tuning supported by trial evidence — see below.
 
-Changes that do not fit the POC: spectators, timers, rematches, persistence, a development harness, or multi-machine deployment. These are intentional omissions, not gaps.
+Changes outside the current scope include spectators, timers, rematches, persistence, a development harness, and multi-machine deployment. These are intentional omissions, not gaps.
 
 If you want to propose something larger, open an issue first so we can agree on scope before you write code.
 

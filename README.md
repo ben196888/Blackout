@@ -1,4 +1,4 @@
-# PACE POC — BLACKOUT
+# BLACKOUT
 
 [![Verify and deploy](https://github.com/ben196888/Blackout/actions/workflows/release.yml/badge.svg)](https://github.com/ben196888/Blackout/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -13,7 +13,7 @@ The research question is not "is this fun". It is whether PACE-style method-cove
 
 ## Status
 
-Proof of concept. Scope is deliberately narrow and several omissions are intentional — see [Runtime limits](#runtime-limits). The implementation plan lives in [issue #1](https://github.com/ben196888/Blackout/issues/1).
+BLACKOUT is live with the v0.0.1 rules. Its current scope remains deliberately focused, and several omissions are intentional — see [Runtime limits](#runtime-limits).
 
 ## Quick start
 
@@ -72,7 +72,7 @@ Four-human sessions must follow the private-log capture and verification checkli
 - Match state is held in memory. A deploy or process restart aborts every live match.
 - Never deploy or restart the production machine during a trial. Run the production smoke before players join, then freeze deployments until the outcome and log dump are complete.
 - Production intentionally runs exactly one always-on Machine in `sin`; in-memory matches cannot be load-balanced across Machines.
-- There are no spectators, timers, rematches, persistence, or development harness in the POC.
+- There are no spectators, timers, rematches, persistence, or development harness in the current release.
 
 ## Contributing
 

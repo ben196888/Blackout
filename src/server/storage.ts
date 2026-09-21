@@ -65,7 +65,7 @@ export class LoggingInMemory implements StorageAPI.Sync {
           ?? (metadata?.paceMessage ? [metadata.paceMessage] : []);
         for (const outcome of outcomes) {
           console.log(JSON.stringify({
-            event: 'pace.message.v1',
+            event: 'blackout.message.v1',
             match: matchID,
             serverTime: new Date().toISOString(),
             gameDay: outcome.day,
@@ -83,7 +83,7 @@ export class LoggingInMemory implements StorageAPI.Sync {
         }
         for (const choice of metadata?.paceRadioChoices ?? []) {
           console.log(JSON.stringify({
-            event: 'pace.radio-choice.v1',
+            event: 'blackout.radio-choice.v1',
             match: matchID,
             serverTime: new Date().toISOString(),
             gameDay: choice.day,

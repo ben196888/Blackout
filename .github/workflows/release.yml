@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pace-poc-release
+  group: blackout-release
   cancel-in-progress: false
 
 jobs:
@@ -76,8 +76,8 @@ jobs:
       - name: Deploy tested commit
         if: github.event_name != 'pull_request'
         run: |
-          flyctl deploy --remote-only --ha=false --app pace-poc
-          flyctl scale count 1 --yes --app pace-poc
+          flyctl deploy --remote-only --ha=false --app play-blackout
+          flyctl scale count 1 --yes --app play-blackout
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 

@@ -1,6 +1,6 @@
 # Four-human trial runbook
 
-Use this checklist for every PACE POC trial. A trial counts only when four humans in four independent browser sessions reach a terminal outcome and its private Fly log dump is verified.
+Use this checklist for every BLACKOUT POC trial. A trial counts only when four humans in four independent browser sessions reach a terminal outcome and its private Fly log dump is verified.
 
 ## 1. Prepare the room
 
@@ -22,14 +22,14 @@ After the run is green, freeze deployments and Fly Machine restarts until the te
 
 ## 3. Create the match and start the dump
 
-Player 1 creates the match at <https://pace-poc.fly.dev>. Before sharing the invite, copy the match ID from `/play/<matchID>` and open a dedicated terminal:
+Player 1 creates the match at <https://blackout-poc.fly.dev>. Before sharing the invite, copy the match ID from `/play/<matchID>` and open a dedicated terminal:
 
 ```sh
 mkdir -p trial-logs
 PACE_MATCH_ID='replace-with-match-id'
 PACE_TRIAL_STARTED="$(date -u +%Y%m%dT%H%M%SZ)"
 PACE_DUMP="trial-logs/${PACE_TRIAL_STARTED}-${PACE_MATCH_ID}.fly.jsonl"
-fly logs --app pace-poc --json > "$PACE_DUMP"
+fly logs --app blackout-poc --json > "$PACE_DUMP"
 ```
 
 Leave that command running for the complete trial. `trial-logs/` is ignored by Git because dumps contain player-authored text and private authoritative delivery outcomes.

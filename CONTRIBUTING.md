@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in PACE POC — BLACKOUT. This is a proof of concept, so the scope is deliberately narrow: it exists to test whether method-coverage planning and imperfect communication produce useful coordination decisions in a four-player hidden-information game.
+Thanks for your interest in BLACKOUT. This is a proof of concept, so the scope is deliberately narrow: it exists to test whether method-coverage planning and imperfect communication produce useful coordination decisions in a four-player hidden-information game.
 
 ## Scope
 

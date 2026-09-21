@@ -1,4 +1,4 @@
-# PACE POC — BLACKOUT
+# BLACKOUT
 
 [![Verify and deploy](https://github.com/ben196888/Blackout/actions/workflows/release.yml/badge.svg)](https://github.com/ben196888/Blackout/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

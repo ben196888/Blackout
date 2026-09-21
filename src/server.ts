@@ -11,7 +11,7 @@ const port = Number(process.env.PORT ?? 8080);
 const dist = join(process.cwd(), 'dist');
 const index = readFileSync(join(dist, 'index.html'), 'utf8');
 const origins = [
-  'https://pace-poc.fly.dev',
+  'https://blackout-poc.fly.dev',
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];

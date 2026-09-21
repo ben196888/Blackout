@@ -10,6 +10,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 COPY index.html tsconfig.json vite.config.mts ./
 COPY src ./src
+COPY docs/rules ./docs/rules
 RUN pnpm build
 
 FROM node:24.7.0-bookworm-slim AS runtime

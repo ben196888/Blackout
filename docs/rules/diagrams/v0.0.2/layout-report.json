@@ -1,0 +1,875 @@
+{
+  "village": {
+    "positions": {
+      "VO": [
+        613.32,
+        526
+      ],
+      "TEMPLE": [
+        637.48,
+        742
+      ],
+      "STORE": [
+        794.64,
+        713.46
+      ],
+      "HOMES": [
+        509,
+        627.99
+      ],
+      "FIRE": [
+        519.1,
+        711.52
+      ],
+      "SCHOOL": [
+        279.64,
+        643.12
+      ],
+      "CLINIC": [
+        282.03,
+        740
+      ],
+      "FIELD": [
+        215.49,
+        588.02
+      ],
+      "LIBRARY": [
+        193.57,
+        728.93
+      ],
+      "WATER": [
+        54.32,
+        674.39
+      ],
+      "COOP": [
+        217.91,
+        280.18
+      ],
+      "TEA": [
+        317,
+        236.61
+      ],
+      "POND": [
+        230.5,
+        167.59
+      ],
+      "BARN": [
+        7,
+        99.72
+      ],
+      "FOREST": [
+        638.9,
+        285.47
+      ],
+      "SHRINE": [
+        508.47,
+        253.04
+      ],
+      "QUARRY": [
+        680.16,
+        94
+      ],
+      "LOOKOUT": [
+        538.01,
+        143.35
+      ]
+    },
+    "audit": {
+      "crossZoneCrossings": 0,
+      "withinZoneCrossings": 0,
+      "nodeObstructions": 0,
+      "nodeOverlaps": 0,
+      "crossingPairs": []
+    }
+  },
+  "town": {
+    "positions": {
+      "VO": [
+        127.36,
+        615.56
+      ],
+      "TEMPLE": [
+        44.51,
+        717
+      ],
+      "STORE": [
+        238.12,
+        717
+      ],
+      "HOMES": [
+        286.34,
+        551.19
+      ],
+      "FIRE": [
+        280.41,
+        609.89
+      ],
+      "SCHOOL": [
+        342,
+        185.85
+      ],
+      "CLINIC": [
+        55.99,
+        310
+      ],
+      "FIELD": [
+        342,
+        299.71
+      ],
+      "LIBRARY": [
+        64.55,
+        172.62
+      ],
+      "WATER": [
+        194.4,
+        99.31
+      ],
+      "COOP": [
+        922.02,
+        685.26
+      ],
+      "TEA": [
+        959.07,
+        495
+      ],
+      "POND": [
+        795.96,
+        500.04
+      ],
+      "BARN": [
+        685.17,
+        591.37
+      ],
+      "MILL": [
+        749.21,
+        675.16
+      ],
+      "FOREST": [
+        818.35,
+        921.07
+      ],
+      "SHRINE": [
+        841.73,
+        1077.99
+      ],
+      "QUARRY": [
+        647,
+        912.82
+      ],
+      "LOOKOUT": [
+        957,
+        1093.08
+      ],
+      "CABIN": [
+        647,
+        1020.46
+      ],
+      "DOCK": [
+        811.61,
+        227.29
+      ],
+      "FISHERY": [
+        692.98,
+        157.2
+      ],
+      "PUMP": [
+        696.08,
+        298.32
+      ],
+      "FERRY": [
+        762.47,
+        92
+      ],
+      "DEPOT": [
+        75.13,
+        1122
+      ],
+      "GARAGE": [
+        333,
+        917.86
+      ],
+      "SUBSTATION": [
+        23,
+        1009.76
+      ],
+      "YARD": [
+        318.48,
+        1020.6
+      ]
+    },
+    "audit": {
+      "crossZoneCrossings": 1,
+      "withinZoneCrossings": 12,
+      "nodeObstructions": 0,
+      "nodeOverlaps": 0,
+      "crossingPairs": [
+        {
+          "edges": [
+            [
+              "TEMPLE",
+              "STORE"
+            ],
+            [
+              "DEPOT",
+              "VO"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "STORE",
+              "VO"
+            ],
+            [
+              "FIRE",
+              "TEMPLE"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FIRE",
+              "TEMPLE"
+            ],
+            [
+              "FOREST",
+              "VO"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FIRE",
+              "TEMPLE"
+            ],
+            [
+              "DEPOT",
+              "VO"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "SCHOOL",
+              "CLINIC"
+            ],
+            [
+              "FIELD",
+              "WATER"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "LIBRARY",
+              "SCHOOL"
+            ],
+            [
+              "FIELD",
+              "WATER"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FIELD",
+              "WATER"
+            ],
+            [
+              "VO",
+              "SCHOOL"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "TEA",
+              "POND"
+            ],
+            [
+              "DOCK",
+              "COOP"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "POND",
+              "BARN"
+            ],
+            [
+              "SCHOOL",
+              "COOP"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FOREST",
+              "VO"
+            ],
+            [
+              "QUARRY",
+              "BARN"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "CABIN",
+              "QUARRY"
+            ],
+            [
+              "DEPOT",
+              "FOREST"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FISHERY",
+              "PUMP"
+            ],
+            [
+              "DOCK",
+              "SCHOOL"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "GARAGE",
+              "SUBSTATION"
+            ],
+            [
+              "DEPOT",
+              "VO"
+            ]
+          ],
+          "kind": "within-zone"
+        }
+      ]
+    }
+  },
+  "valley": {
+    "positions": {
+      "VO": [
+        677.09,
+        290.63
+      ],
+      "TEMPLE": [
+        761.77,
+        217.09
+      ],
+      "STORE": [
+        647.68,
+        189.19
+      ],
+      "HOMES": [
+        694.19,
+        349.03
+      ],
+      "FIRE": [
+        792,
+        390.02
+      ],
+      "SCHOOL": [
+        1013.74,
+        215.88
+      ],
+      "CLINIC": [
+        995.9,
+        92
+      ],
+      "FIELD": [
+        1081.54,
+        306.43
+      ],
+      "LIBRARY": [
+        1149.05,
+        92
+      ],
+      "WATER": [
+        1285.83,
+        199.67
+      ],
+      "COOP": [
+        495.12,
+        903.06
+      ],
+      "TEA": [
+        513.14,
+        1008.15
+      ],
+      "POND": [
+        654.39,
+        1001.62
+      ],
+      "BARN": [
+        696.02,
+        810.41
+      ],
+      "MILL": [
+        733.45,
+        883.82
+      ],
+      "FOREST": [
+        322.1,
+        697.05
+      ],
+      "SHRINE": [
+        164.09,
+        710.99
+      ],
+      "QUARRY": [
+        238.54,
+        529.84
+      ],
+      "LOOKOUT": [
+        124.61,
+        534.97
+      ],
+      "CABIN": [
+        52.12,
+        701.47
+      ],
+      "DOCK": [
+        1102.38,
+        966
+      ],
+      "FISHERY": [
+        975,
+        1057.58
+      ],
+      "PUMP": [
+        1015.58,
+        1143.23
+      ],
+      "FERRY": [
+        1285,
+        948
+      ],
+      "LEVEE": [
+        1208.77,
+        1026.45
+      ],
+      "DEPOT": [
+        232.98,
+        252.05
+      ],
+      "GARAGE": [
+        218.55,
+        114.14
+      ],
+      "SUBSTATION": [
+        310,
+        189.75
+      ],
+      "YARD": [
+        178.84,
+        200
+      ],
+      "WORKSHOP": [
+        20.63,
+        99.49
+      ],
+      "HALL": [
+        296.19,
+        1004.21
+      ],
+      "RESERVOIR": [
+        133.9,
+        1135.58
+      ],
+      "ORCHARD": [
+        238.28,
+        1154.74
+      ],
+      "RADIO": [
+        138.85,
+        1064.77
+      ],
+      "OBSERVATORY": [
+        6.36,
+        1121.46
+      ],
+      "TERMINAL": [
+        985.68,
+        562.65
+      ],
+      "WAREHOUSE": [
+        964,
+        726.35
+      ],
+      "MARKET": [
+        1173.19,
+        576.79
+      ],
+      "GARDEN": [
+        1231.7,
+        736
+      ],
+      "SHELTER": [
+        1236.61,
+        674.99
+      ]
+    },
+    "audit": {
+      "crossZoneCrossings": 9,
+      "withinZoneCrossings": 16,
+      "nodeObstructions": 0,
+      "nodeOverlaps": 0,
+      "crossingPairs": [
+        {
+          "edges": [
+            [
+              "FIRE",
+              "TEMPLE"
+            ],
+            [
+              "VO",
+              "SCHOOL"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "FIELD",
+              "WATER"
+            ],
+            [
+              "SHELTER",
+              "LIBRARY"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "POND",
+              "BARN"
+            ],
+            [
+              "COOP",
+              "MILL"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "POND",
+              "BARN"
+            ],
+            [
+              "DOCK",
+              "COOP"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "SHRINE",
+              "LOOKOUT"
+            ],
+            [
+              "CABIN",
+              "QUARRY"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "SCHOOL",
+              "COOP"
+            ],
+            [
+              "QUARRY",
+              "BARN"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "COOP",
+              "FOREST"
+            ],
+            [
+              "HALL",
+              "VO"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "FOREST",
+              "VO"
+            ],
+            [
+              "QUARRY",
+              "BARN"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "BARN",
+              "FIELD"
+            ],
+            [
+              "DOCK",
+              "SCHOOL"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "BARN",
+              "FIELD"
+            ],
+            [
+              "TERMINAL",
+              "SCHOOL"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "STORE",
+              "QUARRY"
+            ],
+            [
+              "DEPOT",
+              "VO"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "STORE",
+              "QUARRY"
+            ],
+            [
+              "DEPOT",
+              "FOREST"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "DOCK",
+              "FERRY"
+            ],
+            [
+              "LEVEE",
+              "FIELD"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "DOCK",
+              "SCHOOL"
+            ],
+            [
+              "WAREHOUSE",
+              "MARKET"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "DOCK",
+              "SCHOOL"
+            ],
+            [
+              "MARKET",
+              "TERMINAL"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "DOCK",
+              "SCHOOL"
+            ],
+            [
+              "TERMINAL",
+              "GARDEN"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "DEPOT",
+              "FOREST"
+            ],
+            [
+              "QUARRY",
+              "BARN"
+            ]
+          ],
+          "kind": "cross-zone"
+        },
+        {
+          "edges": [
+            [
+              "HALL",
+              "RESERVOIR"
+            ],
+            [
+              "RADIO",
+              "TEA"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "ORCHARD",
+              "HALL"
+            ],
+            [
+              "RADIO",
+              "TEA"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "WAREHOUSE",
+              "MARKET"
+            ],
+            [
+              "TERMINAL",
+              "GARDEN"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "WAREHOUSE",
+              "MARKET"
+            ],
+            [
+              "TERMINAL",
+              "DOCK"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "WAREHOUSE",
+              "MARKET"
+            ],
+            [
+              "LEVEE",
+              "FIELD"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "MARKET",
+              "TERMINAL"
+            ],
+            [
+              "LEVEE",
+              "FIELD"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "TERMINAL",
+              "GARDEN"
+            ],
+            [
+              "LEVEE",
+              "FIELD"
+            ]
+          ],
+          "kind": "within-zone"
+        },
+        {
+          "edges": [
+            [
+              "HALL",
+              "VO"
+            ],
+            [
+              "QUARRY",
+              "BARN"
+            ]
+          ],
+          "kind": "cross-zone"
+        }
+      ]
+    }
+  }
+}

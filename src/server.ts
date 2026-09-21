@@ -11,7 +11,7 @@ const port = Number(process.env.PORT ?? 8080);
 const dist = join(process.cwd(), 'dist');
 const index = readFileSync(join(dist, 'index.html'), 'utf8');
 const origins = [
-  'https://blackout-poc.fly.dev',
+  'https://play-blackout.fly.dev',
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];
@@ -81,5 +81,5 @@ server.app.use(async (ctx, next) => {
 });
 
 void server.run(port, () => {
-  console.log(JSON.stringify({ event: 'pace.server.ready', port }));
+  console.log(JSON.stringify({ event: 'blackout.server.ready', port }));
 });

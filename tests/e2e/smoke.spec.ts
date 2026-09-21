@@ -35,7 +35,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     const invite = await first.getByLabel('Invite link').inputValue();
     expect(invite).toContain(`${baseURL}/play/`);
     const matchID = new URL(invite).pathname.split('/').at(-1)!;
-    const storedIdentity = await first.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID);
+    const storedIdentity = await first.evaluate((id) => localStorage.getItem(`blackout.identity.${id}`), matchID);
     const seat = JSON.parse(storedIdentity!) as { playerID: string; credentials: string };
     const validAuth = await request.post(`/games/blackout/${matchID}/auth`, {
       headers: { Authorization: `Bearer ${seat.credentials}`, 'X-Player-ID': seat.playerID },
@@ -143,7 +143,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await expect(pages[0]!.getByLabel('Open channel')).toContainText('MEET AT SCHOOL');
 
     await pages[0]!.evaluate((id) => {
-      const key = `pace.identity.${id}`;
+      const key = `blackout.identity.${id}`;
       const identity = JSON.parse(localStorage.getItem(key)!) as { credentials: string };
       identity.credentials = 'tampered-token';
       localStorage.setItem(key, JSON.stringify(identity));
@@ -151,7 +151,7 @@ test('four isolated players create, join, plan, advance and reconnect', async ({
     await pages[0]!.reload();
     await expect(pages[0]!.getByRole('alert')).toHaveText('This game is already in progress. Spectator access is not available.');
     await expect(pages[0]!.getByText('DAY 1', { exact: true })).toHaveCount(0);
-    await expect.poll(() => pages[0]!.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID)).toBeNull();
+    await expect.poll(() => pages[0]!.evaluate((id) => localStorage.getItem(`blackout.identity.${id}`), matchID)).toBeNull();
   } finally {
     await Promise.all(contexts.map((context) => context.close()));
   }
@@ -167,7 +167,7 @@ test('invalid pregame identity clears and may claim a free seat', async ({ brows
     await expect(page).toHaveURL(/\/play\/[A-Za-z0-9_-]+/);
     const matchID = new URL(page.url()).pathname.split('/').at(-1)!;
     await page.evaluate((id) => {
-      const key = `pace.identity.${id}`;
+      const key = `blackout.identity.${id}`;
       const identity = JSON.parse(localStorage.getItem(key)!) as { credentials: string };
       identity.credentials = 'tampered-token';
       localStorage.setItem(key, JSON.stringify(identity));
@@ -175,7 +175,7 @@ test('invalid pregame identity clears and may claim a free seat', async ({ brows
 
     await page.reload();
     await expect(page.getByRole('button', { name: 'Join first free seat' })).toBeVisible();
-    await expect.poll(() => page.evaluate((id) => localStorage.getItem(`pace.identity.${id}`), matchID)).toBeNull();
+    await expect.poll(() => page.evaluate((id) => localStorage.getItem(`blackout.identity.${id}`), matchID)).toBeNull();
     await page.getByLabel('Your name').fill('Replacement Player');
     await page.getByRole('button', { name: 'Join first free seat' }).click();
     await expect(page.getByText('Waiting room · 2/4 seats')).toBeVisible();

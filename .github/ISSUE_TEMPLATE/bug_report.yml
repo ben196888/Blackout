@@ -37,7 +37,7 @@ body:
       options:
         - Local dev server (pnpm dev)
         - Local smoke (pnpm smoke)
-        - Production (blackout-poc.fly.dev)
+        - Production (play-blackout.fly.dev)
         - Unit tests (pnpm test)
     validations:
       required: true

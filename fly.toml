@@ -1,4 +1,4 @@
-app = "blackout-poc"
+app = "play-blackout"
 primary_region = "sin"
 
 [build]

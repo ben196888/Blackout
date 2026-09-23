@@ -26,8 +26,8 @@ type Method = { id: string; group: string; label: string; tag: string; blurb: st
 const BLURBS: Record<string, string> = {
   WALKIE: 'Every living Walkie-talkie holder in your neighborhood, plus holders at locations directly connected to your location across its boundary, hears the broadcast. Barn reaches all of Farm, Field and Quarry. A closed road does not stop radio coverage. 40 characters; one battery buys three sends.',
   WALKIE_RESERVIST: 'A Reservist reaches the ordinary Walkie-talkie footprint plus every location one road beyond it. The extra road is measured from any location in the ordinary footprint. Closed roads do not block radio coverage; listeners still need Walkie-talkie.',
-  MESH: 'Mesh goes one road directly. A living intermediary one road from both sender and target can relay the message without holding Mesh. Closed roads change those distances. 40 characters; one battery buys two sends.',
-  MESH_STUDENT: 'The Student sends Mesh directly across two roads without an intermediary. The Student chooses five methods; other professions choose four.',
+  MESH: 'Address one Mesh holder in your neighborhood or at a node connected across its boundary. An equipped holder in direct range can relay once, automatically and privately. Lookout links to Field; Town adds Quarry–Dock, Valley adds Observatory–Shelter. These radio links need a holder at each end and remain open when roads close. 40 characters; one battery buys two sends.',
+  MESH_STUDENT: 'The Student sends Mesh one additional road beyond ordinary direct coverage without a relay. A relay still uses its own ordinary range. The Student chooses five methods; other professions choose four.',
   VO_BROADCAST: 'From Village Office, the Village Leader reaches living survivors in Core, School and Ridge only. One free, player-written message per day, 60 characters, with no delivery receipt. Other neighborhoods need relays or boards.',
   HIGH_GROUND: 'Lookout sees open locations in Ridge and Farm. Town adds Quarry overlooking Ridge and Works; Valley adds Observatory overlooking Upland and Core. Enclosed locations stay hidden. This is passive sight, not a message. Shrine no longer provides global observation.',
 };
@@ -35,10 +35,11 @@ const BLURBS: Record<string, string> = {
 export default function DraftReachExplorer({ methods }: { methods: readonly Method[] }) {
   const previewMethods = methods.flatMap((entry) => {
     if (entry.id === 'WALKIE') return [{ ...entry, tag: 'zone + border' }];
+    if (entry.id === 'MESH') return [{ ...entry, tag: 'zone + border + relay' }];
     if (entry.id === 'MESH_STUDENT') return [{
       id: 'WALKIE_RESERVIST', group: 'Role abilities', label: 'Walkie-talkie · Reservist',
       tag: 'zone + border + 1 road', blurb: BLURBS.WALKIE_RESERVIST,
-    }, entry];
+    }, { ...entry, tag: 'direct + 1 road' }];
     return [entry];
   });
   const [scale, setScale] = useState('village');
@@ -154,12 +155,13 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
             </label>
             <p className="draft-node-detail" aria-live="polite">{names[origin]} · {region.id} · {map.enclosed.includes(origin) ? 'Enclosed' : 'Open'}
               {map.bulletins.includes(origin) ? ' · Bulletin board' : ''}{map.landlines.includes(origin) ? ' · Phone' : ''}
-              {map.rendezvousCandidates.includes(origin) ? ' · Evacuation candidate' : ''}</p>
+              {map.rendezvousCandidates.includes(origin) ? ' · Evacuation candidate' : ''}
+              {['MESH', 'MESH_STUDENT'].includes(method) && map.meshHighGroundLinks.some(([site]) => site === origin) ? ' · Mesh high ground' : ''}</p>
           </div>
           <div className="map-legend">
             <span className="grn">Green border: {method === 'HIGH_GROUND' ? 'visible open location' : 'reachable'}</span>
             <span className="grn">Green fill: you</span>
-            {relay.length > 0 && <span className="sig">Amber dashed border: needs an intermediary</span>}
+            {relay.length > 0 && <span className="sig">Amber dashed border: possible via one Mesh-equipped intermediary</span>}
             <span>Double border: evacuation candidate</span><span>Red dashed road: closed</span>
             <span className="grn">Bright roads: exits from your location</span>
             <span>Gaps separate crossing roads. Only named locations are junctions.</span>

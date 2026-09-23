@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { DRAFT_MAPS, draftDistances, draftReach, draftWalkieReach, mapNodes, observationSites, roadKey } from '../src/rules/draft-map';
+import { DRAFT_MAPS, draftDistances, draftMeshReach, draftReach, draftWalkieReach, mapNodes, observationSites, roadKey } from '../src/rules/draft-map';
 
 for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
   it('uses diagram nodes, roads and neighborhoods matching the canonical graph', () => {
@@ -25,7 +25,7 @@ for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
       .toEqual(draftWalkieReach(map, 'BARN', true));
   });
 
-  it('keeps radio coverage through road closures while mesh detours', () => {
+  it('keeps radio coverage through road closures', () => {
     expect(draftReach(map, 'WALKIE', 'VO').reach).toContain('SCHOOL');
     expect(draftReach(map, 'WALKIE', 'VO', 2).reach).toEqual(draftReach(map, 'WALKIE', 'VO').reach);
     expect(draftReach(map, 'WALKIE_RESERVIST', 'VO', 2).reach)
@@ -34,9 +34,36 @@ for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
     expect(Object.values(draftDistances(map, 'VO', 2)).every(Number.isFinite)).toBe(true);
     const mesh = draftReach(map, 'MESH', 'VO', 2);
     expect(mesh.reach).toContain('TEMPLE');
-    expect(mesh.relay).toContain('CLINIC');
-    expect(mesh.reach).not.toContain('CLINIC');
+    expect(mesh.reach).toContain('SCHOOL');
+    expect(mesh.reach).toEqual(draftReach(map, 'MESH', 'VO').reach);
+    expect(mesh.relay).toContain('FIELD');
+    expect(mesh.reach).not.toContain('FIELD');
     expect(draftReach(map, 'MESH_STUDENT', 'VO', 2).reach).toContain('CLINIC');
+  });
+
+  it('adds narrow two-way Mesh links only at named high-ground sites', () => {
+    expect(map.meshHighGroundLinks.every(([site, target]) =>
+      observationSites(map).includes(site!) && mapNodes(map).includes(target!))).toBe(true);
+    for (const [site, target] of map.meshHighGroundLinks) {
+      expect(map.edges.some(([a, b]) => (a === site && b === target) || (a === target && b === site))).toBe(false);
+      expect(draftMeshReach(map, site!)).toContain(target);
+      expect(draftMeshReach(map, target!)).toContain(site);
+      expect(draftMeshReach(map, site!)).toEqual(draftReach(map, 'MESH', site!).reach);
+      expect(draftMeshReach(map, site!)).toEqual(draftReach(map, 'MESH', site!, 2).reach);
+    }
+    expect(draftMeshReach(map, 'LOOKOUT')).toContain('FIELD');
+    expect(draftMeshReach(map, 'LOOKOUT')).not.toContain('SCHOOL');
+    expect(draftMeshReach(map, 'SCHOOL')).not.toContain('LOOKOUT');
+    expect(draftReach(map, 'MESH', 'LOOKOUT').relay).toContain('SCHOOL');
+    expect(draftMeshReach(map, 'LOOKOUT', true)).toContain('SCHOOL');
+    if (map.id !== 'village') {
+      expect(draftMeshReach(map, 'QUARRY')).toContain('DOCK');
+      expect(draftMeshReach(map, 'QUARRY')).not.toContain('FERRY');
+    }
+    if (map.id === 'valley') {
+      expect(draftMeshReach(map, 'OBSERVATORY')).toContain('SHELTER');
+      expect(draftMeshReach(map, 'OBSERVATORY')).not.toContain('MARKET');
+    }
   });
 
   it('limits leader broadcasts and observation to their authored neighborhoods', () => {

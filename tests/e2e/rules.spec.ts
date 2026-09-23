@@ -69,8 +69,19 @@ test('draft maps support scale, pointer and keyboard movement, closures and loca
     await page.getByLabel('Road conditions').selectOption('2');
     await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
     await expect(page.locator('.draft-road[data-closed="true"]')).toHaveCount(2);
-    await picker.getByRole('button', { name: /^Mesh 1 hop/ }).click();
+    await picker.getByRole('button', { name: /^Mesh zone \+ border \+ relay/ }).click();
     await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-reach', 'relay');
+    await page.getByLabel('Stand at', { exact: true }).selectOption('LOOKOUT');
+    await expect(page.locator('[data-node="FIELD"]')).toHaveAttribute('data-reach', 'direct');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'relay');
+    if (id !== 'village') {
+      await page.getByLabel('Stand at', { exact: true }).selectOption('QUARRY');
+      await expect(page.locator('[data-node="DOCK"]')).toHaveAttribute('data-reach', 'direct');
+    }
+    if (id === 'valley') {
+      await page.getByLabel('Stand at', { exact: true }).selectOption('OBSERVATORY');
+      await expect(page.locator('[data-node="SHELTER"]')).toHaveAttribute('data-reach', 'direct');
+    }
     const temple = page.getByRole('button', { name: 'Stand at Temple', exact: true });
     await temple.focus();
     await temple.press('Enter');

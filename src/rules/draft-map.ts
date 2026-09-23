@@ -42,6 +42,23 @@ export function draftWalkieReach(map: DraftMap, origin: string, reservist = fals
   return mapNodes(map).filter((node) => node !== origin && (covered.has(node) || (reservist && borderNeighbors.has(node))));
 }
 
+/** Mesh shares local radio coverage, with named two-way links from occupied high ground. */
+export function draftMeshReach(map: DraftMap, origin: string, student = false): string[] {
+  const covered = new Set(draftWalkieReach(map, origin));
+  for (const [site, distant] of map.meshHighGroundLinks) {
+    if (origin === site) covered.add(distant!);
+    if (origin === distant) covered.add(site!);
+  }
+  if (student) {
+    const ordinary = new Set(covered);
+    for (const [a, b] of map.edges) {
+      if (ordinary.has(a!)) covered.add(b!);
+      if (ordinary.has(b!)) covered.add(a!);
+    }
+  }
+  return mapNodes(map).filter((node) => node !== origin && covered.has(node));
+}
+
 export function draftReach(map: DraftMap, method: string, origin: string, closures = 0) {
   const nodes = mapNodes(map);
   const distances = draftDistances(map, origin, closures);
@@ -52,10 +69,13 @@ export function draftReach(map: DraftMap, method: string, origin: string, closur
     case 'WALKIE': reach = draftWalkieReach(map, origin); break;
     case 'WALKIE_RESERVIST': reach = draftWalkieReach(map, origin, true); break;
     case 'MESH':
-      reach = within(1);
-      relay = nodes.filter((node) => distances[node] === 2);
+    case 'MESH_STUDENT': {
+      reach = draftMeshReach(map, origin, method === 'MESH_STUDENT');
+      const direct = new Set(reach);
+      const viaOneHolder = new Set(reach.flatMap((site) => draftMeshReach(map, site)));
+      relay = nodes.filter((node) => node !== origin && !direct.has(node) && viaOneHolder.has(node));
       break;
-    case 'MESH_STUDENT': reach = within(2); break;
+    }
     case 'BULLETIN': case 'FACE_TO_FACE': reach = [origin]; break;
     case 'LANDLINE': reach = map.landlines.filter((node) => node !== origin); break;
     case 'SMS': case 'MOBILE_VOICE': reach = nodes.filter((node) => node !== origin); break;

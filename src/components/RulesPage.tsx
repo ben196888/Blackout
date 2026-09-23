@@ -326,7 +326,7 @@ function VersionedRules({ version }: { version: string }) {
             <tbody>
               {METHOD_TABLE.map((row) => (
                 <tr key={row.name}>
-                  <td>{row.name}</td><td>{draft && row.name === 'Landline' ? '4–6 phone nodes, by map' : row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
+                  <td>{row.name}</td><td>{draft && row.name === 'Landline' ? '4–6 phone nodes, by map' : draft && row.name === 'Walkie-talkie' ? 'Same neighborhood + sender’s border neighbors; Reservist +1 road' : row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
                 </tr>
               ))}
             </tbody>

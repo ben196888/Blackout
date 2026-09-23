@@ -24,12 +24,23 @@ function diagramGeometry(id: string) {
 
 type Method = { id: string; group: string; label: string; tag: string; blurb: string };
 const BLURBS: Record<string, string> = {
+  WALKIE: 'Every living Walkie-talkie holder in your neighborhood, plus holders at locations directly connected to your location across its boundary, hears the broadcast. Barn reaches all of Farm, Field and Quarry. A closed road does not stop radio coverage. 40 characters; one battery buys three sends.',
+  WALKIE_RESERVIST: 'A Reservist reaches the ordinary Walkie-talkie footprint plus every location one road beyond it. The extra road is measured from any location in the ordinary footprint. Closed roads do not block radio coverage; listeners still need Walkie-talkie.',
+  MESH: 'Mesh goes one road directly. A living intermediary one road from both sender and target can relay the message without holding Mesh. Closed roads change those distances. 40 characters; one battery buys two sends.',
   MESH_STUDENT: 'The Student sends Mesh directly across two roads without an intermediary. The Student chooses five methods; other professions choose four.',
   VO_BROADCAST: 'From Village Office, the Village Leader reaches living survivors in Core, School and Ridge only. One free, player-written message per day, 60 characters, with no delivery receipt. Other neighborhoods need relays or boards.',
   HIGH_GROUND: 'Lookout sees open locations in Ridge and Farm. Town adds Quarry overlooking Ridge and Works; Valley adds Observatory overlooking Upland and Core. Enclosed locations stay hidden. This is passive sight, not a message. Shrine no longer provides global observation.',
 };
 
 export default function DraftReachExplorer({ methods }: { methods: readonly Method[] }) {
+  const previewMethods = methods.flatMap((entry) => {
+    if (entry.id === 'WALKIE') return [{ ...entry, tag: 'zone + border' }];
+    if (entry.id === 'MESH_STUDENT') return [{
+      id: 'WALKIE_RESERVIST', group: 'Role abilities', label: 'Walkie-talkie · Reservist',
+      tag: 'zone + border + 1 road', blurb: BLURBS.WALKIE_RESERVIST,
+    }, entry];
+    return [entry];
+  });
   const [scale, setScale] = useState('village');
   const [method, setMethod] = useState('WALKIE');
   const [vantage, setVantage] = useState('SCHOOL');
@@ -40,7 +51,7 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
   const map = DRAFT_MAPS.find(({ id }) => id === scale)!;
   const geometry = useMemo(() => diagramGeometry(scale), [scale]);
   const names = Object.fromEntries(geometry.nodes.map((node) => [node.id, node.labels.map(({ text }) => text).join(' ')]));
-  const selected = methods.find(({ id }) => id === method)!;
+  const selected = previewMethods.find(({ id }) => id === method)!;
   const pinned = ['BULLETIN', 'LANDLINE', 'MOBILE_DATA'].includes(method) ? 'SCHOOL'
     : method === 'VO_BROADCAST' ? 'VO' : method === 'HIGH_GROUND' ? observation : undefined;
   const origin = pinned ?? vantage;
@@ -82,8 +93,8 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
       <div className="reach-explorer">
         <div>
           <div className="reach-picker" role="group" aria-label="Ways to reach and see">
-            {methods.map((spec, index) => <Fragment key={spec.id}>
-              {spec.group !== methods[index - 1]?.group && <p className="reach-group">{spec.group}</p>}
+            {previewMethods.map((spec, index) => <Fragment key={spec.id}>
+              {spec.group !== previewMethods[index - 1]?.group && <p className="reach-group">{spec.group}</p>}
               <button type="button" aria-pressed={spec.id === method} onClick={() => { setMethod(spec.id); setFocus('all'); }}>
                 <span>{spec.label}</span><span className="tag">{spec.id === 'LANDLINE' ? `${map.landlines.length} phones` : spec.tag}</span>
               </button>

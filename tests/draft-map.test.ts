@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { DRAFT_MAPS, draftDistances, draftReach, mapNodes, observationSites, roadKey } from '../src/rules/draft-map';
+import { DRAFT_MAPS, draftDistances, draftReach, draftWalkieReach, mapNodes, observationSites, roadKey } from '../src/rules/draft-map';
 
 for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
   it('uses diagram nodes, roads and neighborhoods matching the canonical graph', () => {
@@ -13,9 +13,23 @@ for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
     expect(ids('cluster').sort()).toEqual(map.regions.map(({ id }) => `cluster_${id}`).sort());
   });
 
-  it('recomputes walkie and mesh range after closures, without disconnecting the map', () => {
+  it('covers Barn’s Farm zone and its own two border neighbors on every scale', () => {
+    const farm = map.regions.find(({ id }) => id === 'FARM')!;
+    expect(draftWalkieReach(map, 'BARN').sort()).toEqual(
+      [...farm.nodes.filter((node) => node !== 'BARN'), 'FIELD', 'QUARRY'].sort(),
+    );
+    expect(draftWalkieReach(map, 'COOP')).not.toContain('FIELD');
+    expect(draftWalkieReach(map, 'BARN', true)).toContain('SCHOOL');
+    expect(draftWalkieReach(map, 'BARN')).not.toContain('SCHOOL');
+    expect(draftReach(map, 'WALKIE_RESERVIST', 'BARN').reach)
+      .toEqual(draftWalkieReach(map, 'BARN', true));
+  });
+
+  it('keeps radio coverage through road closures while mesh detours', () => {
     expect(draftReach(map, 'WALKIE', 'VO').reach).toContain('SCHOOL');
-    expect(draftReach(map, 'WALKIE', 'VO', 2).reach).not.toContain('SCHOOL');
+    expect(draftReach(map, 'WALKIE', 'VO', 2).reach).toEqual(draftReach(map, 'WALKIE', 'VO').reach);
+    expect(draftReach(map, 'WALKIE_RESERVIST', 'VO', 2).reach)
+      .toEqual(draftReach(map, 'WALKIE_RESERVIST', 'VO').reach);
     expect(draftDistances(map, 'VO', 2).SCHOOL).toBe(3);
     expect(Object.values(draftDistances(map, 'VO', 2)).every(Number.isFinite)).toBe(true);
     const mesh = draftReach(map, 'MESH', 'VO', 2);

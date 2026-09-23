@@ -7,7 +7,7 @@ export const mapNodes = (map: DraftMap) => map.regions.flatMap((region) => regio
 export const observationSites = (map: DraftMap) =>
   ['LOOKOUT', ...(map.id !== 'village' ? ['QUARRY'] : []), ...(map.id === 'valley' ? ['OBSERVATORY'] : [])];
 
-/** Every draft road costs one move; closed roads cannot carry a distance-based method. */
+/** Every draft road costs one move; closed roads cannot carry a movement-distance method. */
 export function draftDistances(map: DraftMap, from: string, closures = 0): Record<string, number> {
   const distances: Record<string, number> = Object.fromEntries(mapNodes(map).map((node) => [node, Infinity]));
   const blocked = new Set(map.closures.slice(0, closures).map(([a, b]) => roadKey(a!, b!)));
@@ -26,6 +26,22 @@ export function draftDistances(map: DraftMap, from: string, closures = 0): Recor
   return distances;
 }
 
+/** Walkie coverage follows a neighborhood footprint plus the sender's border roads. */
+export function draftWalkieReach(map: DraftMap, origin: string, reservist = false): string[] {
+  const home = map.regions.find(({ nodes }) => nodes.includes(origin));
+  if (!home) return [];
+  const sameZone = new Set(home.nodes);
+  const borderNeighbors = new Set(map.edges.flatMap(([a, b]) =>
+    a === origin && b && !sameZone.has(b) ? [b]
+      : b === origin && a && !sameZone.has(a) ? [a] : []));
+  const covered = new Set([...sameZone, ...borderNeighbors]);
+  if (reservist) for (const [a, b] of map.edges) {
+    if (covered.has(a!)) borderNeighbors.add(b!);
+    if (covered.has(b!)) borderNeighbors.add(a!);
+  }
+  return mapNodes(map).filter((node) => node !== origin && (covered.has(node) || (reservist && borderNeighbors.has(node))));
+}
+
 export function draftReach(map: DraftMap, method: string, origin: string, closures = 0) {
   const nodes = mapNodes(map);
   const distances = draftDistances(map, origin, closures);
@@ -33,7 +49,8 @@ export function draftReach(map: DraftMap, method: string, origin: string, closur
   let reach: string[] = [];
   let relay: string[] = [];
   switch (method) {
-    case 'WALKIE': reach = within(1); break;
+    case 'WALKIE': reach = draftWalkieReach(map, origin); break;
+    case 'WALKIE_RESERVIST': reach = draftWalkieReach(map, origin, true); break;
     case 'MESH':
       reach = within(1);
       relay = nodes.filter((node) => distances[node] === 2);

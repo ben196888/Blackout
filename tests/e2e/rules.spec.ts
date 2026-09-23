@@ -55,11 +55,19 @@ test('draft maps support scale, pointer and keyboard movement, closures and loca
     await expect(page.locator('.draft-road')).toHaveCount(roads);
     await expect(page.locator('.draft-region')).toHaveCount(regions);
     expect(await page.getByLabel('Scrollable map').evaluate((element) => element.scrollHeight)).toBeLessThanOrEqual(650);
+    await page.getByLabel('Stand at', { exact: true }).selectOption('BARN');
+    for (const node of ['COOP', 'TEA', 'POND', 'FIELD', 'QUARRY']) {
+      await expect(page.locator(`[data-node="${node}"]`)).toHaveAttribute('data-reach', 'direct');
+    }
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await picker.getByRole('button', { name: /^Walkie-talkie · Reservist/ }).click();
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
+    await picker.getByRole('button', { name: 'Walkie-talkie', exact: false }).first().click();
     await page.getByRole('button', { name: 'Stand at Village Office', exact: true }).click();
     await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('VO');
     await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
     await page.getByLabel('Road conditions').selectOption('2');
-    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
     await expect(page.locator('.draft-road[data-closed="true"]')).toHaveCount(2);
     await picker.getByRole('button', { name: /^Mesh 1 hop/ }).click();
     await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-reach', 'relay');
@@ -67,7 +75,7 @@ test('draft maps support scale, pointer and keyboard movement, closures and loca
     await temple.focus();
     await temple.press('Enter');
     await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('TEMPLE');
-    await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+    await picker.getByRole('button', { name: /^Walkie-talkie zone \+ border$/ }).click();
     await page.getByLabel('Road conditions').selectOption('0');
   }
   await picker.getByRole('button', { name: /^Village Office broadcaster/ }).click();
@@ -78,7 +86,7 @@ test('draft maps support scale, pointer and keyboard movement, closures and loca
   await expect(page.locator('[data-node="TEMPLE"]')).toHaveAttribute('data-reach', 'direct');
   await expect(page.locator('[data-node="STORE"]')).toHaveAttribute('data-reach', 'none');
   await expect(page.locator('[data-node="TEA"]')).toHaveAttribute('data-reach', 'none');
-  await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+  await picker.getByRole('button', { name: /^Walkie-talkie zone \+ border$/ }).click();
   await page.getByLabel('Neighborhood focus').selectOption('UPLAND');
   await page.getByLabel('Stand at', { exact: true }).selectOption('RADIO');
   await expect(page.getByRole('button', { name: 'Stand at Radio Hut', exact: true })).toHaveAttribute('aria-pressed', 'true');

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { DRAFT_MAPS, draftDistances, draftMeshReach, draftReach, draftWalkieReach, mapNodes, observationSites, roadKey } from '../src/rules/draft-map';
+import { DRAFT_MAPS, draftDistances, draftMeshReach, draftReach, draftWalkieReach, mapNodes, meshHighGroundCoverage, meshHighGroundSites, roadKey } from '../src/rules/draft-map';
 
 for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
   it('uses diagram nodes, roads and neighborhoods matching the canonical graph', () => {
@@ -43,7 +43,7 @@ for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
 
   it('adds narrow two-way Mesh links only at named high-ground sites', () => {
     expect(map.meshHighGroundLinks.every(([site, target]) =>
-      observationSites(map).includes(site!) && mapNodes(map).includes(target!))).toBe(true);
+      meshHighGroundSites(map).includes(site!) && mapNodes(map).includes(target!))).toBe(true);
     for (const [site, target] of map.meshHighGroundLinks) {
       expect(map.edges.some(([a, b]) => (a === site && b === target) || (a === target && b === site))).toBe(false);
       expect(draftMeshReach(map, site!)).toContain(target);
@@ -66,22 +66,27 @@ for (const map of DRAFT_MAPS) describe(`${map.id} draft preview`, () => {
     }
   });
 
-  it('limits leader broadcasts and observation to their authored neighborhoods', () => {
+  it('limits leader broadcasts and removes passive sight in favor of Mesh high ground', () => {
     const broadcast = draftReach(map, 'VO_BROADCAST', 'VO').reach;
     expect(broadcast).toContain('SCHOOL');
     expect(broadcast).toContain('SHRINE');
     for (const node of map.regions.filter(({ id }) => !['CORE', 'SCHOOL', 'RIDGE'].includes(id)).flatMap(({ nodes }) => nodes)) {
       expect(broadcast).not.toContain(node);
     }
-    for (const site of observationSites(map)) {
-      const sight = draftReach(map, 'HIGH_GROUND', site).reach;
-      expect(sight.length).toBeGreaterThan(0);
-      expect(sight).toEqual(draftReach(map, 'HIGH_GROUND', site, 2).reach);
-      expect(sight.some((node) => map.enclosed.includes(node))).toBe(false);
+    for (const site of meshHighGroundSites(map)) {
+      const coverage = meshHighGroundCoverage(map, site);
+      expect(coverage.length).toBeGreaterThan(0);
+      expect(coverage.some((node) => map.enclosed.includes(node))).toBe(false);
+      for (const node of coverage) {
+        expect(draftMeshReach(map, site)).toContain(node);
+        expect(draftMeshReach(map, node)).toContain(site);
+      }
+      expect(draftReach(map, 'HIGH_GROUND', site).reach).toEqual([]);
     }
-    expect(draftReach(map, 'HIGH_GROUND', 'LOOKOUT').reach).toContain('TEA');
-    expect(draftReach(map, 'HIGH_GROUND', 'LOOKOUT').reach).not.toContain('TEMPLE');
+    expect(draftMeshReach(map, 'LOOKOUT')).toContain('TEA');
+    expect(draftMeshReach(map, 'LOOKOUT')).not.toContain('TEMPLE');
     expect(draftReach(map, 'HIGH_GROUND', 'SHRINE').reach).toEqual([]);
+    if (map.id !== 'village') expect(draftMeshReach(map, 'QUARRY')).not.toContain('DEPOT');
   });
 
   it('uses map-specific phones and keeps the mobile-data preview within the School zone', () => {

@@ -4,8 +4,16 @@ export const DRAFT_MAPS = maps;
 export type DraftMap = typeof maps[number];
 export const roadKey = (a: string, b: string) => [a, b].sort().join('--');
 export const mapNodes = (map: DraftMap) => map.regions.flatMap((region) => region.nodes);
-export const observationSites = (map: DraftMap) =>
-  ['LOOKOUT', ...(map.id !== 'village' ? ['QUARRY'] : []), ...(map.id === 'valley' ? ['OBSERVATORY'] : [])];
+export const meshHighGroundSites = (map: DraftMap) => map.meshHighGroundLinks.map(([site]) => site!);
+
+/** Former open-node sight footprint, now only a Mesh radio footprint. */
+export function meshHighGroundCoverage(map: DraftMap, site: string): string[] {
+  if (!meshHighGroundSites(map).includes(site)) return [];
+  const zones = site === 'LOOKOUT' ? ['RIDGE', 'FARM']
+    : site === 'QUARRY' ? ['RIDGE', 'WORKS'] : ['UPLAND', 'CORE'];
+  return map.regions.filter(({ id }) => zones.includes(id)).flatMap(({ nodes }) => nodes)
+    .filter((node) => node !== site && !map.enclosed.includes(node));
+}
 
 /** Every draft road costs one move; closed roads cannot carry a movement-distance method. */
 export function draftDistances(map: DraftMap, from: string, closures = 0): Record<string, number> {
@@ -42,9 +50,14 @@ export function draftWalkieReach(map: DraftMap, origin: string, reservist = fals
   return mapNodes(map).filter((node) => node !== origin && (covered.has(node) || (reservist && borderNeighbors.has(node))));
 }
 
-/** Mesh shares local radio coverage, with named two-way links from occupied high ground. */
+/** Mesh shares local radio coverage, with high-ground radio links but no passive sight. */
 export function draftMeshReach(map: DraftMap, origin: string, student = false): string[] {
   const covered = new Set(draftWalkieReach(map, origin));
+  for (const site of meshHighGroundSites(map)) {
+    const footprint = meshHighGroundCoverage(map, site);
+    if (origin === site) for (const node of footprint) covered.add(node);
+    else if (footprint.includes(origin)) covered.add(site);
+  }
   for (const [site, distant] of map.meshHighGroundLinks) {
     if (origin === site) covered.add(distant!);
     if (origin === distant) covered.add(site!);
@@ -84,14 +97,6 @@ export function draftReach(map: DraftMap, method: string, origin: string, closur
       reach = map.regions.filter(({ id }) => ['CORE', 'SCHOOL', 'RIDGE'].includes(id))
         .flatMap(({ nodes }) => nodes).filter((node) => node !== origin && Number.isFinite(distances[node]));
       break;
-    case 'HIGH_GROUND': {
-      if (!observationSites(map).includes(origin)) break;
-      const regions = origin === 'LOOKOUT' ? ['RIDGE', 'FARM']
-        : origin === 'QUARRY' ? ['RIDGE', 'WORKS'] : origin === 'OBSERVATORY' ? ['UPLAND', 'CORE'] : [];
-      reach = map.regions.filter(({ id }) => regions.includes(id)).flatMap(({ nodes }) => nodes)
-        .filter((node) => node !== origin && !map.enclosed.includes(node));
-      break;
-    }
   }
   return { reach, relay };
 }

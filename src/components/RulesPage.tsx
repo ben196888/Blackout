@@ -211,7 +211,9 @@ function VersionedRules({ version }: { version: string }) {
             <article className={`day-card ${phase.tone}`} key={phase.n}>
               <div className="num">{phase.n}</div>
               <h3>{phase.title}</h3>
-              <p>{draft && phase.n === '01' ? 'Choose attendance and its matching map. Everyone picks four methods (the Student gets five), then agrees on one shared comms plan. Choices lock before Day 1.' : phase.body}</p>
+              <p>{draft && phase.n === '01' ? 'Choose attendance and its matching map. Everyone picks four methods (the Student gets five), then agrees on one shared comms plan. Choices lock before Day 1.'
+                : draft && phase.n === '03' ? 'Direct electronic messages require both sides to hold the method. Face-to-face needs no selection; Bulletin readers need no Bulletin selection. Mesh relays require a living holder equipped with Mesh. Only face-to-face confirms delivery.'
+                  : phase.body}</p>
             </article>
           ))}
         </div>
@@ -314,7 +316,7 @@ function VersionedRules({ version }: { version: string }) {
         <p className="sub">
           Both ends must hold a direct electronic method. Face-to-face is always available at the
           same node. Bulletin requires a selection to post, but not to read; a Mesh intermediary
-          needs no Mesh selection. Costs below are normal daily rates: on Day 5, Mesh and Walkie
+          {draft ? ' must hold Mesh in this draft.' : ' needs no Mesh selection.'} Costs below are normal daily rates: on Day 5, Mesh and Walkie
           send charges double; free methods stay free and nightly radio still costs one battery.
           Capped messages flag truncation in your sent record, without revealing remote delivery.
         </p>
@@ -326,7 +328,7 @@ function VersionedRules({ version }: { version: string }) {
             <tbody>
               {METHOD_TABLE.map((row) => (
                 <tr key={row.name}>
-                  <td>{row.name}</td><td>{draft && row.name === 'Landline' ? '4–6 phone nodes, by map' : row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
+                  <td>{row.name}</td><td>{draft && row.name === 'Landline' ? '4–6 phone nodes, by map' : draft && row.name === 'Walkie-talkie' ? 'Same neighborhood + sender’s border neighbors; Reservist +1 road' : draft && row.name === 'Mesh' ? 'Same neighborhood + border; high ground covers open nodes in named zones + select links; one equipped relay; Student +1 road' : row.reach}</td><td>{row.cap}</td><td>{row.batt}</td><td>{row.down}</td>
                 </tr>
               ))}
             </tbody>
@@ -378,9 +380,9 @@ function VersionedRules({ version }: { version: string }) {
         <p className="sub">Cache six food and three batteries per player across the map. Starting inventories,
           carrying limits and daily actions stay the same. Deal one Village Leader, then repeated shuffled
           decks of the other professions. Start at distinct locations distributed across neighborhoods.</p>
-        <p className="sub">School and Barn are enclosed in this version. Observation is local to the designated
-          Lookout, Quarry and Observatory areas; the Shrine loses global sight. Office broadcasts reach
-          Core, School and Ridge. Ordinary sightlines and an absent-player policy are still under review.</p>
+        <p className="sub">School and Barn are enclosed in this version. Lookout, Quarry and Observatory
+          extend Mesh coverage; high ground no longer reveals distant player identities. Office broadcasts
+          reach Core, School and Ridge. A large-group absent-player policy is still under review.</p>
         <details className="draft-rulebook-details" onToggle={(event) => setShowRulebook(event.currentTarget.open)}>
           <summary>Complete v0.0.2 proposal and map data</summary>
           {showRulebook && <Suspense fallback={<p>Loading rulebook…</p>}><Rulebook version={version} /></Suspense>}

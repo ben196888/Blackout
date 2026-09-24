@@ -1,6 +1,7 @@
 [
   {
     "id": "village",
+    "meshHighGroundLinks": [["LOOKOUT", "FIELD"]],
     "players": [
       4,
       8
@@ -247,6 +248,7 @@
   },
   {
     "id": "town",
+    "meshHighGroundLinks": [["LOOKOUT", "FIELD"], ["QUARRY", "DOCK"]],
     "players": [
       9,
       13
@@ -627,6 +629,7 @@
   },
   {
     "id": "valley",
+    "meshHighGroundLinks": [["LOOKOUT", "FIELD"], ["QUARRY", "DOCK"], ["OBSERVATORY", "SHELTER"]],
     "players": [
       14,
       20

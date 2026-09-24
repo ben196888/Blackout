@@ -11,7 +11,7 @@ test('readers can select draft rules, reload and return to the released default'
   await expect(page).toHaveURL(/\/rules\?version=v0\.0\.2$/);
   await expect(selector.locator('option:checked')).toHaveText('v0.0.2 · Draft');
   await expect(page.getByRole('heading', { name: '01 · How a day runs' })).toBeVisible();
-  await expect(page.getByRole('group', { name: 'Ways to reach and see' })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Ways to reach' })).toBeVisible();
   await page.getByText('Complete v0.0.2 proposal and map data', { exact: true }).click();
   for (const name of ['Village', 'Town', 'Valley']) {
     const diagram = page.getByRole('img', { name: `${name} map: every node and connection grouped by neighborhood` });
@@ -45,40 +45,60 @@ test('unknown versions fall back, and draft rules fit a narrow screen', async ({
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
-test('draft maps support scale, pointer and keyboard movement, closures and local observation', async ({ page }) => {
+test('draft maps support scale, movement, closures and Mesh high ground', async ({ page }) => {
   await page.goto('/rules?version=v0.0.2');
   const scale = page.getByLabel('Map scale', { exact: true });
-  const picker = page.getByRole('group', { name: 'Ways to reach and see' });
+  const picker = page.getByRole('group', { name: 'Ways to reach' });
   for (const [id, count, roads, regions] of [['village', 18, 26, 4], ['town', 28, 46, 6], ['valley', 40, 72, 8]] as const) {
     await scale.selectOption(id);
     await expect(page.locator('.draft-map-node')).toHaveCount(count);
     await expect(page.locator('.draft-road')).toHaveCount(roads);
     await expect(page.locator('.draft-region')).toHaveCount(regions);
     expect(await page.getByLabel('Scrollable map').evaluate((element) => element.scrollHeight)).toBeLessThanOrEqual(650);
+    await page.getByLabel('Stand at', { exact: true }).selectOption('BARN');
+    for (const node of ['COOP', 'TEA', 'POND', 'FIELD', 'QUARRY']) {
+      await expect(page.locator(`[data-node="${node}"]`)).toHaveAttribute('data-reach', 'direct');
+    }
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await picker.getByRole('button', { name: /^Walkie-talkie · Reservist/ }).click();
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
+    await picker.getByRole('button', { name: 'Walkie-talkie', exact: false }).first().click();
     await page.getByRole('button', { name: 'Stand at Village Office', exact: true }).click();
     await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('VO');
     await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
     await page.getByLabel('Road conditions').selectOption('2');
-    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
     await expect(page.locator('.draft-road[data-closed="true"]')).toHaveCount(2);
-    await picker.getByRole('button', { name: /^Mesh 1 hop/ }).click();
+    await picker.getByRole('button', { name: /^Mesh zone \+ border \+ relay/ }).click();
     await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-reach', 'relay');
+    await page.getByLabel('Stand at', { exact: true }).selectOption('LOOKOUT');
+    await expect(page.locator('[data-node="FIELD"]')).toHaveAttribute('data-reach', 'direct');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'relay');
+    if (id !== 'village') {
+      await page.getByLabel('Stand at', { exact: true }).selectOption('QUARRY');
+      await expect(page.locator('[data-node="DOCK"]')).toHaveAttribute('data-reach', 'direct');
+    }
+    if (id === 'valley') {
+      await page.getByLabel('Stand at', { exact: true }).selectOption('OBSERVATORY');
+      await expect(page.locator('[data-node="SHELTER"]')).toHaveAttribute('data-reach', 'direct');
+    }
     const temple = page.getByRole('button', { name: 'Stand at Temple', exact: true });
     await temple.focus();
     await temple.press('Enter');
     await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('TEMPLE');
-    await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+    await picker.getByRole('button', { name: /^Walkie-talkie zone \+ border$/ }).click();
     await page.getByLabel('Road conditions').selectOption('0');
   }
   await picker.getByRole('button', { name: /^Village Office broadcaster/ }).click();
   await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'direct');
   await expect(page.locator('[data-node="HALL"]')).toHaveAttribute('data-reach', 'none');
-  await picker.getByRole('button', { name: /^High ground/ }).click();
-  await page.getByLabel('Observation site').selectOption('OBSERVATORY');
+  await expect(picker.getByRole('button', { name: /^High ground/ })).toHaveCount(0);
+  await picker.getByRole('button', { name: /^Mesh zone \+ border/ }).click();
+  await page.getByLabel('Stand at', { exact: true }).selectOption('OBSERVATORY');
   await expect(page.locator('[data-node="TEMPLE"]')).toHaveAttribute('data-reach', 'direct');
-  await expect(page.locator('[data-node="STORE"]')).toHaveAttribute('data-reach', 'none');
-  await expect(page.locator('[data-node="TEA"]')).toHaveAttribute('data-reach', 'none');
-  await picker.getByRole('button', { name: /^Walkie-talkie/ }).click();
+  await expect(page.locator('[data-node="STORE"]')).not.toHaveAttribute('data-reach', 'direct');
+  await expect(page.locator('[data-node="TEA"]')).not.toHaveAttribute('data-reach', 'direct');
+  await picker.getByRole('button', { name: /^Walkie-talkie zone \+ border$/ }).click();
   await page.getByLabel('Neighborhood focus').selectOption('UPLAND');
   await page.getByLabel('Stand at', { exact: true }).selectOption('RADIO');
   await expect(page.getByRole('button', { name: 'Stand at Radio Hut', exact: true })).toHaveAttribute('aria-pressed', 'true');
@@ -89,4 +109,41 @@ test('draft maps support scale, pointer and keyboard movement, closures and loca
   await scale.selectOption('village');
   await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('SCHOOL');
   await expect(page.getByLabel('Neighborhood focus')).toHaveValue('all');
+});
+
+test('draft board and landline previews move between their facilities', async ({ page }) => {
+  await page.goto('/rules?version=v0.0.2');
+  const picker = page.getByRole('group', { name: 'Ways to reach' });
+  const scale = page.getByLabel('Map scale', { exact: true });
+  for (const [id, boards, phones] of [
+    ['village', ['VO', 'SCHOOL', 'COOP', 'FOREST'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST']],
+    ['town', ['VO', 'SCHOOL', 'COOP', 'FOREST', 'DOCK', 'DEPOT'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST', 'DEPOT']],
+    ['valley', ['VO', 'SCHOOL', 'COOP', 'FOREST', 'DOCK', 'DEPOT', 'HALL', 'TERMINAL'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST', 'DEPOT', 'HALL']],
+  ] as const) {
+    await scale.selectOption(id);
+    await picker.getByRole('button', { name: /^Bulletin board/ }).click();
+    const boardPicker = page.getByLabel('Stand at bulletin board');
+    await expect(boardPicker.locator('option')).toHaveCount(boards.length);
+    await expect(boardPicker).toHaveValue('SCHOOL');
+    await boardPicker.selectOption('FOREST');
+    await expect(page.locator('[data-node="FOREST"]')).toHaveAttribute('data-selected', 'true');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await page.getByRole('button', { name: 'Stand at Co-op', exact: true }).click();
+    await expect(boardPicker).toHaveValue('COOP');
+    await expect(page.getByRole('button', { name: 'Stand at Tea Terrace', exact: true })).toHaveCount(0);
+
+    await picker.getByRole('button', { name: /^Landline/ }).click();
+    const phonePicker = page.getByLabel('Stand at landline');
+    await expect(phonePicker.locator('option')).toHaveCount(phones.length);
+    await expect(phonePicker).toHaveValue('SCHOOL');
+    await phonePicker.selectOption('CLINIC');
+    await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-selected', 'true');
+    await expect(page.locator('[data-node="VO"]')).toHaveAttribute('data-reach', 'direct');
+    const forest = page.getByRole('button', { name: 'Stand at Forest Station', exact: true });
+    await forest.focus();
+    await forest.press('Enter');
+    await expect(phonePicker).toHaveValue('FOREST');
+    await picker.getByRole('button', { name: /^Bulletin board/ }).click();
+    await expect(boardPicker).toHaveValue('COOP');
+  }
 });

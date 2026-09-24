@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from 'react';
-import { DRAFT_MAPS, draftReach, mapNodes, observationSites, roadKey } from '../rules/draft-map';
+import { DRAFT_MAPS, draftReach, mapNodes, meshHighGroundSites, roadKey } from '../rules/draft-map';
 
 const diagrams = import.meta.glob<string>('../../docs/rules/diagrams/v0.0.2/*.svg', {
   query: '?raw', import: 'default', eager: true,
@@ -24,25 +24,40 @@ function diagramGeometry(id: string) {
 
 type Method = { id: string; group: string; label: string; tag: string; blurb: string };
 const BLURBS: Record<string, string> = {
-  MESH_STUDENT: 'The Student sends Mesh directly across two roads without an intermediary. The Student chooses five methods; other professions choose four.',
+  WALKIE: 'Every living Walkie-talkie holder in your neighborhood, plus holders at locations directly connected to your location across its boundary, hears the broadcast. Barn reaches all of Farm, Field and Quarry. A closed road does not stop radio coverage. 40 characters; one battery buys three sends.',
+  WALKIE_RESERVIST: 'A Reservist reaches the ordinary Walkie-talkie footprint plus every location one road beyond it. The extra road is measured from any location in the ordinary footprint. Closed roads do not block radio coverage; listeners still need Walkie-talkie.',
+  MESH: 'Address one Mesh holder in your neighborhood or at a node connected across its boundary. From Lookout, Mesh also covers open Ridge and Farm nodes plus Field; Town adds Quarry covering open Ridge and Works nodes plus Dock; Valley adds Observatory covering open Upland and Core nodes plus Shelter. Both ends need Mesh. An equipped holder can relay once. High ground gives no passive sight. 40 characters; one battery buys two sends.',
+  MESH_STUDENT: 'The Student sends Mesh one additional road beyond ordinary direct coverage without a relay. A relay still uses its own ordinary range. The Student chooses five methods; other professions choose four.',
   VO_BROADCAST: 'From Village Office, the Village Leader reaches living survivors in Core, School and Ridge only. One free, player-written message per day, 60 characters, with no delivery receipt. Other neighborhoods need relays or boards.',
-  HIGH_GROUND: 'Lookout sees open locations in Ridge and Farm. Town adds Quarry overlooking Ridge and Works; Valley adds Observatory overlooking Upland and Core. Enclosed locations stay hidden. This is passive sight, not a message. Shrine no longer provides global observation.',
 };
 
 export default function DraftReachExplorer({ methods }: { methods: readonly Method[] }) {
+  const previewMethods = methods.filter((entry) => entry.id !== 'HIGH_GROUND').flatMap((entry) => {
+    if (entry.id === 'WALKIE') return [{ ...entry, tag: 'zone + border' }];
+    if (entry.id === 'MESH') return [{ ...entry, tag: 'zone + border + relay' }];
+    if (entry.id === 'MESH_STUDENT') return [{
+      id: 'WALKIE_RESERVIST', group: 'Role abilities', label: 'Walkie-talkie · Reservist',
+      tag: 'zone + border + 1 road', blurb: BLURBS.WALKIE_RESERVIST,
+    }, { ...entry, tag: 'direct + 1 road' }];
+    return [entry];
+  });
   const [scale, setScale] = useState('village');
   const [method, setMethod] = useState('WALKIE');
   const [vantage, setVantage] = useState('SCHOOL');
-  const [observation, setObservation] = useState('LOOKOUT');
+  const [bulletinBoard, setBulletinBoard] = useState('SCHOOL');
+  const [landline, setLandline] = useState('SCHOOL');
   const [closures, setClosures] = useState(0);
   const [focus, setFocus] = useState('all');
   const [zoom, setZoom] = useState(1);
   const map = DRAFT_MAPS.find(({ id }) => id === scale)!;
   const geometry = useMemo(() => diagramGeometry(scale), [scale]);
   const names = Object.fromEntries(geometry.nodes.map((node) => [node.id, node.labels.map(({ text }) => text).join(' ')]));
-  const selected = methods.find(({ id }) => id === method)!;
-  const pinned = ['BULLETIN', 'LANDLINE', 'MOBILE_DATA'].includes(method) ? 'SCHOOL'
-    : method === 'VO_BROADCAST' ? 'VO' : method === 'HIGH_GROUND' ? observation : undefined;
+  const selected = previewMethods.find(({ id }) => id === method)!;
+  const facilityNodes = method === 'BULLETIN' ? map.bulletins : method === 'LANDLINE' ? map.landlines : undefined;
+  const pinned = method === 'BULLETIN' ? bulletinBoard
+    : method === 'LANDLINE' ? landline
+    : method === 'MOBILE_DATA' ? 'SCHOOL'
+    : method === 'VO_BROADCAST' ? 'VO' : undefined;
   const origin = pinned ?? vantage;
   const { reach, relay } = draftReach(map, method, origin, closures);
   const nodes = mapNodes(map);
@@ -58,15 +73,19 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
     viewBox = [Math.min(...xs) - 20, Math.min(...ys) - 20, Math.max(...xs) - Math.min(...xs) + 40, Math.max(...ys) - Math.min(...ys) + 40];
   }
   const chooseNode = (node: string) => {
-    if (!pinned) setVantage(node);
-    else if (method === 'HIGH_GROUND' && observationSites(map).includes(node)) setObservation(node);
+    if (facilityNodes) {
+      if (!facilityNodes.includes(node)) return;
+      if (method === 'BULLETIN') setBulletinBoard(node);
+      else setLandline(node);
+    } else if (pinned) return;
+    else setVantage(node);
     if (focus !== 'all') setFocus(map.regions.find(({ nodes }) => nodes.includes(node))!.id);
   };
   return (
     <>
       <div className="draft-map-controls">
         <label>Map scale<select aria-label="Map scale" value={scale} onChange={(event) => {
-          setScale(event.target.value); setVantage('SCHOOL'); setObservation('LOOKOUT'); setFocus('all'); setZoom(1);
+          setScale(event.target.value); setVantage('SCHOOL'); setBulletinBoard('SCHOOL'); setLandline('SCHOOL'); setFocus('all'); setZoom(1);
         }}>{DRAFT_MAPS.map((entry) => <option key={entry.id} value={entry.id}>
           {entry.id[0]!.toUpperCase() + entry.id.slice(1)} · {entry.players[0]}–{entry.players[1]} players
         </option>)}</select></label>
@@ -76,20 +95,21 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
       </div>
       <p className="sub">{title}: {nodes.length} locations, {map.edges.length} roads, {map.regions.length} neighborhoods.
         {' '}Every road costs one move. Closures create detours; the map stays connected.</p>
-      <p className="sub">You are standing at the {names[origin]}. {pinned
-        ? 'This method starts at a suitable facility.' : 'Click a location or choose one below to move the preview.'}
+      <p className="sub">You are standing at the {names[origin]}. {facilityNodes
+        ? `Choose a ${method === 'BULLETIN' ? 'bulletin board' : 'landline'} on the map or below to move the preview.`
+        : pinned ? 'This method starts at a suitable facility.' : 'Click a location or choose one below to move the preview.'}
         {' '}Highlights show potential reach, not delivery. Network timing, method selection and living recipients still apply.</p>
       <div className="reach-explorer">
         <div>
-          <div className="reach-picker" role="group" aria-label="Ways to reach and see">
-            {methods.map((spec, index) => <Fragment key={spec.id}>
-              {spec.group !== methods[index - 1]?.group && <p className="reach-group">{spec.group}</p>}
+          <div className="reach-picker" role="group" aria-label="Ways to reach">
+            {previewMethods.map((spec, index) => <Fragment key={spec.id}>
+              {spec.group !== previewMethods[index - 1]?.group && <p className="reach-group">{spec.group}</p>}
               <button type="button" aria-pressed={spec.id === method} onClick={() => { setMethod(spec.id); setFocus('all'); }}>
                 <span>{spec.label}</span><span className="tag">{spec.id === 'LANDLINE' ? `${map.landlines.length} phones` : spec.tag}</span>
               </button>
             </Fragment>)}
           </div>
-          <div className="reach-blurb"><p className="card-title">{method === 'HIGH_GROUND' ? 'Sight' : 'Reach'}</p>
+          <div className="reach-blurb"><p className="card-title">Reach</p>
             <p>{BLURBS[method] ?? selected.blurb}</p></div>
         </div>
         <div className="map-frame">
@@ -120,7 +140,7 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
               </g>)}
               {geometry.nodes.map((node) => {
                 const inView = focus === 'all' || map.regions.find(({ id }) => id === focus)!.nodes.includes(node.id);
-                const interactive = inView && (!pinned || (method === 'HIGH_GROUND' && observationSites(map).includes(node.id)));
+                const interactive = inView && (facilityNodes ? facilityNodes.includes(node.id) : !pinned);
                 return <g key={node.id} className="draft-map-node" data-node={node.id} data-selected={node.id === origin}
                   data-reach={reach.includes(node.id) ? 'direct' : relay.includes(node.id) ? 'relay' : 'none'}
                   role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined}
@@ -136,19 +156,20 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
             </svg>
           </div>
           <div className="draft-map-controls">
-            <label>{method === 'HIGH_GROUND' ? 'Observation site' : 'Stand at'}
-              <select aria-label={method === 'HIGH_GROUND' ? 'Observation site' : 'Stand at'} value={origin} disabled={Boolean(pinned) && method !== 'HIGH_GROUND'} onChange={(event) => chooseNode(event.target.value)}>
-                {(method === 'HIGH_GROUND' ? observationSites(map) : nodes).map((node) => <option key={node} value={node}>{names[node]}</option>)}
+            <label>{method === 'BULLETIN' ? 'Stand at bulletin board' : method === 'LANDLINE' ? 'Stand at landline' : 'Stand at'}
+              <select aria-label={method === 'BULLETIN' ? 'Stand at bulletin board' : method === 'LANDLINE' ? 'Stand at landline' : 'Stand at'} value={origin} disabled={Boolean(pinned) && !facilityNodes} onChange={(event) => chooseNode(event.target.value)}>
+                {(facilityNodes ?? nodes).map((node) => <option key={node} value={node}>{names[node]}</option>)}
               </select>
             </label>
             <p className="draft-node-detail" aria-live="polite">{names[origin]} · {region.id} · {map.enclosed.includes(origin) ? 'Enclosed' : 'Open'}
               {map.bulletins.includes(origin) ? ' · Bulletin board' : ''}{map.landlines.includes(origin) ? ' · Phone' : ''}
-              {map.rendezvousCandidates.includes(origin) ? ' · Evacuation candidate' : ''}</p>
+              {map.rendezvousCandidates.includes(origin) ? ' · Evacuation candidate' : ''}
+              {['MESH', 'MESH_STUDENT'].includes(method) && meshHighGroundSites(map).includes(origin) ? ' · Mesh high ground' : ''}</p>
           </div>
           <div className="map-legend">
-            <span className="grn">Green border: {method === 'HIGH_GROUND' ? 'visible open location' : 'reachable'}</span>
+            <span className="grn">Green border: reachable</span>
             <span className="grn">Green fill: you</span>
-            {relay.length > 0 && <span className="sig">Amber dashed border: needs an intermediary</span>}
+            {relay.length > 0 && <span className="sig">Amber dashed border: possible via one Mesh-equipped intermediary</span>}
             <span>Double border: evacuation candidate</span><span>Red dashed road: closed</span>
             <span className="grn">Bright roads: exits from your location</span>
             <span>Gaps separate crossing roads. Only named locations are junctions.</span>

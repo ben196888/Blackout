@@ -240,7 +240,7 @@ test('draft map explorer shows all three scales and neighborhood focus', async (
   test.skip(!process.env.BLACKOUT_SHOTS, 'run `pnpm shots`; baselines only match inside the pinned Playwright image');
   await page.setViewportSize(VIEWPORT);
   await page.goto('/rules?version=v0.0.2');
-  await page.getByRole('group', { name: 'Ways to reach and see' }).getByRole('button', { name: /^Mesh 1 hop/ }).click();
+  await page.getByRole('group', { name: 'Ways to reach' }).getByRole('button', { name: /^Mesh zone \+ border/ }).click();
   await awaitFonts(page);
   const explorer = page.locator('.reach-explorer');
   for (const [index, scale] of ['village', 'town', 'valley'].entries()) {

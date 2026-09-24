@@ -44,6 +44,8 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
   const [scale, setScale] = useState('village');
   const [method, setMethod] = useState('WALKIE');
   const [vantage, setVantage] = useState('SCHOOL');
+  const [bulletinBoard, setBulletinBoard] = useState('SCHOOL');
+  const [landline, setLandline] = useState('SCHOOL');
   const [closures, setClosures] = useState(0);
   const [focus, setFocus] = useState('all');
   const [zoom, setZoom] = useState(1);
@@ -51,7 +53,10 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
   const geometry = useMemo(() => diagramGeometry(scale), [scale]);
   const names = Object.fromEntries(geometry.nodes.map((node) => [node.id, node.labels.map(({ text }) => text).join(' ')]));
   const selected = previewMethods.find(({ id }) => id === method)!;
-  const pinned = ['BULLETIN', 'LANDLINE', 'MOBILE_DATA'].includes(method) ? 'SCHOOL'
+  const facilityNodes = method === 'BULLETIN' ? map.bulletins : method === 'LANDLINE' ? map.landlines : undefined;
+  const pinned = method === 'BULLETIN' ? bulletinBoard
+    : method === 'LANDLINE' ? landline
+    : method === 'MOBILE_DATA' ? 'SCHOOL'
     : method === 'VO_BROADCAST' ? 'VO' : undefined;
   const origin = pinned ?? vantage;
   const { reach, relay } = draftReach(map, method, origin, closures);
@@ -68,14 +73,19 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
     viewBox = [Math.min(...xs) - 20, Math.min(...ys) - 20, Math.max(...xs) - Math.min(...xs) + 40, Math.max(...ys) - Math.min(...ys) + 40];
   }
   const chooseNode = (node: string) => {
-    if (!pinned) setVantage(node);
+    if (facilityNodes) {
+      if (!facilityNodes.includes(node)) return;
+      if (method === 'BULLETIN') setBulletinBoard(node);
+      else setLandline(node);
+    } else if (pinned) return;
+    else setVantage(node);
     if (focus !== 'all') setFocus(map.regions.find(({ nodes }) => nodes.includes(node))!.id);
   };
   return (
     <>
       <div className="draft-map-controls">
         <label>Map scale<select aria-label="Map scale" value={scale} onChange={(event) => {
-          setScale(event.target.value); setVantage('SCHOOL'); setFocus('all'); setZoom(1);
+          setScale(event.target.value); setVantage('SCHOOL'); setBulletinBoard('SCHOOL'); setLandline('SCHOOL'); setFocus('all'); setZoom(1);
         }}>{DRAFT_MAPS.map((entry) => <option key={entry.id} value={entry.id}>
           {entry.id[0]!.toUpperCase() + entry.id.slice(1)} · {entry.players[0]}–{entry.players[1]} players
         </option>)}</select></label>
@@ -85,8 +95,9 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
       </div>
       <p className="sub">{title}: {nodes.length} locations, {map.edges.length} roads, {map.regions.length} neighborhoods.
         {' '}Every road costs one move. Closures create detours; the map stays connected.</p>
-      <p className="sub">You are standing at the {names[origin]}. {pinned
-        ? 'This method starts at a suitable facility.' : 'Click a location or choose one below to move the preview.'}
+      <p className="sub">You are standing at the {names[origin]}. {facilityNodes
+        ? `Choose a ${method === 'BULLETIN' ? 'bulletin board' : 'landline'} on the map or below to move the preview.`
+        : pinned ? 'This method starts at a suitable facility.' : 'Click a location or choose one below to move the preview.'}
         {' '}Highlights show potential reach, not delivery. Network timing, method selection and living recipients still apply.</p>
       <div className="reach-explorer">
         <div>
@@ -129,7 +140,7 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
               </g>)}
               {geometry.nodes.map((node) => {
                 const inView = focus === 'all' || map.regions.find(({ id }) => id === focus)!.nodes.includes(node.id);
-                const interactive = inView && !pinned;
+                const interactive = inView && (facilityNodes ? facilityNodes.includes(node.id) : !pinned);
                 return <g key={node.id} className="draft-map-node" data-node={node.id} data-selected={node.id === origin}
                   data-reach={reach.includes(node.id) ? 'direct' : relay.includes(node.id) ? 'relay' : 'none'}
                   role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined}
@@ -145,9 +156,9 @@ export default function DraftReachExplorer({ methods }: { methods: readonly Meth
             </svg>
           </div>
           <div className="draft-map-controls">
-            <label>Stand at
-              <select aria-label="Stand at" value={origin} disabled={Boolean(pinned)} onChange={(event) => chooseNode(event.target.value)}>
-                {nodes.map((node) => <option key={node} value={node}>{names[node]}</option>)}
+            <label>{method === 'BULLETIN' ? 'Stand at bulletin board' : method === 'LANDLINE' ? 'Stand at landline' : 'Stand at'}
+              <select aria-label={method === 'BULLETIN' ? 'Stand at bulletin board' : method === 'LANDLINE' ? 'Stand at landline' : 'Stand at'} value={origin} disabled={Boolean(pinned) && !facilityNodes} onChange={(event) => chooseNode(event.target.value)}>
+                {(facilityNodes ?? nodes).map((node) => <option key={node} value={node}>{names[node]}</option>)}
               </select>
             </label>
             <p className="draft-node-detail" aria-live="polite">{names[origin]} · {region.id} · {map.enclosed.includes(origin) ? 'Enclosed' : 'Open'}

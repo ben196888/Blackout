@@ -110,3 +110,40 @@ test('draft maps support scale, movement, closures and Mesh high ground', async 
   await expect(page.getByLabel('Stand at', { exact: true })).toHaveValue('SCHOOL');
   await expect(page.getByLabel('Neighborhood focus')).toHaveValue('all');
 });
+
+test('draft board and landline previews move between their facilities', async ({ page }) => {
+  await page.goto('/rules?version=v0.0.2');
+  const picker = page.getByRole('group', { name: 'Ways to reach' });
+  const scale = page.getByLabel('Map scale', { exact: true });
+  for (const [id, boards, phones] of [
+    ['village', ['VO', 'SCHOOL', 'COOP', 'FOREST'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST']],
+    ['town', ['VO', 'SCHOOL', 'COOP', 'FOREST', 'DOCK', 'DEPOT'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST', 'DEPOT']],
+    ['valley', ['VO', 'SCHOOL', 'COOP', 'FOREST', 'DOCK', 'DEPOT', 'HALL', 'TERMINAL'], ['VO', 'SCHOOL', 'CLINIC', 'FOREST', 'DEPOT', 'HALL']],
+  ] as const) {
+    await scale.selectOption(id);
+    await picker.getByRole('button', { name: /^Bulletin board/ }).click();
+    const boardPicker = page.getByLabel('Stand at bulletin board');
+    await expect(boardPicker.locator('option')).toHaveCount(boards.length);
+    await expect(boardPicker).toHaveValue('SCHOOL');
+    await boardPicker.selectOption('FOREST');
+    await expect(page.locator('[data-node="FOREST"]')).toHaveAttribute('data-selected', 'true');
+    await expect(page.locator('[data-node="SCHOOL"]')).toHaveAttribute('data-reach', 'none');
+    await page.getByRole('button', { name: 'Stand at Co-op', exact: true }).click();
+    await expect(boardPicker).toHaveValue('COOP');
+    await expect(page.getByRole('button', { name: 'Stand at Tea Terrace', exact: true })).toHaveCount(0);
+
+    await picker.getByRole('button', { name: /^Landline/ }).click();
+    const phonePicker = page.getByLabel('Stand at landline');
+    await expect(phonePicker.locator('option')).toHaveCount(phones.length);
+    await expect(phonePicker).toHaveValue('SCHOOL');
+    await phonePicker.selectOption('CLINIC');
+    await expect(page.locator('[data-node="CLINIC"]')).toHaveAttribute('data-selected', 'true');
+    await expect(page.locator('[data-node="VO"]')).toHaveAttribute('data-reach', 'direct');
+    const forest = page.getByRole('button', { name: 'Stand at Forest Station', exact: true });
+    await forest.focus();
+    await forest.press('Enter');
+    await expect(phonePicker).toHaveValue('FOREST');
+    await picker.getByRole('button', { name: /^Bulletin board/ }).click();
+    await expect(boardPicker).toHaveValue('COOP');
+  }
+});

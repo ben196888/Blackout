@@ -20,6 +20,11 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 #start p{opacity:.7;margin:14px 0 0;letter-spacing:.12em}
 #start .go{margin-top:28px;padding:9px 22px;border:1px solid rgba(255,213,138,.6);color:#ffd58a;letter-spacing:.3em;border-radius:3px}
 #err{position:fixed;left:14px;right:14px;top:40px;color:#ff8a7a;white-space:pre-wrap;pointer-events:none}
+#dTitle{position:fixed;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;opacity:0;text-shadow:0 2px 14px #000,0 0 3px #000;color:#e8ecf5}
+#dTitle b{font-size:46px;font-weight:300;letter-spacing:.42em;margin-left:.42em}
+#dTitle span{margin-top:12px;font-size:16px;letter-spacing:.2em;color:#ffd58a}
+#dFade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none}
+#dBar{position:fixed;left:0;bottom:0;height:3px;width:0;background:rgba(255,213,138,.8);pointer-events:none}
 </style>
 </head>
 <body>
@@ -651,6 +656,7 @@ fn h12(p: vec2f) -> f32 { var p3 = fract(vec3f(p.xyx) * .1031); p3 += dot(p3, p3
 
 // ------------------------------------------------------------ utilities
 const Q = new URLSearchParams(location.search);
+const DEMO = Q.get('demo') === '1', CAPTURE = DEMO && Q.has('capture');   // ?demo=1 automated 25 s tour; &capture=1 fixed 30 fps timestep
 const SEED = (parseInt(Q.get('seed')) || 1337) | 0;
 const lerp = (a, b, t) => a + (b - a) * t, clamp = (x, a, b) => x < a ? a : x > b ? b : x;
 const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
@@ -1765,16 +1771,17 @@ async function main() {
   const start = $('start');
   const lock = () => { const r = canvas.requestPointerLock && canvas.requestPointerLock(); if (r && r.catch) r.catch(() => { }); };
   const enter = () => { start.style.display = 'none'; lock(); };
-  start.addEventListener('click', enter); canvas.addEventListener('click', lock);
+  if (!DEMO) { start.addEventListener('click', enter); canvas.addEventListener('click', lock); }
   document.addEventListener('pointerlockchange', () => { state.locked = document.pointerLockElement === canvas; });
   let drag = false; canvas.addEventListener('mousedown', () => drag = true); addEventListener('mouseup', () => drag = false);
   addEventListener('mousemove', e => {
-    if (!state.locked && !drag) return;
+    if (DEMO || (!state.locked && !drag)) return;
     const o = free.on ? free : player, k = .0022;
     o.yaw += clamp(e.movementX, -300, 300) * k; o.pitch = clamp(o.pitch - clamp(e.movementY, -300, 300) * k, -1.54, 1.54);
   });
   addEventListener('wheel', e => { if (free.on) free.speed = clamp(free.speed * (e.deltaY < 0 ? 1.25 : .8), 1, 200); }, { passive: true });
   addEventListener('keydown', e => {
+    if (DEMO) return;
     if (e.code == 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
     if (e.repeat) return; keys[e.code] = true;
     if (e.code == 'KeyF') state.fl = !state.fl;
@@ -1802,14 +1809,72 @@ async function main() {
   if (fixedT !== null) { state.flI = state.fl ? 1 : 0; const c0 = Math.cos(player.pitch - .045); flD[0] = Math.sin(player.yaw) * c0; flD[1] = Math.sin(player.pitch - .045); flD[2] = -Math.cos(player.yaw) * c0; }
   $('stat').textContent = 'a village without power  ·  seed ' + SEED; $('go').style.display = 'block';
 
+  // ---------------------------------------------------------- automated demo tour (?demo=1)
+  // Keyframes: t (s), e = eye [x, height above ground, z], g = look-at target [x, height above ground, z].
+  // Each shot is a Catmull-Rom spline through its keyframes; a short black dip hides the cuts between shots.
+  const DEMO_LEN = 25;
+  const SHOTS = !DEMO ? null : [
+    { fl: [[9, 18]], k: [   // 0-13 s: village overview -> main road walk -> night road with flashlight
+      { t: 0, e: [10, 50, 110], g: [5, 0, 0] }, { t: 2, e: [-45, 38, 70], g: [0, 2, 5] },
+      { t: 4, e: [-62, 3.5, 3], g: [-30, 1.7, .8] }, { t: 6.5, e: [-34, 1.7, .8], g: [-12, 1.7, .6] },
+      { t: 9, e: [18, 1.7, .8], g: [34, 1.7, .5] }, { t: 10, e: [11, 1.7, 3], g: [10, 1.5, 18] },
+      { t: 11.5, e: [10, 1.7, 18], g: [8, 1.5, 34] }, { t: 13, e: [10.5, 1.7, 38], g: [12, 1.5, 56] }] },
+    { k: [{ t: 13, e: [-60, 4, 5], g: [-88, 0, 0] }, { t: 14.25, e: [-71, 4, 6], g: [-88, 0, 0] }, { t: 15.5, e: [-78, 5, 9], g: [-90, 0, 0] }] },    // damaged bridge
+    { k: [{ t: 15.5, e: [70, 3, -95], g: [125, 38, -135] }, { t: 17, e: [92, 3, -112], g: [125, 28, -135] }, { t: 18, e: [106, 3.5, -120], g: [125, 30, -135] }] },   // comms tower
+    { k: [   // 18-25 s: emergency shelter, then pull up to the closing overview
+      { t: 18, e: [-52, 1.7, 44], g: [-43, 2.2, 52] }, { t: 19.5, e: [-46, 1.7, 45], g: [-33, 1.5, 57] },
+      { t: 21, e: [-38, 1.7, 48], g: [-28, 1.5, 60] }, { t: 23, e: [-36, 3, 50], g: [-24, 1.5, 62] },
+      { t: 25, e: [-10, 52, 112], g: [0, 0, 10] }] },
+  ];
+  const CUTS = [13, 15.5, 18];
+  function cr(a, b, c, d, s) { const s2 = s * s, s3 = s2 * s; return .5 * (2 * b + (-a + c) * s + (2 * a - 5 * b + 4 * c - d) * s2 + (-a + 3 * b - 3 * c + d) * s3); }
+  function sample(ks, t, f) {
+    let i = 0; while (i < ks.length - 2 && t >= ks[i + 1].t) i++;
+    const p0 = ks[Math.max(i - 1, 0)][f], p1 = ks[i][f], p2 = ks[i + 1][f], p3 = ks[Math.min(i + 2, ks.length - 1)][f];
+    const s = clamp((t - ks[i].t) / (ks[i + 1].t - ks[i].t), 0, 1);
+    return [0, 1, 2].map(a => cr(p0[a], p1[a], p2[a], p3[a], s));
+  }
+  const base = (x, z) => Math.max(groundH(x, z), 0);
+  // Pure function of tour time t: returns eye + target in world space, flashlight state and cut-fade amount.
+  function demoPose(t) {
+    t = clamp(t, 0, DEMO_LEN);
+    const sh = SHOTS.find(s => t <= s.k[s.k.length - 1].t) || SHOTS[SHOTS.length - 1];
+    const e = sample(sh.k, t, 'e'), g = sample(sh.k, t, 'g');
+    const ey = Math.max(base(e[0], e[2]) + e[1], groundH(e[0], e[2]) + 1.2), gy = base(g[0], g[2]) + g[1];
+    return { eye: [e[0], ey, e[2]], tgt: [g[0], gy, g[2]], fl: t >= 9 && t < 18, fade: Math.max(0, ...CUTS.map(c => 1 - Math.abs(t - c) / .25)) };
+  }
+  let dEls = null, demoT = 0, demoStart = null, capFrame = 0;
+  if (DEMO) {
+    start.style.display = 'none'; $('help').style.display = 'none'; $('mode').style.display = 'none'; $('perf').style.display = 'none';
+    document.body.style.cursor = 'none';
+    document.body.insertAdjacentHTML('beforeend', '<div id="dTitle"><b></b><span></span></div><div id="dFade"></div><div id="dBar"></div>');
+    dEls = { title: $('dTitle'), b: document.querySelector('#dTitle b'), sub: document.querySelector('#dTitle span'), fade: $('dFade'), bar: $('dBar') };
+    state.fl = false; state.flI = 0;
+  }
+  function demoUpdate(now) {
+    if (CAPTURE) demoT = Math.min(capFrame++ / 30, DEMO_LEN);
+    else { if (demoStart === null) demoStart = now; demoT = Math.min((now - demoStart) / 1000, DEMO_LEN); }
+    const d = demoPose(demoT), p = player, dx = d.tgt[0] - d.eye[0], dy = d.tgt[1] - d.eye[1], dz = d.tgt[2] - d.eye[2];
+    p.x = d.eye[0]; p.z = d.eye[2]; p.eye = d.eye[1]; p.y = d.eye[1] - 1.68; p.vx = p.vz = p.vy = 0; p.bob = 0; p.ground = true;
+    p.yaw = Math.atan2(dx, -dz); p.pitch = Math.asin(dy / Math.hypot(dx, dy, dz));
+    state.fl = d.fl; state.time = demoT;
+    const op = (a, b) => clamp(Math.min(demoT - a, b - demoT) / .6, 0, 1);
+    const first = demoT < 4.2, e = dEls;
+    e.b.textContent = first ? 'BLACKOUT — From Board Game to 3D' : '';
+    e.sub.textContent = first ? '' : 'AI Coding Agent POC | November 2026';
+    e.title.style.opacity = first ? op(.2, 3.8) : op(23.2, 99);
+    e.fade.style.opacity = d.fade; e.bar.style.width = (demoT / DEMO_LEN * 100) + '%';
+    if (window.BLK) window.BLK.demo.t = demoT;
+  }
+
   function frame(now) {
     requestAnimationFrame(frame);
     if (OFF && rbBusy) return;   // test path: no presentation to throttle us, so wait for the readback
     const cpu0 = performance.now(), rawDt = (now - last) / 1000; last = now;
     const dt = Math.min(rawDt, .05);
-    state.time = fixedT !== null ? fixedT : state.time + dt;
+    if (DEMO) demoUpdate(now); else state.time = fixedT !== null ? fixedT : state.time + dt;
     resize();
-    updatePlayer(dt);
+    if (!DEMO) updatePlayer(dt);
     // camera
     const p = player, bobA = Math.min(Math.hypot(p.vx, p.vz) / 4.1, 1.6) * (p.ground ? 1 : 0);
     const cam = free.on ? free : p;
@@ -1887,7 +1952,7 @@ async function main() {
       $('mode').textContent = free.on ? 'FREE CAMERA  ·  C to return' : (state.fl ? '' : 'FLASHLIGHT OFF');
     }
   }
-  window.BLK = { player, free, state, keys, stats, W, gpuErrors, LIGHTS, groundH, frames: () => OFF ? rbCount : frameNo, genMs, adapter: adapter.info };
+  window.BLK = { player, free, state, keys, stats, W, gpuErrors, LIGHTS, groundH, frames: () => OFF ? rbCount : frameNo, genMs, adapter: adapter.info, demo: { t: 0, length: DEMO_LEN, pose: DEMO ? demoPose : null } };
   requestAnimationFrame(frame);
 }
 main().catch(e => { console.error(e); $('err').textContent = String(e && e.message || e); });
